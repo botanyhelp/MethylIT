@@ -18,7 +18,7 @@ Status
 
 !!! FOR TESTING ONLY !!!
 
-This application is under development and has not been officially released. Watch this repo or check the releases page for the official release.
+This application is under development and has not yet been officially released. Watch this repo or check the releases page for the official release.
 
 Installation
 ------------
