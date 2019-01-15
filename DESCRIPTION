@@ -1,0 +1,54 @@
+Package: MethylIT
+Title: Methylation Analysis Based on Information Thermodynamics
+Version: 0.3.1
+Encoding: UTF-8
+Author: Robersy Sanchez
+Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
+                  role = c("aut", "cre", "cph")),
+              person("Jose Raul ", "Barreras", email = "jrb428@psu.edu",
+                  role = c("ctb")))
+Maintainer: Robersy Sanchez <rus547@psu.edu>
+Description: Methylation Analysis based on Information Theory.
+Depends: 
+  R (>= 3.4.0),
+  DESeq2,
+  rtracklayer
+License: file LICENSE
+biocViews: 
+  Software, Epigenetics, MathematicalBiology, DNAMethylation, 
+  DifferentialMethylation, Sequencing, Alignment, Bayesian, 
+  DifferentialExpression
+LazyData: yes
+Imports:
+  ArgumentCheck,
+  BiocGenerics,
+  BiocParallel,
+  Biostrings,
+  betareg,
+  biovizBase,
+  caret,
+  data.table,
+  Epi,
+  e1071,
+  genefilter,
+  GenomeInfoDb,
+  GenomicRanges,
+  graphics,
+  grDevices,
+  IRanges,
+  matrixStats,
+  MASS,
+  methods,
+  minpack.lm,
+  nls2,
+  parallel,
+  RCurl,
+  S4Vectors,
+  stats,
+  utils,
+  XML
+RoxygenNote: 6.1.0
+Suggests: testthat, rmarkdown,
+    knitr
+VignetteBuilder: rmarkdown,
+    knitr

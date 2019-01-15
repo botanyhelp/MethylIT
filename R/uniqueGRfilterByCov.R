@@ -1,0 +1,69 @@
+#' @rdname uniqueGRfilterByCov
+#'
+#' @title  Unique GRanges of methylation read counts filtered by coverages
+#' @description Given two GRanges objects, this function will filter by coverage
+#'     each cytosine site from each GRanges object.
+#' @details Cytosine sites with 'coverage' > 'min.coverage' and 'coverage' <
+#'     'percentile' (e.g., 99.9 percentile) in at least one of the samples are
+#'     preserved. It is expected that the columns of methylated and unmethylated
+#'     counts are given.
+#'
+#' @param x A GRanges object with methylated and unmethylated counts in its
+#'     meta-column.
+#' @param y A GRanges object with methylated and unmethylated counts in its
+#'     meta-column.
+#' @param min.coverage Cytosine sites with coverage less than min.coverage are
+#'     discarded.
+#' @param percentile Threshold to remove the outliers from each file and all
+#'     files stacked.
+#' @param high.coverage An integer for read counts. Cytosine sites having higher
+#'     coverage than this are discarded.
+#' @param columns Vector of integer numbers of the columns (from each GRanges
+#'     meta-column) where the methylated and unmethylated counts are provided. If
+#'     not provided, then the methylated and unmethylated counts are assumed to
+#'     be at columns 1 and 2, respectively.
+#' @param num.cores The number of cores to use, i.e. at most how many child
+#'     processes will be run simultaneously (see bplapply function from
+#'     BiocParallel package).
+#' @param tasks integer(1). The number of tasks per job. value must be a scalar
+#'     integer >= 0L. In this documentation a job is defined as a single call to a
+#'     function, such as bplapply, bpmapply etc. A task is the division of the X
+#'     argument into chunks. When tasks == 0 (default), X is divided as evenly as
+#'     possible over the number of workers (see MulticoreParam from BiocParallel
+#'     package).
+#' @param verbose if TRUE, prints the function log to stdout
+#' @param ... Additional parameters for 'uniqueGRanges' function.
+
+#' @return A GRanges object with the columns of methylated and unmethylated
+#'   counts filtered for each cytosine position.
+#'
+#' @examples
+#' dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,
+#' strand <- c("+","-","+","*","."), mC = 1:5, uC = 1:5)
+#' dfChr2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
+#' strand <- '*', mC = 1:7, uC = 1:7)
+#' gr1 <- makeGRangesFromDataFrame(dfChr1, keep.extra.columns = TRUE)
+#' gr2 <- makeGRangesFromDataFrame(dfChr2, keep.extra.columns = TRUE)
+#' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
+#'
+#' @importFrom GenomicRanges GRanges GRangesList
+#' @export
+#'
+uniqueGRfilterByCov <- function(x, y, min.coverage=4, percentile=.9999,
+                   high.coverage=NULL, columns=c(mC=1, uC=2), num.cores=1L,
+                   tasks=0L, verbose=TRUE, ...) {
+
+   x <- x[, columns]
+   y <- y[, columns]
+   x <- uniqueGRanges(list(x, y), num.cores=num.cores, tasks=tasks,
+                   verbose=verbose, ...)
+   cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
+   cov2 <- rowSums(as.matrix(mcols(x[,3:4])))
+   q1 <- quantile(cov1, probs=percentile)
+   q2 <- quantile(cov2, probs=percentile)
+   q <- max(q1, q2, high.coverage)
+   idx1 <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
+   idx2 <- which((cov1 <= q) & (cov2 <= q))
+   idx <- intersect(idx1, idx2)
+   return(x[ idx ])
+}

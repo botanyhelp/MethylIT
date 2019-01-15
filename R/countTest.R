@@ -1,0 +1,245 @@
+#' @rdname countTest
+#'
+#' @title Regression Test for Count
+#' @description Perform Poisson and Negative Binomial regression analysis to
+#'     compare the counts from different groups, treatment and control
+#'
+#' @param DS DESeqDataSet object
+#' @param num.cores number of cores used
+#' @param countFilter whether or not to filter the counts according to the
+#'     minimum count per region per each individual/sample, which is setting by
+#'     "minCountPerIndv"
+#' @param CountPerBp for each group the count per bp must be equal or greater
+#'     than CountPerBp. The filter is applied if 'CountPerBp' is given and if
+#'     'x' DESeqDataSet object has the rowRanges as a GRanges object on it
+#' @param minCountPerIndv each gene or region must have more than
+#'     'minCountPerIndv' counts (on average) per individual in at least one
+#'     group
+#' @param maxGrpCV A numerical vector. Maximum coefficient of variance for each
+#'     group. Defaul maxGrpCV = NULL. The numbers maxGrpCV[1] and maxGrpCV[2]
+#'     will be taken as the maximun variances values permitted in control and
+#'     in treatment groups, repectively. If only maxGrpCV[1] is provided, then
+#'     maxGrpCV = c(maxGrpCV[1], maxGrpCV[1]). This parameter is addressed to
+#'     prevent testing regions where intra-group variations are very large,
+#'     e.g.: control = c(1,0,1,1) and traatment = c(1, 0, 1, 40). The
+#'     coefficient of variance for the treatment group is 1.87, very high. The
+#'     generalized linear regression analysis would yield statistical
+#'     significant group differences, but evidently there is something wrong in
+#'     one of the treatment samples. We would try the application of further
+#'     statistical smoothing approach, but we prefer to leave the user decide
+#'     which regions to test.
+#' @param FilterLog2FC if TRUE, the results are filtered using the minimun
+#'     absolute value of log2FoldChanges observed to accept that a gene in the
+#'     treatment is differentially expressed in respect to the control
+#' @param pAdjustMethod method used to adjust the results; default: BH
+#' @param pvalCutOff cutoff used then a p-value adjustment is performed
+#' @param MVrate Minimum Mean/Variance rate
+#' @param Minlog2FC minimum logarithm base 2 of fold changes.
+#' @param test A character string matching one of "Wald" or "LRT". If test =
+#'   "Wald", then the p-value of the Wald test for the coefficient of the
+#'   independent variable (\emph{treatment group}) will be reported p-value. If
+#'   test = "LRT", then the p-value from a likelihood ratio test given by
+#'   \code{\link[stats]{anova}} function from \emph{stats} packages will be the
+#'   reported p-value for the group comparison.
+#' @param scaling integer (default 1). Scaling factor estimate the
+#'     signal density as: scaling * "DIMP-Count-Per-Bp". For example,
+#'     if scaling = 1000, then signal density denotes the number of DIMPs in
+#'      1000 bp.
+#' @param saveAll if TRUE all the temporal results are returned
+#' @param verbose if TRUE, prints the function log to stdout
+#
+#' @return a data frame or GRanges object (if the DS contain the GRanges
+#'     information for each gene) with the test results and original count
+#'     matrix, plus control and treatment signal densities and their variation.
+#'
+#' @examples
+#'     countData <- matrix(1:40,ncol = 4)
+#'     condition <- factor(c("A","A","B","B"))
+#'     dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
+#'                                 ~ condition)
+#'     countTest(dds)
+#'
+#' @importFrom parallel mclapply
+#' @importFrom stats p.adjust
+#' @importFrom DESeq2 dispersions sizeFactors<- estimateDispersions counts
+#'     estimateDispersionsGeneEst estimateSizeFactors sizeFactors
+#' @importFrom S4Vectors DataFrame
+#' @importFrom IRanges width
+#'
+#' @export
+countTest <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
+                      minCountPerIndv=3, maxGrpCV=NULL, FilterLog2FC=TRUE,
+                      pAdjustMethod="BH", pvalCutOff=0.05, MVrate=0.98,
+                      Minlog2FC=0.5, test = c("Wald", "LRT"), scaling =1L,
+                      saveAll=FALSE, verbose=TRUE ) {
+
+   group <- DS@colData$condition
+   lev <- levels(group)
+
+   if (countFilter) {
+       ## Remove var == 0 positions
+       dc <- counts(DS, normalized=FALSE )
+       vars <- apply(dc, 1, var)
+       DS <- DS[which(vars > 0)]
+
+       ## Each gene must have more than 'minCountPerIndv' read-counts
+       ## per individual in at least one group
+       dc <- counts(DS, normalized=FALSE)
+       g1 <- which(lev[1] ==  group)
+       g2 <- which(lev[2] ==  group)
+       m1 <- rowMeans(dc[ ,g1])
+       m2 <- rowMeans(dc[ ,g2])
+       idx <- which(m1 >= minCountPerIndv |
+                   m2 >= minCountPerIndv)
+       if (length(idx) == 0)
+           stop("* No genomic region passed the 'minCountPerIndv' \n",
+               "filtering conditions")
+       DS <- DS[idx];
+       dc <- counts(DS, normalized=FALSE )
+
+       if (!is.null(CountPerBp) && class(DS@rowRanges) == "GRanges") {
+       ## For each group the count per hundred bp must be equal or greater
+       ## than CountPerHundredBp
+           size <- width(DS)
+           idx <- which((unname((rowMeans(dc[,g1])) / size) >= CountPerBp) |
+                       (unname((rowMeans(dc[,g2])) / size) >= CountPerBp))
+           if (length(idx) == 0)
+               stop("* No genomic region passed the 'CountPerBp' \n",
+                   "filtering conditions")
+           DS <- DS[idx]
+           dc <- counts(DS, normalized=FALSE )
+       }
+       if (verbose)
+           message("*** Number of GR after filtering counts ", length(idx))
+   }
+   sf <- .computeSizeFactors(DS)
+   sizeFactors(DS) <- sf
+
+   X <- floor(counts(DS) * sf)
+   if (verbose) message("*** Estimating dispersion...")
+   adds <- try(estimateDispersions(DS, fitType="local", maxit=10^8),
+               silent=TRUE)
+   if (!inherits(adds, "try-error")) {
+       disp <- dispersions( adds )
+   } else {
+       DS <- estimateSizeFactors(DS)
+       adds <- try(estimateDispersions(DS, fitType='local', maxit=10^8),
+                   silent=TRUE)
+       if (!inherits(adds, "try-error")) {
+           disp <- dispersions(adds)
+       } else {
+           DS <- estimateDispersionsGeneEst(DS)
+           disp <- dispersions(DS)
+       }
+       sf <- sizeFactors(DS)
+       X <- floor(counts(DS) * sf)
+   }
+
+   baseMeanAndVar <- .getBaseMeansAndVariances(X, sf)
+   m1 <- rowMeans(log(X[ ,group == lev[1]] + 1))
+   m2 <- rowMeans(log(X[ ,group == lev[2]] + 1))
+   ## Var = mean + dispersion * mean ^ 2
+   ## weights
+   ## w = 1 / (baseMeanAndVar$baseMean + disp * baseMeanAndVar$baseMean ^ 2)
+   if(!is.null(disp)) {
+       w1 <- 1 / (m1 + disp * m1 ^ 2) # weights
+       w2 <- 1 / (m2 + disp * m2 ^ 2)
+   } else {
+       d1 <- apply(log(X[ ,group == lev[1]] + 1), 1, var)
+       d2 <- apply(log(X[ ,group == lev[2]] + 1), 1, var)
+       w1 <- 1 / (m1 + d1 * m1 ^ 2) # weights
+       w2 <- 1 / (m2 + d2 * m2 ^ 2)
+   }
+   w1[is.infinite(w1)] <- 1
+   w2[is.infinite(w2)] <- 1
+   w <- cbind(w1, w2)
+   if (verbose) message("*** GLM...")
+   if (num.cores == 1) {
+       tests = c()
+       for (k in 1:nrow(X)) {
+           if (verbose) message("*** Processing sample", k, "\n")
+           tests <- rbind(tests, .estimateGLM(x=X[k, ], groups=group,
+                                       baseMV=baseMeanAndVar[k, ],
+                                       w=w[k, ], MVrate=MVrate, test=test[1]))
+       }
+   }
+   if (num.cores > 1) {
+       tests <- mclapply(1:nrow(X),
+                       function(k) .estimateGLM(x=X[k, ], groups=group,
+                                               baseMV=baseMeanAndVar[k, ],
+                                               w=w[k, ], MVrate=MVrate,
+                                               test=test[1]),
+                       mc.cores=num.cores)
+       tests=do.call(rbind, tests)
+   }
+
+   DS@elementMetadata <- DataFrame(tests)
+   ## DS = cbind( counts(DS), test)
+   DS <- DS[!is.na(tests$log2FC)]
+
+   if (FilterLog2FC && is.null(pvalCutOff) && !saveAll) {
+       DS <- DS[abs(DS@elementMetadata$log2FC) > Minlog2FC]
+   }
+   if (!is.null(pvalCutOff) && !saveAll) {
+       if (FilterLog2FC) DS <- DS[abs(DS@elementMetadata$log2FC) > Minlog2FC, ]
+       DS@elementMetadata$adj.pval <- p.adjust(DS@elementMetadata$pvalue,
+                                           method=pAdjustMethod)
+       DS <- DS[DS@elementMetadata$adj.pval < pvalCutOff, ]
+   } else {
+       if (!is.null(pvalCutOff) && saveAll) {
+           DS@elementMetadata$adj.pval <- p.adjust(DS@elementMetadata$pvalue,
+                                               method=pAdjustMethod)
+           if (FilterLog2FC) {
+               idx <- which(abs(DS@elementMetadata$log2FC) > Minlog2FC)
+               pval <- DS@elementMetadata$pvalue[idx]
+               DS@elementMetadata$adj.pval[idx] <- p.adjust(pval,
+                                                       method=pAdjustMethod)
+           }
+       }
+   }
+   if (!is.null(maxGrpCV)) {
+       if (length(maxGrpCV) == 1 && is.numeric(maxGrpCV))
+           maxGrpCV = c(maxGrpCV, maxGrpCV)
+       dc <- counts(DS, normalized=FALSE)
+       if (nrow(dc) > 1) {
+           g1 <- which(lev[1] ==  group)
+           g2 <- which(lev[2] ==  group)
+           m1 <- rowMeans(dc[ ,g1])
+           m2 <- rowMeans(dc[ ,g2])
+           m1 <- sapply(m1, function(x) max(x,1)) # mean = 0 undefine the CV
+           m2 <- sapply(m2, function(x) max(x,1))
+           cv1 <- apply(dc[ ,g1], 1, sd)/m1
+           cv2 <- apply(dc[ ,g2], 1, sd)/m2
+       } else {
+           m1 <- max(mean(dc[ ,g1]), 1)
+           m2 <- max(mean(dc[ ,g2]), 1)
+           cv1 <- sd(dc[ ,g1])/m1
+           cv2 <- sd(dc[ ,g2])/m2
+       }
+       idx <- intersect(which(cv1 <= maxGrpCV[1]),
+                           which(cv2 <= maxGrpCV[2]))
+       if (length(idx) == 0)
+           stop("* No genomic region passed the 'maxGrpCV' \n",
+                   "filtering conditions")
+       DS <- DS[idx]
+       rm(m1,m2,cv1,cv2,dc); gc()
+   }
+   if (class(DS@rowRanges) == "GRanges") {
+       GR <- DS@rowRanges
+       dc <- counts(DS, normalized=FALSE)
+       g1 <- which(lev[1] ==  group)
+       g2 <- which(lev[2] ==  group)
+       size <- width(GR)
+       CT.CountPerBp <- unname((rowSums(dc[ ,g1]) / length(g1)) / size)
+       TT.CountPerBp <- unname((rowSums(dc[ ,g2]) / length(g2)) / size)
+       mcols(GR) <- data.frame(counts(DS), DS@elementMetadata,
+                               CT.SignalDensity=(scaling * CT.CountPerBp),
+                               TT.SignalDensity=(scaling * TT.CountPerBp),
+                               SignalDensityVariation=scaling *
+                                   (TT.CountPerBp - CT.CountPerBp))
+       res <- GR[order(as.factor(seqnames(GR)), start(GR)), ]
+   } else {
+       res <- cbind(counts(DS), DS@elementMetadata)
+   }
+   return(res)
+}
