@@ -49,7 +49,12 @@ Install R dependencies:
 You can install MethylIT from PSU's GitLab
 
     install.packages("devtools")
+    devtools::install_git("https://github.com/genomaths/MethylIT.git")
+    Or 
     devtools::install_git("https://git.psu.edu/genomath/MethylIT.git")
+    
+   
+    
 
 Flow diagram
 ------------
