@@ -1,0 +1,15 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+/*.Rcheck/
+/*.tar.gz
+*-Ex.R
+.Rapp.history
+.httr-oauth
+/*_cache/
+/cache/
+*.utf8.md
+*.knit.md
+.Rproj.user
+
