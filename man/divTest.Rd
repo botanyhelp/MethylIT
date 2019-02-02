@@ -14,11 +14,11 @@ divTest(GR, control.names, treatment.names, glm.family = Gamma(link =
 }
 \arguments{
 \item{GR}{GRanges objects including control and treatment samples containing
-an information divergence of methylation levels. The names for each 
-column must coincide with the names given for parameters: 
+an information divergence of methylation levels. The names for each
+column must coincide with the names given for parameters:
 'control.names' and 'treatment.names'.}
 
-\item{control.names}{Names/IDs of the control samples, which must be 
+\item{control.names}{Names/IDs of the control samples, which must be
 included in the variable GR in a metacolumn.}
 
 \item{treatment.names}{Names/IDs of the treatment samples, which must be
@@ -27,19 +27,19 @@ included in the variable GR in a metacolumn.}
 \item{glm.family, link}{Parameter to be passed to function
 \code{\link[stats]{glm}}. A description of the error distribution and
 link function to be used in the model. For \code{\link[stats]{glm}} this
-can be a character string naming a family function, or the result of a 
-call to a family function. For \code{\link[stats]{glm}}.fit only the 
-third option is supported. (See\code{\link[stats]{family}} function). 
+can be a character string naming a family function, or the result of a
+call to a family function. For \code{\link[stats]{glm}}.fit only the
+third option is supported. (See\code{\link[stats]{family}} function).
 Default: glm.family=Gamma(link ="log").}
 
-\item{var.weights}{Logical (default: FALSE). Whether to use group variances 
+\item{var.weights}{Logical (default: FALSE). Whether to use group variances
 as weights.}
 
 \item{weights}{An optional list of two numeric vectors of ‘prior weights’ to
-be used in the fitting process. One vector of weights for the control 
+be used in the fitting process. One vector of weights for the control
 and one for the treatment. Each vector with length equal to length(GR)
 (default: NULL). Non-NULL weights can be used to indicate that different
-observations have different dispersions (with the values in weights 
+observations have different dispersions (with the values in weights
 being inversely proportional to the dispersions).}
 
 \item{varFilter}{Numeric (default: 0). GLM will be performed only for those
@@ -74,10 +74,14 @@ if scaling = 1000, then signal density denotes the number of DIMPs in
 \item{pvalCutOff}{cutoff used then a p-value adjustment is performed}
 
 \item{saveAll}{if TRUE all the temporal results that passed filters
-'varFilter' and are 'meanFilter' returned. If FALSE, only the 
-comparisons that passed filters 'varFilter', 'meanFilter', and 
-pvalue < pvalCutOff or adj.pvalue < pvalCutOff (if pAdjustMethod is not 
+'varFilter' and are 'meanFilter' returned. If FALSE, only the
+comparisons that passed filters 'varFilter', 'meanFilter', and
+pvalue < pvalCutOff or adj.pvalue < pvalCutOff (if pAdjustMethod is not
 NULL) are returned.}
+
+\item{num.cores}{The number of cores to use, i.e. at most how many child
+processes will be run simultaneously (see
+\code{\link[BiocParallel]{bplapply}} function from BiocParallel).}
 
 \item{tasks}{integer(1). The number of tasks per job.  Value must be a scalar
 integer >= 0L. In this documentation a job is defined as a single call to
@@ -90,10 +94,6 @@ package).}
 \item{verbose}{if TRUE, prints the function log to stdout}
 
 \item{...}{Additional parameters passed to \code{\link[stats]{glm}} function.}
-
-\item{mc.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see
-\code{\link[BiocParallel]{bplapply}} function from BiocParallel).}
 }
 \value{
 The original GRanges object with the columns "beta", "log2FC",
@@ -103,8 +103,8 @@ The original GRanges object with the columns "beta", "log2FC",
 \description{
 Generalized Linear Model for group comparison of information
     divergence variables yielded by MethylIT output. Basically, this a
-    wrapping function to perform the fitting of generalized linear models 
-    with \code{\link[stats]{glm}} from 'stats' package to any variable of 
+    wrapping function to perform the fitting of generalized linear models
+    with \code{\link[stats]{glm}} from 'stats' package to any variable of
     interest given in GRanges objects of MethylIT output.
 }
 \details{
@@ -112,17 +112,15 @@ The default parameter setting glm.family = Gamma(link = "log") is
     thought to perform the group comparison of the sums of absolute
     differences of methylation levels (total variation distance (TVD) at
     gene-body DIMPs on DMGs). The sums of Hellinger divergence (HD, at
-    gene-body DIMPs on DMGs) can be tested with this setting as well. Both 
+    gene-body DIMPs on DMGs) can be tested with this setting as well. Both
     TVD and HD follow asymptotic Chi-square distribution and, consequently,
-    so do the sum of TVD and the sum of HD.  The Chi-square distribution is 
+    so do the sum of TVD and the sum of HD.  The Chi-square distribution is
     a particular case of Gamma distribution: \cr
         \deqn{f(x|a,s) = 1/(s^a Gamma(a)) x^(a-1) e^-(x/s)}
     Chi-square density is derived after replacing a = n/2 and s = 2: \cr
         \deqn{f(x|n) = 1/(2^(n/2) Γ(n/2)) x^(n/2-1) e^(-x/2)}
 }
 \examples{
-num.cyt <- 11001 #' Number of cytosine position with methylation call
-max.cyt = 14000
 ## Gene annotation
 genes <- GRanges(seqnames = "1",
                  ranges = IRanges(start = c(3631, 6788, 11649),
@@ -130,71 +128,49 @@ genes <- GRanges(seqnames = "1",
                  strand = c("+", "-", "-"))
 mcols(genes) <- data.frame(gene_id = c("AT1G01010", "AT1G01020",
                                        "AT1G01030"))
+# === The number of cytosine sites to generate ===
+sites = 11001
+# == Set a seed for pseudo-random number generation ===
+set.seed(123)
+alpha.ct <- 0.09
+alpha.tt <- 0.2
+# === Simulate samples ===
+ref = simulateCounts(num.samples = 2, sites = sites, alpha = alpha.ct,
+                   beta = 0.5, size = 50, theta = 4.5, sample.ids = "R1")
 
-set.seed(123) #''#'' To set a seed for random number generation
-## GRanges object of the reference with methylation levels in
-## its meta-column
-Ref <- makeGRangesFromDataFrame(
-  data.frame(chr = '1',
-             start = 3000:max.cyt,
-             end = 3000:max.cyt,
-             strand = '*',
-             p1 = rbeta(num.cyt, shape1 = 1, shape2 = 1.5)),
-  keep.extra.columns = TRUE)
+# Control group
+ctrl = simulateCounts(num.samples = 2, sites = sites, alpha = alpha.ct,
+                       beta = 0.5, size = 50, theta = 4.5,
+                       sample.ids = c("C1", "C2"))
+# Treatment group
+treat = simulateCounts(num.samples = 2, sites = sites, alpha = alpha.tt,
+                        beta = 0.5, size = 50, theta = 4.5,
+                        sample.ids = c("T1", "T2"))
 
-## List of Granges objects of individuals methylation levels
-Indiv <- GRangesList(
-  sample11 = makeGRangesFromDataFrame(
-    data.frame(chr = '1',
-               start = 3000:max.cyt,
-               end = 3000:max.cyt,
-               strand = '*',
-               p2 = rbeta(num.cyt, shape1 = 1.5, shape2 = 2)),
-    keep.extra.columns = TRUE),
-  sample12 = makeGRangesFromDataFrame(
-    data.frame(chr = '1',
-               start = 3000:max.cyt,
-               end = 3000:max.cyt,
-               strand = '*',
-               p2 = rbeta(num.cyt, shape1 = 1.6, shape2 = 2.1)),
-    keep.extra.columns = TRUE),
-  sample21 = makeGRangesFromDataFrame(
-    data.frame(chr = '1',
-               start = 3000:max.cyt,
-               end = 3000:max.cyt,
-               strand = '*',
-               p2 = rbeta(num.cyt, shape1 = 10, shape2 = 4)),
-    keep.extra.columns = TRUE),
-  sample22 = makeGRangesFromDataFrame(
-    data.frame(chr = '1',
-               start = 3000:max.cyt,
-               end = 3000:max.cyt,
-               strand = '*',
-               p2 = rbeta(num.cyt, shape1 = 11, shape2 = 4)),
-    keep.extra.columns = TRUE))
-## To estimate Hellinger divergence using only the methylation levels.
-HD <- estimateDivergence(ref = Ref, indiv = Indiv, meth.level = TRUE,
-                         columns = 1)
-## To perform the nonlinear regression analysis
+#  === Estime Divergences ===
+HD = estimateDivergence(ref = ref$R1, indiv = c(ctrl, treat),
+                        Bayesian = TRUE, num.cores = 1L, percentile = 1,
+                        verbose = FALSE)
+
 nlms <- nonlinearFitDist(HD, column = 4, verbose = FALSE)
 
 ## Next, the potential signal can be estimated
 PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 4, alpha = 0.05)
 
 ## The cutpoint estimation used to discriminate the signal from the noise
-cutpoints <- estimateCutPoint(PS, control.names = c("sample11", "sample12"),
-                              treatment.names = c("sample21", "sample22"),
-                              div.col = 4, verbose = TRUE)
+cutpoints <- estimateCutPoint(PS, control.names = c("C1", "C2"),
+                              treatment.names = c("T1", "T2"),
+                              div.col = 4, verbose = FALSE)
 ## DIMPs are selected using the cupoints
-DIMPs <- selectDIMP(PS, div.col = 4, cutpoint = min(cutpoints$cutpoint))
+DIMPs <- selectDIMP(PS, div.col = 9, cutpoint = min(cutpoints$cutpoint))
 
 ## Finally DIMPs statistics genes
 tv_DIMPs = getGRegionsStat(GR = DIMPs, grfeatures = genes, stat = "sum",
-                           absolute = TRUE, column = 3L)
+                           absolute = TRUE, column = 7L)
 
 GR_tv_DIMP = uniqueGRanges(tv_DIMPs, type = "equal", chromosomes = "1")
-colnames(mcols(GR_tv_DIMP)) <-  c("sample11", "sample12", "sample21",
-                                  "sample22")
-divTest(GR=GR_tv_DIMP, control.names = c("sample11", "sample12"),
-          treatment.names = c("sample21", "sample22"))
+colnames(mcols(GR_tv_DIMP)) <-  c("C1", "C2", "T1", "T2")
+
+res <- divTest(GR=GR_tv_DIMP, control.names =  c("C1", "C2"),
+               treatment.names = c("T1", "T2"))
 }

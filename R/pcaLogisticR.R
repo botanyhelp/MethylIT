@@ -22,14 +22,16 @@
 #' @return
 #'     Function 'pcaLogisticR' returns an object ('pcaLogisticR' class)
 #'     containing a list of two objects:
-#'         1) 'logistic': an object of class 'glm' from package 'stats'.
-#'         2) 'pca': an object of class 'prcomp' from package 'stats'.
-#'         3) reference.level: response level used as reference.
-#'         4) positive.level: response level that corresponds to a "positive"
+#'     \enumerate{
+#'         \item 'logistic': an object of class 'glm' from package 'stats'.
+#'         \item 'pca': an object of class 'prcomp' from package 'stats'.
+#'         \item reference.level: response level used as reference.
+#'         \item positive.level: response level that corresponds to a "positive"
 #'             result. When type = "response", the probability vector returned
 #'             correspond to the probabilities of each individual to be a
 #'             result, i.e., the probability to belong to the class of positive
 #'             level.
+#'     }
 #'     For information on how to use these objects see ?glm and ?prcomp.
 #'
 #' @examples

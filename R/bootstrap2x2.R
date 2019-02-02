@@ -5,10 +5,32 @@
 #'     goodness of fit statistic is the root-mean-square statistic (RMST) or
 #'     Hellinger divergence, as proposed by Perkins et al. [1, 2]. Hellinger
 #'     divergence (HD) is computed as proposed in [3].
+#'
 #' @param x A numerical matrix corresponding to cross tabulation (2x2) table
 #'     (contingency table).
-#' @param stat Statistic to be used in the testing: 'RMST' or 'HD'
+#' @param stat Statistic to be used in the testing: 'rmst','hdiv', or "all".
 #' @param num.permut Number of permutations.
+#'
+#' @details For goodness-of-fit the following null hypothesis is tested
+#'     \eqn{H_\theta: p = p(\theta)}
+#'     To conduct a single simulation, we perform the following three-step
+#'      procedure [1,2]:
+#' \enumerate{
+#'     \item To generate m i.i.d. draws according to the model distribution
+#'           \eqn{p(\theta)}, where \eqn{\theta'} is the estimate calculated
+#'           from the experimental data,
+#'     \item To estimate the parameter \eqn{\theta} from the data generated in
+#'           Step 1, obtaining a new estimate \eqn{\theta}est.
+#'     \item To calculate the statistic under consideration (HD,
+#'           RMST), using the data generated in Step 1 and taking the model
+#'           distribution to be \eqn{\theta}est, where \eqn{\theta}est is the
+#'           estimate calculated in Step 2 from the data generated in Step 1.
+#' }
+#'     After conducting many such simulations, the confidence level for
+#'     rejecting the null hypothesis is the fraction of the statistics
+#'     calculated in step 3 that are less than the statistic calculated from
+#'     the empirical data. The significance level α is the same as a confidence
+#'     level of \eqn{1-\alpha}.
 #'
 #' @return A p-value probability
 #'
@@ -20,15 +42,18 @@
 #'     ## Small num.permut for test's speed sake
 #'     bootstrap2x2( TeaTasting, stat = "all", num.permut = 100 )
 #' @references
-#'     1. Perkins W, Tygert M, Ward R. and Classical Exact Tests Often
-#'         Wildly Misreport Significance; the Remedy Lies in Computers
-#'         [Internet]. Uploaded to ArXiv. 2011. Report No.: arXiv:1108.4126v2.
-#'     2. Perkins, W., Tygert, M. & Ward, R. Computing the confidence levels
-#'         for a root-mean square test of goodness-of-fit. 217, 9072-9084
-#'         (2011).
-#'     3. Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two discrete
-#'         populations based on the Hellinger distance. Stat. Probab. Lett. 80,
-#'         206-214 (2010).
+#' \enumerate{
+#'     \item Perkins W, Tygert M, Ward R. Chi^2 and Classical Exact Tests
+#'           Often Wildly Misreport Significance; the Remedy Lies in Computers
+#'           [Internet]. Uploaded to ArXiv. 2011. Report No.:
+#'           arXiv:1108.4126v2.
+#'     \item Perkins, W., Tygert, M. & Ward, R. Computing the confidence
+#'           levels or a root-mean square test of goodness-of-fit. 217,
+#'           9072-9084 (2011).
+#'     \item Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two
+#'           discrete populations based on the Hellinger distance. Stat.
+#'           Probab. Lett. 80, 206-214 (2010).
+#' }
 #' @export
 bootstrap2x2 <- function(x, stat="rmst", num.permut=100) {
    HD <- function(x, y) {

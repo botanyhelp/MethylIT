@@ -37,7 +37,7 @@
 #'     NULL all the reported p-values are for testing.
 #' @param Minlog2FC minimum logarithm base 2 of fold changes.
 #' @param saveAll if TRUE all the temporal results are returned.
-#' @param mc.cores The number of cores to use, i.e. at most how many child
+#' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bpapply function from
 #'     BiocParallel).
 #' @param tasks integer(1). The number of tasks per job. value must be a scalar
@@ -49,6 +49,7 @@
 #' @param verbose if TRUE, prints the function log to stdout
 #' @importFrom betareg betareg
 #' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom stats quasibinomial coefficients
 #' @return The original GRanges object with the columns "beta", "log2FC",
 #'     "pvalue", and TV added.
 #' @examples

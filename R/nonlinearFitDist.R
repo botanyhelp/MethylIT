@@ -123,7 +123,7 @@
 #' nlms4 <- nonlinearFitDist(HD, column = 1, dist.name = "GGamma3P",
 #'         verbose = FALSE)
 #'
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom GenomicRanges GRanges GRangesList mcols
 #'
 #' @export
@@ -181,7 +181,11 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,
                verbose=verbose)
    } else {
-       bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       if (Sys.info()['sysname'] == "Linux") {
+         bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else {
+         bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+       }
        x <- bplapply(1:length(LR), toFit, sample.size=sample.size,
                  npoints=npoints, npoints0=npoints0, maxiter=maxiter,
                  tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,

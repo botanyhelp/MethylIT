@@ -8,7 +8,7 @@ countTest2(DS, num.cores = 1, countFilter = TRUE, CountPerBp = NULL,
   minCountPerIndv = 3, maxGrpCV = NULL, FilterLog2FC = TRUE,
   pAdjustMethod = "BH", pvalCutOff = 0.05, MVrate = 0.98,
   Minlog2FC = 0.5, test = c("Wald", "LRT"), scaling = 1L,
-  saveAll = FALSE, verbose = TRUE)
+  tasks = 0L, saveAll = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{DS}{DESeqDataSet object}
@@ -65,6 +65,13 @@ signal density as: scaling * "DIMP-Count-Per-Bp". For example,
 if scaling = 1000, then signal density denotes the number of DIMPs in
  1000 bp.}
 
+\item{tasks}{Only for Linux OS. integer(1). The number of tasks per job.
+value must be a scalar integer >= 0L. In this documentation a job is
+defined as a single call to a function, such as bplapply, bpmapply etc.
+A task is the division of the X argument into chunks. When tasks == 0
+(default), X is divided as evenly as possible over the number of workers
+(see MulticoreParam from BiocParallel package).}
+
 \item{saveAll}{if TRUE all the temporal results are returned}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
@@ -86,6 +93,14 @@ Perform Poisson and Negative Binomial regression analysis to
     condition <- factor(c("A","A","B","B"))
     dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
                                 ~ condition)
-    countTest(dds)
+    countTest2(dds, verbose = FALSE)
+
+    # Parallel computation. Package 'BiocParallel' must be installed
+    # set.seed(133)
+    # countData <- matrix(sample.int(200, 10000, replace = TRUE), ncol = 4)
+    # condition <- factor(c("A","A","B","B"))
+    # dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
+                            ~ condition)
+    # countTest2(dds, num.cores = 4L)
 
 }

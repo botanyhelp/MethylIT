@@ -12,7 +12,8 @@ uniqueGRanges(ListOfGranges, ncols = NULL, columns = NULL,
 }
 \arguments{
 \item{ListOfGranges}{Objects to combine. A list of GRanges object or a
-GRangesList object.}
+GRangesList object. The metacolumn names must be the same for all the
+GRanges objects in the list.}
 
 \item{ncols}{integer. Number of columns to use from the meta-column of each
 GRanges object. Default value: NULL. If NULL, all the columns (from

@@ -29,6 +29,9 @@ for the the magnitude given in div.col or in pval.col, respectively
 (see below). The values greater than 'cutoff' are predicted TRUE
 (positives), otherwise are predicted FALSE (negatives).}
 
+\item{tv.col}{Column number for the total variation distance (TVD; absolute
+value of methylation levels differences, \eqn{TVD = abs(TV)}).}
+
 \item{div.col}{Column number for divergence variable used in the performance
 analysis and estimation of the cutpoints. Default: NULL. One of the
 parameter values div.col or pval.col must be given.}

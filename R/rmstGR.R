@@ -17,11 +17,24 @@
 #'     Each GRanges object from the list must have two columns: methylated
 #'     (mC) and unmethylated (uC) counts. The name of each element from the
 #'     list must coincide with a control or a treatment name.
+#' @param count.col 2d-vector of integers with the indexes of the read count
+#'     columns. If not given, then it is asssumed that the methylated and
+#'     unmethylated read counts are located in columns 1 and 2 of each GRanges
+#'     metacolumns. If object LR is the output of Methyl-IT function
+#'     \code{\link[MethylIT]{estimateDivergence}}, then columns 1:4 are the read
+#'     count columns: columns 1 and 2 are methylated and unmethylated read
+#'     counts from the reference group, while columns 3 and 4 are methylated and
+#'     unmethylated read counts from the treatment group, respectively. In this
+#'     case, if the requested comparison is reference versus treatment, then no
+#'     specification is needed for count.col. The comparison control versus
+#'     treatment can be obtained by setting count.col = 3:4 and providing
+#'     control.names and treatment.names.
 #' @param control.names Names/IDs of the control samples, which must be include
 #'     in the variable GR at the metacolumn.
 #' @param treatment.names Names/IDs of the treatment samples, which must be
 #'     included in the variable GR at the metacolumn.
-#' @param stat Statistic to be used in the testing: 'RMST' or 'HD'
+#' @param stat Statistic to be used in the testing: 'rmst' (root mean square
+#'     test) or 'hdiv' (Hellinger divergence test).
 #' @param pooling.stat statistic used to estimate the methylation pool: row sum,
 #'     row mean or row median of methylated and unmethylated read counts across
 #'     individuals. If the number of control samples is greater than 2 and
@@ -50,7 +63,7 @@
 #' @param ... Additional parameters for function
 #'     \code{\link[uniqueGRanges]{MethylIT}}.
 #'
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
 #' @return A GRanges object with the original sample counts, bootstrap p-value
 #'     probability, total variation (difference of methylation levels), and
@@ -59,7 +72,7 @@
 #' @examples
 #' #' A list of GRanges
 #' set.seed(123)
-#' sites = 50
+#' sites = 15
 #' data <- list(
 #'   C1 = data.frame(chr = "chr1", start = 1:sites,
 #'                   end = 1:sites,strand = '*',
@@ -84,25 +97,28 @@
 #'
 #' rmstGR(LR = data, control.names = c("C1", "C2"),
 #'        treatment.names = c("T1", "T2"),
-#'        tv.cut = 0.25, num.permut = 200, pAdjustMethod="BH",
+#'        tv.cut = 0.25, num.permut = 100, pAdjustMethod="BH",
 #'        pvalCutOff = 0.05, num.cores = 4L, verbose=TRUE)
 #' @references
-#'     1. Perkins W, Tygert M, Ward R. and Classical Exact Tests Often
-#'         Wildly Misreport Significance; the Remedy Lies in Computers
+#'     \enumerate{
+#'         \item Perkins W, Tygert M, Ward R. Chi-square and Classical Exact
+#'         Tests Often Wildly Misreport Significance; the Remedy Lies in
+#'         Computers.
 #'         [Internet]. Uploaded to ArXiv. 2011. Report No.: arXiv:1108.4126v2.
-#'     2. Perkins, W., Tygert, M. & Ward, R. Computing the confidence levels
-#'         for a root-mean square test of goodness-of-fit. 217, 9072-9084
+#'         \item Perkins, W., Tygert, M. & Ward, R. Computing the confidence
+#'         levels for a root-mean square test of goodness-of-fit. 217, 9072-9084
 #'         (2011).
-#'     3. Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two discrete
-#'         populations based on the Hellinger distance. Stat. Probab. Lett. 80,
-#'         206-214 (2010).
+#'         \item Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two
+#'         discrete populations based on the Hellinger distance. Stat. Probab.
+#'         Lett. 80, 206-214 (2010).
+#'     }
 #'
 #' @seealso \code{\link[MethylIT]{FisherTest}}
 #' @export
-rmstGR <- function(LR, control.names, treatment.names, stat="rmst",
-                   pooling.stat = "sum", tv.cut=NULL, num.permut=100,
-                   pAdjustMethod="BH", pvalCutOff=0.05, saveAll=FALSE,
-                   num.cores=1L, tasks=0L, verbose=TRUE, ...) {
+rmstGR <- function(LR, count.col=1:2, control.names, treatment.names,
+                   stat="rmst", pooling.stat = "sum", tv.cut=NULL,
+                   num.permut=100, pAdjustMethod="BH", pvalCutOff=0.05,
+                   saveAll=FALSE, num.cores=1L, tasks=0L, verbose=TRUE, ...) {
    if (inherits(LR, "list")) LR <- try(as(LR, "GRangesList"))
    if (inherits(LR, "try-error"))
        stop("LR is not list of GRanges objects")
@@ -113,26 +129,10 @@ rmstGR <- function(LR, control.names, treatment.names, stat="rmst",
    }
    LR = try(LR[c(control.names, treatment.names)], silent=TRUE)
    if (inherits(LR, "try-error"))
-     stop("List's names does not match control & treatment names")
+       stop("List's names does not match control & treatment names")
 
    # === Auxiliar function to perform RMST ===
-   rmst <- function(LR, ctrl.ns, treat.ns) {
-       if(length(ctrl.ns) > 2) {
-           if (verbose)
-               cat("*** # of control samples is > 2. Pooling samples ...", "\n")
-               ctrl <- poolFromGRlist(LR[ctrl.ns], stat=pooling.stat,
-                               num.cores=num.cores, verbose=verbose)
-       } else ctrl <- LR[ctrl.ns][[1]]
-
-       if(length(treat.ns) > 2) {
-           if (verbose)
-               cat("*** # of treatment samples is > 2. Pooling samples ...",
-                   "\n")
-       treat <- poolFromGRlist(LR[treat.ns], stat=pooling.stat,
-                               num.cores=num.cores, verbose=verbose)
-       } else  treat <- LR[treat.ns][[1]]
-
-       GR = uniqueGRanges(list(ctrl, treat), ...)
+   rmst <- function(GR, ctrl.ns, treat.ns) {
        count.matrix = as.matrix(mcols(GR))
        p1 <- count.matrix[, 1:2]
        p1 <- p1[, 1]/rowSums(p1)
@@ -144,20 +144,24 @@ rmstGR <- function(LR, control.names, treatment.names, stat="rmst",
            idx <- which(abs(TV) >= tv.cut)
            count.matrix = as.matrix(mcols(GR[idx]))
        } else count.matrix = as.matrix(mcols(GR))
-       sites = nrow(count.matrix)
-       GR$TV <- TV
-       GR$pvalue <- rep(1, length(GR))
-       GR$adj.pval <- rep(1, length(GR))
-       count.matrix=split(count.matrix, row(count.matrix))
-
+           count.matrix = count.matrix[, 1:4]
+           sites = nrow(count.matrix)
+           GR$TV <- TV
+           GR$pvalue <- rep(1, length(GR))
+           GR$adj.pval <- rep(1, length(GR))
+           count.matrix = count.matrix[, 1:4]
+           count.matrix=split(count.matrix, row(count.matrix))
        if (verbose)
-           cat("*** Performing bootstrap analysis for contingence table... \n
+           cat("*** Performing", stat, "test... \n
                # of sites after filtering: ", sites, "\n")
-           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
-           pvals <- unname(unlist(bplapply(count.matrix, function(v) {
-               m=matrix(as.integer(v), 2, byrow = TRUE)
-               bootstrap2x2(x=m, stat=stat, num.permut=num.permut)},
-               BPPARAM=bpparam)))
+       if (Sys.info()['sysname'] == "Linux") {
+               bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+
+       pvals <- unname(unlist(bplapply(count.matrix, function(v) {
+                   m=matrix(as.integer(v), 2, byrow = TRUE)
+                   bootstrap2x2(x=m, stat=stat, num.permut=num.permut)},
+                   BPPARAM=bpparam)))
 
        if (!is.null(tv.cut) && !saveAll) {
            GR <- GR[idx]
@@ -165,42 +169,65 @@ rmstGR <- function(LR, control.names, treatment.names, stat="rmst",
            GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
        } else {
            if (!is.null(tv.cut) && saveAll) {
-              GR$pvalue[idx] <- pvals
-              GR$adj.pval[idx] <- p.adjust(pvals, method=pAdjustMethod)
+               GR$pvalue[idx] <- pvals
+               GR$adj.pval[idx] <- p.adjust(pvals, method=pAdjustMethod)
            }
            if (is.null(tv.cut) && saveAll) {
-              GR$pvalue <- pvals
-              GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
+               GR$pvalue <- pvals
+               GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
            }
        }
 
        if (!is.null(pvalCutOff) && !saveAll) {
            GR <- GR[ GR$adj.pval < pvalCutOff ]
        }
-
        return(GR)
    }
 
-   if (!is.null(pooling.stat) && length(LR) > 2) {
-       res <- rmst(LR=LR, ctrl.ns=control.names, treat.ns=treatment.names)
-   } else {
-       ctrl.ns = control.names
-       treat.ns = treatment.names
-       res = list()
-       i = 1
-       test.name = c()
-       for(k in 1:length(ctrl.ns)){
-           for (j in 1:length(treat.ns)) {
-               test.name = c(test.name, paste0(ctrl.ns[k], ".", treat.ns[j]))
-               if (verbose)
-                   cat("*** Testing",
-                       paste0(ctrl.ns[k], " versus ", treat.ns[j]), "\n")
-               res[[i]]=rmst(LR=LR, ctrl.ns=control.names[j],
-                               treat.ns=treatment.names[k])
-               i = i + 1
+   if (is.null(control.names) || is.null(treatment.names)) {
+       res <- lapply(LR, function(GR) rmst(GR, ctrl=FALSE, treat=FALSE, ...) )
+   }
+
+   if (!is.null(control.names)&&!is.null(treatment.names)) {
+       ctrl <- LR[control.names]
+       ctrl <- lapply(ctrl, function(GR) {
+           GR <- GR[, count.col]
+           colnames(mcols(GR)) <- c("mC", "uC") # Control counts
+           return(GR)
+       })
+
+       treat <- LR[treatment.names]
+       treat <- lapply(treat, function(GR) {
+           GR <- GR[, count.col]
+           colnames(mcols(GR)) <- c("mC", "uC") # Control counts
+           return(GR)
+       })
+       if (!is.null(pooling.stat)) {
+           ctrl <- poolFromGRlist(ctrl, stat=pooling.stat,
+                           num.cores=num.cores, verbose=verbose)
+           treat <- poolFromGRlist(treat, stat=pooling.stat,
+                           num.cores=num.cores, verbose=verbose)
+           GR <- uniqueGRanges(list(ctrl, treat), verbose=verbose, ...)
+           res <- rmst(GR, ctrl=FALSE, treat=FALSE, ...)
+       } else {
+           res = list()
+           i = 1
+           test.name = c()
+           for(j in 1:length(ctrl)){
+               for (k in 1:length(treat)) {
+                   test.name = c(test.name, paste0(control.names[j], ".",
+                                           treatment.names[k]))
+                   GR <- uniqueGRanges(list(ctrl[[j]], treat[[k]]),
+                               verbose = verbose, ...)
+                   if (verbose)
+                       cat("*** Testing", paste0(control.names[k], " versus ",
+                                           treatment.names[j]), "\n")
+                   res[[i]]=rmst(GR, verbose = verbose, ...)
+                   i = i + 1
+               }
+               names(res) <- test.name
            }
        }
-       names(res) <- test.name
    }
    return(res)
 }

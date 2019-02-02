@@ -21,7 +21,7 @@
 #' @param theta Parameter theta from \code{\link[MASS]{rnegbin}}
 #'     (overdispersion parameter).
 #' @param sample.ids Names for the samples.
-#' @importFrom stats rbeta
+#' @importFrom stats rbeta rbinom
 #' @importFrom MASS rnegbin
 #' @return A list of GRanges objects with the methylated and unmethylated counts
 #'     in its metacolumn.

@@ -48,6 +48,12 @@
 #'     signal density as: scaling * "DIMP-Count-Per-Bp". For example,
 #'     if scaling = 1000, then signal density denotes the number of DIMPs in
 #'      1000 bp.
+#' @param tasks Only for Linux OS. integer(1). The number of tasks per job.
+#'     value must be a scalar integer >= 0L. In this documentation a job is
+#'     defined as a single call to a function, such as bplapply, bpmapply etc.
+#'     A task is the division of the X argument into chunks. When tasks == 0
+#'     (default), X is divided as evenly as possible over the number of workers
+#'     (see MulticoreParam from BiocParallel package).
 #' @param saveAll if TRUE all the temporal results are returned
 #' @param verbose if TRUE, prints the function log to stdout
 #
@@ -60,10 +66,18 @@
 #'     condition <- factor(c("A","A","B","B"))
 #'     dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
 #'                                 ~ condition)
-#'     countTest(dds)
+#'     countTest2(dds, verbose = FALSE)
 #'
-#' @importFrom parallel mclapply
-#' @importFrom stats p.adjust
+#'     # Parallel computation. Package 'BiocParallel' must be installed
+#'     # set.seed(133)
+#'     # countData <- matrix(sample.int(200, 10000, replace = TRUE), ncol = 4)
+#'     # condition <- factor(c("A","A","B","B"))
+#'     # dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
+#'                             ~ condition)
+#'     # countTest2(dds, num.cores = 4L)
+#'
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
+#' @importFrom stats p.adjust sd
 #' @importFrom DESeq2 counts
 #' @importFrom S4Vectors DataFrame
 #' @importFrom IRanges width
@@ -74,7 +88,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
                       minCountPerIndv=3, maxGrpCV=NULL, FilterLog2FC=TRUE,
                       pAdjustMethod="BH", pvalCutOff=0.05, MVrate=0.98,
                       Minlog2FC=0.5, test = c("Wald", "LRT"), scaling =1L,
-                      saveAll=FALSE, verbose=TRUE ) {
+                      tasks=0L, saveAll=FALSE, verbose=TRUE ) {
 
    group <- DS@colData$condition
    lev <- levels(group)
@@ -157,12 +171,17 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        }
    }
    if (num.cores > 1) {
-       tests <- mclapply(1:nrow(X),
+       if (Sys.info()['sysname'] == "Linux") {
+           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else {
+           bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+       }
+       tests <- bplapply(1:nrow(X),
                        function(k) .estimateGLM(x=X[k, ], groups=group,
                                                baseMV=baseMeanAndVar[k, ],
                                                w=w[k, ], MVrate=MVrate,
                                                test=test[1]),
-                       mc.cores=num.cores)
+                       BPPARAM=bpparam)
        tests=do.call(rbind, tests)
    }
 

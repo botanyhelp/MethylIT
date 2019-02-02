@@ -54,6 +54,10 @@ NULL all the reported p-values are for testing.}
 
 \item{saveAll}{if TRUE all the temporal results are returned.}
 
+\item{num.cores}{The number of cores to use, i.e. at most how many child
+processes will be run simultaneously (see bpapply function from
+BiocParallel).}
+
 \item{tasks}{integer(1). The number of tasks per job. value must be a scalar
 integer >= 0L. In this documentation a job is defined as a single call
 to a function, such as bplapply, bpmapply etc. A task is the division of
@@ -62,10 +66,6 @@ evenly as possible over the number of workers (see MulticoreParam from
 BiocParallel package).}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
-
-\item{mc.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see bpapply function from
-BiocParallel).}
 }
 \value{
 The original GRanges object with the columns "beta", "log2FC",

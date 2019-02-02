@@ -60,7 +60,7 @@
 #'     countTest(dds)
 #'
 #' @importFrom parallel mclapply
-#' @importFrom stats p.adjust
+#' @importFrom stats p.adjust sd
 #' @importFrom DESeq2 dispersions sizeFactors<- estimateDispersions counts
 #'     estimateDispersionsGeneEst estimateSizeFactors sizeFactors
 #' @importFrom S4Vectors DataFrame

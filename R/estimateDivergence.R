@@ -81,7 +81,7 @@
 #'     y <- makeGRangesFromDataFrame(y, keep.extra.columns = TRUE)
 #'     HD <- estimateDivergence(ref = x, indiv = list(y))
 #'
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom GenomicRanges GRanges GRangesList
 #'
 #' @export
@@ -93,7 +93,12 @@ estimateDivergence <- function(ref, indiv, Bayesian=FALSE, columns=NULL,
    if (is.null(columns) && (!meth.level)) columns <- 1:2
    if (meth.level && (is.null(columns))) columns <- 1
    sn <- names(indiv)
-   bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+
+   if (Sys.info()['sysname'] == "Linux") {
+       bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+   } else {
+       bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+   }
    if (meth.level) {
        x = bplapply(1:length(indiv), function(k, ref, indv, sn) {
            if (verbose) message("*** Processing sample #", k, " ", sn[k])

@@ -4,10 +4,10 @@
 \alias{rmstGR}
 \title{Root Mean Square Test for metadata in a list of GRanges objects}
 \usage{
-rmstGR(LR, control.names, treatment.names, stat = "rmst",
-  pooling.stat = "sum", tv.cut = NULL, num.permut = 100,
-  pAdjustMethod = "BH", pvalCutOff = 0.05, saveAll = FALSE,
-  num.cores = 1L, tasks = 0L, verbose = TRUE, ...)
+rmstGR(LR, count.col = 1:2, control.names, treatment.names,
+  stat = "rmst", pooling.stat = "sum", tv.cut = NULL,
+  num.permut = 100, pAdjustMethod = "BH", pvalCutOff = 0.05,
+  saveAll = FALSE, num.cores = 1L, tasks = 0L, verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -15,13 +15,27 @@ Each GRanges object from the list must have two columns: methylated
 (mC) and unmethylated (uC) counts. The name of each element from the
 list must coincide with a control or a treatment name.}
 
+\item{count.col}{2d-vector of integers with the indexes of the read count
+columns. If not given, then it is asssumed that the methylated and
+unmethylated read counts are located in columns 1 and 2 of each GRanges
+metacolumns. If object LR is the output of Methyl-IT function
+\code{\link[MethylIT]{estimateDivergence}}, then columns 1:4 are the read
+count columns: columns 1 and 2 are methylated and unmethylated read
+counts from the reference group, while columns 3 and 4 are methylated and
+unmethylated read counts from the treatment group, respectively. In this
+case, if the requested comparison is reference versus treatment, then no
+specification is needed for count.col. The comparison control versus
+treatment can be obtained by setting count.col = 3:4 and providing
+control.names and treatment.names.}
+
 \item{control.names}{Names/IDs of the control samples, which must be include
 in the variable GR at the metacolumn.}
 
 \item{treatment.names}{Names/IDs of the treatment samples, which must be
 included in the variable GR at the metacolumn.}
 
-\item{stat}{Statistic to be used in the testing: 'RMST' or 'HD'}
+\item{stat}{Statistic to be used in the testing: 'rmst' (root mean square
+test) or 'hdiv' (Hellinger divergence test).}
 
 \item{pooling.stat}{statistic used to estimate the methylation pool: row sum,
 row mean or row median of methylated and unmethylated read counts across
@@ -84,7 +98,7 @@ Samples from each group are pooled according to the statistic
 \examples{
 #' A list of GRanges
 set.seed(123)
-sites = 50
+sites = 15
 data <- list(
   C1 = data.frame(chr = "chr1", start = 1:sites,
                   end = 1:sites,strand = '*',
@@ -109,19 +123,22 @@ data = lapply(data,
 
 rmstGR(LR = data, control.names = c("C1", "C2"),
        treatment.names = c("T1", "T2"),
-       tv.cut = 0.25, num.permut = 200, pAdjustMethod="BH",
+       tv.cut = 0.25, num.permut = 100, pAdjustMethod="BH",
        pvalCutOff = 0.05, num.cores = 4L, verbose=TRUE)
 }
 \references{
-1. Perkins W, Tygert M, Ward R. and Classical Exact Tests Often
-        Wildly Misreport Significance; the Remedy Lies in Computers
+\enumerate{
+        \item Perkins W, Tygert M, Ward R. Chi-square and Classical Exact
+        Tests Often Wildly Misreport Significance; the Remedy Lies in
+        Computers.
         [Internet]. Uploaded to ArXiv. 2011. Report No.: arXiv:1108.4126v2.
-    2. Perkins, W., Tygert, M. & Ward, R. Computing the confidence levels
-        for a root-mean square test of goodness-of-fit. 217, 9072-9084
+        \item Perkins, W., Tygert, M. & Ward, R. Computing the confidence
+        levels for a root-mean square test of goodness-of-fit. 217, 9072-9084
         (2011).
-    3. Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two discrete
-        populations based on the Hellinger distance. Stat. Probab. Lett. 80,
-        206-214 (2010).
+        \item Basu, A., Mandal, A. & Pardo, L. Hypothesis testing for two
+        discrete populations based on the Hellinger distance. Stat. Probab.
+        Lett. 80, 206-214 (2010).
+    }
 }
 \seealso{
 \code{\link[MethylIT]{FisherTest}}

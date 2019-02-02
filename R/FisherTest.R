@@ -43,7 +43,7 @@
 #' @param pAdjustMethod method used to adjust the results; default: BH
 #' @param pvalCutOff cutoff used then a p-value adjustment is performed
 #' @param saveAll if TRUE all the temporal results are returned
-#' @param mc.cores The number of cores to use, i.e. at most how many child
+#' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bpapply function from
 #'     BiocParallel).
 #' @param tasks integer(1). The number of tasks per job. value must be a scalar
@@ -56,8 +56,9 @@
 #' @param ... Additional parameters for function
 #'     \code{\link[uniqueGRanges]{MethylIT}}.
 #'
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom stats fisher.test
 #' @return The input GRanges object with the columns of Fisher's exact test
 #'     p-value, total variation (difference of methylation levels), and
 #'     p-value adjusment.
@@ -65,7 +66,7 @@
 #' @examples
 #' #' A list of GRanges
 #' set.seed(123)
-#' sites = 50
+#' sites = 15
 #' data <- list(
 #'   C1 = data.frame(chr = "chr1", start = 1:sites,
 #'                   end = 1:sites,strand = '*',
@@ -90,7 +91,7 @@
 #'
 #' FisherTest(LR = data, control.names = c("C1", "C2"),
 #'         treatment.names = c("T1", "T2"), tv.cut = 0.25,
-#'         pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 4L,
+#'         pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
 #'         verbose=TRUE)
 #'
 #' @seealso \code{\link[MethylIT]{rmstGR}}
@@ -112,7 +113,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NU
    if (inherits(LR, "try-error"))
      stop("List's names does not match control & treatment names")
 
-   # === Auxiliar function to perform RMST ===
+   # === Auxiliar function to perform FT ===
    ftest <- function(GR, ...) {
        count.matrix = as.matrix(mcols(GR))
        p1 <- count.matrix[, 1:2]
@@ -136,7 +137,11 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NU
        if (verbose)
            cat("*** Performing Fisher's exact test... \n
                # of sites after filtering: ", sites, "\n")
-       bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       if (Sys.info()['sysname'] == "Linux") {
+           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else {
+           bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+       }
        pvals = unname(unlist(bplapply(count.matrix, function(v) {
                fisher.test(matrix(as.integer(v), 2, byrow = TRUE))$p.value
                }, BPPARAM=bpparam)))

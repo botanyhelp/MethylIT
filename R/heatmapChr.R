@@ -138,7 +138,7 @@
 #' file.remove(paste0(file, ".tiff"))
 #' @importFrom GenomicRanges GRanges
 #' @importFrom grDevices dev.off heat.colors jpeg pdf png tiff
-#' @importFrom graphics axis box image layout par plot polygon text
+#' @importFrom graphics axis box image layout par plot polygon text title
 #' @importFrom stats hclust
 #' @export
 #' @author Robersy Sanchez

@@ -52,6 +52,10 @@ performing the regression analysis. Its value must be NULL or a number
 
 \item{saveAll}{if TRUE all the temporal results are returned}
 
+\item{num.cores}{The number of cores to use, i.e. at most how many child
+processes will be run simultaneously (see bpapply function from
+BiocParallel).}
+
 \item{tasks}{integer(1). The number of tasks per job. value must be a scalar
 integer >= 0L. In this documentation a job is defined as a single call
 to a function, such as bplapply, bpmapply etc. A task is the division of
@@ -63,10 +67,6 @@ BiocParallel package).}
 
 \item{...}{Additional parameters for function
 \code{\link[uniqueGRanges]{MethylIT}}.}
-
-\item{mc.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see bpapply function from
-BiocParallel).}
 }
 \value{
 The input GRanges object with the columns of Fisher's exact test
@@ -88,7 +88,7 @@ Samples from each group are pooled according to the statistic
 \examples{
 #' A list of GRanges
 set.seed(123)
-sites = 50
+sites = 15
 data <- list(
   C1 = data.frame(chr = "chr1", start = 1:sites,
                   end = 1:sites,strand = '*',
@@ -113,7 +113,7 @@ data = lapply(data,
 
 FisherTest(LR = data, control.names = c("C1", "C2"),
         treatment.names = c("T1", "T2"), tv.cut = 0.25,
-        pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 4L,
+        pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
         verbose=TRUE)
 
 }
