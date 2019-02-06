@@ -169,7 +169,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, div.col=NULL,
                        "So, the cutpoint is the min(div) > 0 value found", "\n",
                        "in the treatment group")
        warning(text)
-       return(cutpoint=min.div)
+       return(list(cutpoint=min.div, auc=NA, accuracy=NA))
    } else {
        control.names <- control.names[lcc]
        LR <- LR[c(control.names, treatment.names)]
