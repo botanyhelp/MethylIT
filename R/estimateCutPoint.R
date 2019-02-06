@@ -75,7 +75,24 @@
 #'     cutpoints <- estimateCutPoint(PS, control.names = "sample1",
 #'                                     treatment.names = c("sample2"),
 #'                                     div.col = 1, verbose = FALSE)
-#'
+#' # Let's add an empty GRanges
+#' PS$sample1.1 <- GRanges()
+#' # The empty GRanges will be ignored
+#' cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+#'                               treatment.names = c("sample2"),
+#'                               div.col = 1, verbose = FALSE)
+#' # Let's make both control GRanges empty.
+#' PS$sample1 <- GRanges()
+#' # Warning is given
+#' cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+#'                               treatment.names = c("sample2"),
+#'                               div.col = 1, verbose = FALSE)
+#' # Let's make the treatment GRange empty.
+#' PS$sample2 <- GRanges()
+#' # The error is reported
+#' cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+#'                               treatment.names = c("sample2"),
+#'                               div.col = 1, verbose = FALSE)
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, div.col=NULL,
                              absolute=FALSE, grouping=FALSE, verbose = TRUE) {
@@ -131,42 +148,68 @@ estimateCutPoint <- function(LR, control.names, treatment.names, div.col=NULL,
            AUC=auc)
    }
 
-   if (grouping) {
-     LR = list(unlist(as(LR[control.names], "GRangesList")),
-               unlist(as(LR[treatment.names], "GRangesList")))
-     sn <-c("ctrl", "treat")
-     names(LR) <- sn
-     control.names <- "ctrl"
-     treatment.names <- "treat"
-   }
-   LR <- infDiv(LR)
-   idx.ct <- match(control.names, sn)
-   idx.tt <- match(treatment.names, sn)
+   lcc <- unlist(lapply(control.names, function(k) length(LR[[k]]) > 0))
+   ltt <- unlist(lapply(treatment.names, function(k) length(LR[[k]]) > 0))
 
-   cutpoint <- c()
-   accuracy <- c()
-   auc <- c()
-   for (j in idx.ct) {
-       for (k in idx.tt) {
-           if (verbose)
-               message( "*** Comparison: ", paste0(sn[j], " versus ", sn[k]))
-           res <- roc(dt0=LR[[j]], dt1=LR[[k]])
-           cutpoint <- c(cutpoint, res$cutpoint)
-           accuracy <- c(accuracy, res$acc)
-           auc <- c(auc, res$AUC)
+
+   if (sum(ltt) < length(LR[treatment.names])) {
+       if (sum(ltt) == 0) {
+           text <- paste0("All the GRanges objects from treatment group are ",
+                       "empty, please check your data")
+           stop(text)
+       } else treatment.names <- treatment.names[ltt]
+   }
+
+   if (sum(lcc) == 0) {
+       LR <- LR[treatment.names]
+       min.div <- min(unlist(lapply(LR, function(l)
+           min(l@elementMetadata[, div.col], na.rm = TRUE))), na.rm = TRUE)
+       min.div <- min.div[min.div > 0]
+       text <- c("All the GRanges objects from your control are empty ", "\n",
+                       "So, the cutpoint is the min(div) > 0 value found", "\n",
+                       "in the treatment group")
+       warning(text)
+       return(cutpoint=min.div)
+   } else {
+       control.names <- control.names[lcc]
+       LR <- LR[c(control.names, treatment.names)]
+       if (grouping) {
+           LR = list(unlist(as(LR[control.names], "GRangesList")),
+                   unlist(as(LR[treatment.names], "GRangesList")))
+           sn <-c("ctrl", "treat")
+           names(LR) <- sn
+           control.names <- "ctrl"
+           treatment.names <- "treat"
        }
+       LR <- infDiv(LR)
+       idx.ct <- match(control.names, sn)
+       idx.tt <- match(treatment.names, sn)
+
+       cutpoint <- c()
+       accuracy <- c()
+       auc <- c()
+       for (j in idx.ct) {
+           for (k in idx.tt) {
+               if (verbose)
+                   message("*** Comparison: ", paste0(sn[j], " versus ", sn[k]))
+               res <- roc(dt0=LR[[j]], dt1=LR[[k]])
+               cutpoint <- c(cutpoint, res$cutpoint)
+               accuracy <- c(accuracy, res$acc)
+               auc <- c(auc, res$AUC)
+           }
+       }
+
+       accuracy <- data.frame(matrix(accuracy, nrow=length(idx.tt)))
+       cutpoint <- data.frame(matrix(cutpoint, nrow=length(idx.tt)))
+       auc <- data.frame(matrix(auc, nrow=length(idx.tt)))
+
+       colnames(accuracy) <- control.names
+       rownames(accuracy) <- treatment.names
+       colnames(cutpoint) <- control.names
+       rownames(cutpoint) <- treatment.names
+       colnames(auc) <- control.names
+       rownames(auc) <- treatment.names
+
+       return(list(cutpoint=cutpoint, auc=auc, accuracy=accuracy))
    }
-
-   accuracy <- data.frame(matrix(accuracy, nrow=length(idx.tt)))
-   cutpoint <- data.frame(matrix(cutpoint, nrow=length(idx.tt)))
-   auc <- data.frame(matrix(auc, nrow=length(idx.tt)))
-
-   colnames(accuracy) <- control.names
-   rownames(accuracy) <- treatment.names
-   colnames(cutpoint) <- control.names
-   rownames(cutpoint) <- treatment.names
-   colnames(auc) <- control.names
-   rownames(auc) <- treatment.names
-
-   return(list(cutpoint=cutpoint, auc=auc, accuracy=accuracy))
 }

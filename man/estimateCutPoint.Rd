@@ -93,5 +93,22 @@ The function performs an estimation of the optimal cutpoint from
     cutpoints <- estimateCutPoint(PS, control.names = "sample1",
                                     treatment.names = c("sample2"),
                                     div.col = 1, verbose = FALSE)
-
+# Let's add an empty GRanges
+PS$sample1.1 <- GRanges()
+# The empty GRanges will be ignored
+cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+                              treatment.names = c("sample2"),
+                              div.col = 1, verbose = FALSE)
+# Let's make both control GRanges empty.
+PS$sample1 <- GRanges()
+# Warning is given
+cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+                              treatment.names = c("sample2"),
+                              div.col = 1, verbose = FALSE)
+# Let's make the treatment GRange empty.
+PS$sample2 <- GRanges()
+# The error is reported
+cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
+                              treatment.names = c("sample2"),
+                              div.col = 1, verbose = FALSE)
 }
