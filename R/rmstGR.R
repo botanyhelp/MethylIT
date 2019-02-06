@@ -29,10 +29,12 @@
 #'     specification is needed for count.col. The comparison control versus
 #'     treatment can be obtained by setting count.col = 3:4 and providing
 #'     control.names and treatment.names.
-#' @param control.names Names/IDs of the control samples, which must be include
-#'     in the variable GR at the metacolumn.
-#' @param treatment.names Names/IDs of the treatment samples, which must be
-#'     included in the variable GR at the metacolumn.
+#' @param control.names,treatment.names Names/IDs of the control samples, which
+#'     must be included in the variable GR at the metacolumn. Default is NULL.
+#'     If NULL, then it is assumed that each GRanges object in LR has four
+#'     columns of counts. The first two columns correspond to the methylated and
+#'     unmethylated counts from control/reference and the other two columns are
+#'     the methylated and unmethylated counts from treatment, respectively.
 #' @param stat Statistic to be used in the testing: 'rmst' (root mean square
 #'     test) or 'hdiv' (Hellinger divergence test).
 #' @param pooling.stat statistic used to estimate the methylation pool: row sum,
@@ -115,7 +117,7 @@
 #'
 #' @seealso \code{\link[MethylIT]{FisherTest}}
 #' @export
-rmstGR <- function(LR, count.col=1:2, control.names, treatment.names,
+rmstGR <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NULL,
                    stat="rmst", pooling.stat = "sum", tv.cut=NULL,
                    num.permut=100, pAdjustMethod="BH", pvalCutOff=0.05,
                    saveAll=FALSE, num.cores=1L, tasks=0L, verbose=TRUE, ...) {
@@ -127,7 +129,8 @@ rmstGR <- function(LR, count.col=1:2, control.names, treatment.names,
        stop("LR is not GRangesList, CompressedGRangesList, GRanges
            or a list of GRanges object")
    }
-   LR = try(LR[c(control.names, treatment.names)], silent=TRUE)
+   if (!is.null(control.names)&&!is.null(treatment.names))
+     LR = try(LR[c(control.names, treatment.names)], silent=TRUE)
    if (inherits(LR, "try-error"))
        stop("List's names does not match control & treatment names")
 
@@ -185,7 +188,7 @@ rmstGR <- function(LR, count.col=1:2, control.names, treatment.names,
    }
 
    if (is.null(control.names) || is.null(treatment.names)) {
-       res <- lapply(LR, function(GR) rmst(GR, ctrl=FALSE, treat=FALSE, ...) )
+       res <- lapply(LR, function(GR) rmst(GR, ...) )
    }
 
    if (!is.null(control.names)&&!is.null(treatment.names)) {

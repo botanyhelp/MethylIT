@@ -4,10 +4,11 @@
 \alias{rmstGR}
 \title{Root Mean Square Test for metadata in a list of GRanges objects}
 \usage{
-rmstGR(LR, count.col = 1:2, control.names, treatment.names,
-  stat = "rmst", pooling.stat = "sum", tv.cut = NULL,
-  num.permut = 100, pAdjustMethod = "BH", pvalCutOff = 0.05,
-  saveAll = FALSE, num.cores = 1L, tasks = 0L, verbose = TRUE, ...)
+rmstGR(LR, count.col = 1:2, control.names = NULL,
+  treatment.names = NULL, stat = "rmst", pooling.stat = "sum",
+  tv.cut = NULL, num.permut = 100, pAdjustMethod = "BH",
+  pvalCutOff = 0.05, saveAll = FALSE, num.cores = 1L, tasks = 0L,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -28,11 +29,12 @@ specification is needed for count.col. The comparison control versus
 treatment can be obtained by setting count.col = 3:4 and providing
 control.names and treatment.names.}
 
-\item{control.names}{Names/IDs of the control samples, which must be include
-in the variable GR at the metacolumn.}
-
-\item{treatment.names}{Names/IDs of the treatment samples, which must be
-included in the variable GR at the metacolumn.}
+\item{control.names, treatment.names}{Names/IDs of the control samples, which
+must be included in the variable GR at the metacolumn. Default is NULL.
+If NULL, then it is assumed that each GRanges object in LR has four
+columns of counts. The first two columns correspond to the methylated and
+unmethylated counts from control/reference and the other two columns are
+the methylated and unmethylated counts from treatment, respectively.}
 
 \item{stat}{Statistic to be used in the testing: 'rmst' (root mean square
 test) or 'hdiv' (Hellinger divergence test).}
