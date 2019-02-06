@@ -31,7 +31,11 @@ control.names and treatment.names.}
 \item{control.names, treatment.names}{Names/IDs of control and treatment
 samples, which must be included in the variable GR at the metacolumn.
 Default NULL. If provided the FIsher's exact test control versus
-trearment is performed.}
+trearment is performed. Default is NULL. If NULL, then it is assumed that
+each GRanges object in LR has four columns of counts. The first two
+columns correspond to the methylated and unmethylated counts from
+control/reference and the other two columns are the methylated and
+unmethylated counts from treatment, respectively.}
 
 \item{pooling.stat}{statistic used to estimate the methylation pool: row sum,
 row mean or row median of methylated and unmethylated read counts across
