@@ -10,7 +10,6 @@
 \alias{list-method}
 \alias{getGRegionsStat,GRangesList-method}
 \alias{GRangesList-method}
-\alias{getGRegionsStat,CompressedGRangesList-method}
 \title{Statistic of Genomic Regions}
 \usage{
 getGRegionsStat(GR, win.size = 350, step.size = 350,
@@ -18,22 +17,20 @@ getGRegionsStat(GR, win.size = 350, step.size = 350,
   "density"), absolute = FALSE, select.strand = NULL, column = 1L,
   prob = FALSE, entropy = FALSE, maxgap = -1L, minoverlap = 0L,
   scaling = 1000L, logbase = 2, type = c("any", "start", "end",
-  "within", "equal"), ignore.strand = FALSE, na.rm = TRUE)
+  "within", "equal"), ignore.strand = FALSE, na.rm = TRUE,
+  num.cores = 1L, tasks = 0)
 
-\S4method{getGRegionsStat}{GRanges}(GR, win.size = 350,
-  step.size = 350, grfeatures = NULL, stat = c("sum", "mean",
-  "gmaean", "median", "density"), absolute = FALSE,
-  select.strand = NULL, column = 1L, prob = FALSE, entropy = FALSE,
-  maxgap = -1L, minoverlap = 0L, scaling = 1000L, logbase = 2,
-  type = c("any", "start", "end", "within", "equal"),
-  ignore.strand = FALSE, na.rm = TRUE)
+\S4method{getGRegionsStat}{GRanges}(GR, win.size, step.size, grfeatures,
+  stat, absolute, select.strand, column, prob, entropy, maxgap, minoverlap,
+  scaling, logbase, type, ignore.strand, na.rm)
 
 \S4method{getGRegionsStat}{list}(GR, win.size = 350, step.size = 350,
   grfeatures = NULL, stat = c("sum", "mean", "gmaean", "median",
   "density"), absolute = FALSE, select.strand = NULL, column = 1L,
   prob = FALSE, entropy = FALSE, maxgap = -1L, minoverlap = 0L,
   scaling = 1000L, logbase = 2, type = c("any", "start", "end",
-  "within", "equal"), ignore.strand = FALSE, na.rm = TRUE)
+  "within", "equal"), ignore.strand = FALSE, na.rm = TRUE,
+  num.cores = 1L, tasks = 0)
 
 \S4method{getGRegionsStat}{GRangesList}(GR, win.size = 350,
   step.size = 350, grfeatures = NULL, stat = c("sum", "mean",
@@ -41,15 +38,7 @@ getGRegionsStat(GR, win.size = 350, step.size = 350,
   select.strand = NULL, column = 1L, prob = FALSE, entropy = FALSE,
   maxgap = -1L, minoverlap = 0L, scaling = 1000L, logbase = 2,
   type = c("any", "start", "end", "within", "equal"),
-  ignore.strand = FALSE, na.rm = TRUE)
-
-\S4method{getGRegionsStat}{CompressedGRangesList}(GR, win.size = 350,
-  step.size = 350, grfeatures = NULL, stat = c("sum", "mean",
-  "gmaean", "median", "density"), absolute = FALSE,
-  select.strand = NULL, column = 1L, prob = FALSE, entropy = FALSE,
-  maxgap = -1L, minoverlap = 0L, scaling = 1L, logbase = 2,
-  type = c("any", "start", "end", "within", "equal"),
-  ignore.strand = FALSE, na.rm = TRUE)
+  ignore.strand = FALSE, na.rm = TRUE, num.cores = 1L, tasks = 0)
 }
 \arguments{
 \item{GR}{A Grange object with the variable of interest in its metacolumn.}
@@ -102,6 +91,12 @@ denotes the sum of values in 1000 bp.}
 the overlap calculations.}
 
 \item{na.rm}{Logical value. If TRUE, the NA values will be removed}
+
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
 }
 \value{
 A GRanges object with the new genomic regions and their corresponding

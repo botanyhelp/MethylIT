@@ -47,6 +47,11 @@
 #' @param logbase A positive number: the base with respect to which logarithms
 #      are computed when parameter 'entropy = TRUE' (default: logbase = 2).
 #' @param na.rm Logical value. If TRUE, the NA values will be removed
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
 #' @return A GRanges object with the new genomic regions and their corresponding
 #'     summarized statistic.
 #' @examples
@@ -91,8 +96,9 @@ setGeneric("getGRegionsStat",
                  prob=FALSE, entropy=FALSE, maxgap=-1L,
                  minoverlap=0L, scaling=1000L, logbase = 2,
                  type=c("any", "start", "end", "within", "equal"),
-                 ignore.strand=FALSE,
-                 na.rm=TRUE) standardGeneric("getGRegionsStat"))
+                 ignore.strand=FALSE, na.rm=TRUE,
+                 num.cores = 1L, tasks = 0)
+             standardGeneric("getGRegionsStat"))
 
 #' @aliases getGRegionsStat
 #' @rdname getGRegionsStat-methods
@@ -295,6 +301,8 @@ setMethod("getGRegionsStat", signature(GR="GRanges"),
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
 #' @importFrom data.table data.table
+#' @importFrom BiocParallel MulticoreParam SnowParam bplapply
+#'
 setMethod("getGRegionsStat", signature(GR="list"),
            function(GR, win.size=350, step.size=350, grfeatures=NULL,
                    stat=c("sum", "mean", "gmaean", "median", "density"),
@@ -302,12 +310,16 @@ setMethod("getGRegionsStat", signature(GR="list"),
                    prob=FALSE, entropy=FALSE, maxgap=-1L, minoverlap=0L,
                    scaling=1000L, logbase = 2,
                    type=c("any", "start", "end", "within", "equal"),
-                   ignore.strand=FALSE, na.rm=TRUE) {
+                   ignore.strand=FALSE, na.rm=TRUE, num.cores = 1L, tasks = 0) {
            if (inherits(GR, "list")) GR <- try(as(GR, "GRangesList"))
-           GR <- lapply(GR, getGRegionsStat, win.size, step.size, grfeatures,
+           if (Sys.info()['sysname'] == "Linux") {
+             bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+           } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+
+           GR <- bplapply(GR, getGRegionsStat, win.size, step.size, grfeatures,
                    stat, absolute, select.strand, column, prob, entropy,
                    maxgap, minoverlap, scaling, logbase,
-                   type, ignore.strand, na.rm)
+                   type, ignore.strand, na.rm, BPPARAM=bpparam)
            return(GR)
            }
 )
@@ -318,6 +330,7 @@ setMethod("getGRegionsStat", signature(GR="list"),
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
 #' @importFrom data.table data.table
+#' @importFrom BiocParallel MulticoreParam SnowParam bplapply
 setMethod("getGRegionsStat", signature(GR="GRangesList"),
           function(GR, win.size=350, step.size=350, grfeatures=NULL,
                    stat=c("sum", "mean", "gmaean", "median", "density"),
@@ -325,33 +338,16 @@ setMethod("getGRegionsStat", signature(GR="GRangesList"),
                    prob=FALSE, entropy=FALSE, maxgap=-1L, minoverlap=0L,
                    scaling=1000L, logbase = 2,
                    type=c("any", "start", "end", "within", "equal"),
-                   ignore.strand=FALSE, na.rm=TRUE){
-            GR <- lapply(GR, getGRegionsStat, win.size, step.size, grfeatures,
+                   ignore.strand=FALSE, na.rm=TRUE, num.cores = 1L, tasks = 0){
+            if (Sys.info()['sysname'] == "Linux") {
+              bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+            } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+
+            GR <- bplapply(GR, getGRegionsStat, win.size, step.size, grfeatures,
                          stat, absolute, select.strand, column, prob, entropy,
                          maxgap, minoverlap, scaling, logbase, type,
-                         ignore.strand, na.rm)
+                         ignore.strand, na.rm, BPPARAM=bpparam)
             return(GR)
           }
 )
 
-#' @aliases getGRegionsStat, GRangesList-method
-#' @rdname getGRegionsStat-methods
-#' @importFrom GenomeInfoDb seqnames seqlengths
-#' @importFrom GenomicRanges GRanges
-#' @importFrom IRanges IRanges
-#' @importFrom data.table data.table
-setMethod("getGRegionsStat", signature(GR="CompressedGRangesList"),
-function(GR, win.size=350, step.size=350, grfeatures=NULL,
-         stat=c("sum", "mean", "gmaean", "median", "density"),
-         absolute=FALSE, select.strand=NULL, column=1L,
-         prob=FALSE, entropy=FALSE, maxgap=-1L, minoverlap=0L,
-         scaling=1L, logbase = 2,
-         type=c("any", "start", "end", "within", "equal"),
-         ignore.strand=FALSE, na.rm=TRUE) {
-  GR <- lapply(GR, getGRegionsStat, win.size, step.size, grfeatures,
-               stat, absolute, select.strand, column, prob, entropy,
-               maxgap, minoverlap, scaling, logbase, type,
-               ignore.strand, na.rm)
-  return(GR)
-}
-)
