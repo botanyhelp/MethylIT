@@ -8,16 +8,15 @@
 #'   linear model.
 #'
 #' @param DS DESeqDataSet object
-#' @param num.cores number of cores used
 #' @param countFilter whether or not to filter the counts according to the
 #'     minimum count per region per each individual/sample, which is setting by
-#'     "minCountPerIndv"
+#'     "minCountPerIndv".
 #' @param CountPerBp for each group the count per bp must be equal or greater
 #'     than CountPerBp. The filter is applied if 'CountPerBp' is given and if
 #'     'x' DESeqDataSet object has the rowRanges as a GRanges object on it
 #' @param minCountPerIndv each gene or region must have more than
 #'     'minCountPerIndv' counts (on average) per individual in at least one
-#'     group
+#'     group.
 #' @param maxGrpCV A numerical vector. Maximum coefficient of variance for each
 #'     group. Defaul maxGrpCV = NULL. The numbers maxGrpCV[1] and maxGrpCV[2]
 #'     will be taken as the maximun variances values permitted in control and
@@ -36,7 +35,7 @@
 #'     treatment is differentially expressed in respect to the control
 #' @param pAdjustMethod method used to adjust the results; default: BH
 #' @param pvalCutOff cutoff used then a p-value adjustment is performed
-#' @param MVrate Minimum Mean/Variance rate
+#' @param MVrate Minimum Mean/Variance rate.
 #' @param Minlog2FC minimum logarithm base 2 of fold changes.
 #' @param test A character string matching one of "Wald" or "LRT". If test =
 #'   "Wald", then the p-value of the Wald test for the coefficient of the
@@ -48,12 +47,11 @@
 #'     signal density as: scaling * "DIMP-Count-Per-Bp". For example,
 #'     if scaling = 1000, then signal density denotes the number of DIMPs in
 #'      1000 bp.
-#' @param tasks Only for Linux OS. integer(1). The number of tasks per job.
-#'     value must be a scalar integer >= 0L. In this documentation a job is
-#'     defined as a single call to a function, such as bplapply, bpmapply etc.
-#'     A task is the division of the X argument into chunks. When tasks == 0
-#'     (default), X is divided as evenly as possible over the number of workers
-#'     (see MulticoreParam from BiocParallel package).
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
 #' @param saveAll if TRUE all the temporal results are returned
 #' @param verbose if TRUE, prints the function log to stdout
 #

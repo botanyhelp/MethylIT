@@ -13,11 +13,15 @@ countTest2(DS, num.cores = 1, countFilter = TRUE, CountPerBp = NULL,
 \arguments{
 \item{DS}{DESeqDataSet object}
 
-\item{num.cores}{number of cores used}
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
 
 \item{countFilter}{whether or not to filter the counts according to the
 minimum count per region per each individual/sample, which is setting by
-"minCountPerIndv"}
+"minCountPerIndv".}
 
 \item{CountPerBp}{for each group the count per bp must be equal or greater
 than CountPerBp. The filter is applied if 'CountPerBp' is given and if
@@ -25,7 +29,7 @@ than CountPerBp. The filter is applied if 'CountPerBp' is given and if
 
 \item{minCountPerIndv}{each gene or region must have more than
 'minCountPerIndv' counts (on average) per individual in at least one
-group}
+group.}
 
 \item{maxGrpCV}{A numerical vector. Maximum coefficient of variance for each
 group. Defaul maxGrpCV = NULL. The numbers maxGrpCV[1] and maxGrpCV[2]
@@ -49,7 +53,7 @@ treatment is differentially expressed in respect to the control}
 
 \item{pvalCutOff}{cutoff used then a p-value adjustment is performed}
 
-\item{MVrate}{Minimum Mean/Variance rate}
+\item{MVrate}{Minimum Mean/Variance rate.}
 
 \item{Minlog2FC}{minimum logarithm base 2 of fold changes.}
 
@@ -64,13 +68,6 @@ reported p-value for the group comparison.}
 signal density as: scaling * "DIMP-Count-Per-Bp". For example,
 if scaling = 1000, then signal density denotes the number of DIMPs in
  1000 bp.}
-
-\item{tasks}{Only for Linux OS. integer(1). The number of tasks per job.
-value must be a scalar integer >= 0L. In this documentation a job is
-defined as a single call to a function, such as bplapply, bpmapply etc.
-A task is the division of the X argument into chunks. When tasks == 0
-(default), X is divided as evenly as possible over the number of workers
-(see MulticoreParam from BiocParallel package).}
 
 \item{saveAll}{if TRUE all the temporal results are returned}
 
