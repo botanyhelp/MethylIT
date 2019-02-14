@@ -103,51 +103,48 @@ setGeneric("getGRegionsStat",
 #' @aliases getGRegionsStat
 #' @rdname getGRegionsStat-methods
 setMethod("getGRegionsStat", signature(GR="GRanges"),
-           function(GR, win.size, step.size, grfeatures, stat, absolute,
-                   select.strand, column, prob, entropy, maxgap, minoverlap,
-                   scaling, logbase, type, ignore.strand, na.rm) {
-           ## These NULL quiet: no visible binding for global variable 'x2'
-           x1 <- x2 <- ent <- statistic <- NULL
-           if (class( GR ) != "GRanges" )
-               stop( "object must be a GRanges object!")
-           if (!is.null(grfeatures) && !inherits(grfeatures,"GRanges"))
-           {
-               stop("* 'grfeatures', if provided, must be a GRanges object")
-           }
+   function(GR, win.size, step.size, grfeatures, stat, absolute,
+       select.strand, column, prob, entropy, maxgap, minoverlap,
+       scaling, logbase, type, ignore.strand, na.rm) {
+       ## These NULL quiet: no visible binding for global variable 'x2'
+       x1 <- x2 <- ent <- statistic <- NULL
+       if (class( GR ) != "GRanges") stop( "object must be a GRanges object!")
+       if (!is.null(grfeatures) && !inherits(grfeatures,"GRanges")) {
+           stop("* 'grfeatures', if provided, must be a GRanges object")
+       }
 
-           ## === Some functions to use ===
-           statist <- function(x, stat, absolute) {
-               if (absolute) x = abs(x)
-               x <- switch(stat[1],
+       ## === Some functions to use ===
+       statist <- function(x, stat, absolute) {
+           if (absolute) x = abs(x)
+           x <- switch(stat[1],
                        sum=sum(x, na.rm=na.rm),
                        mean=mean(x, na.rm=na.rm),
                        gmean=exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x)),
                        median=median(x, na.rm=na.rm),
                        density=sum(x, na.rm=na.rm))
-               }
+       }
 
-           ## =============================== ##
-           if (!is.null(select.strand)) {
-               ## possible values "-", "+", NULL
-               if (!is.element(select.strand, unique(strand(GR)))) {
-                   stop("* The GRanges object does not have strand named ", "'",
+       ## =============================== ##
+       if (!is.null(select.strand)) {
+           ## possible values "-", "+", NULL
+           if (!is.element(select.strand, unique(strand(GR)))) {
+               stop("* The GRanges object does not have strand named ", "'",
                        select.strand, "'")
                }
                idx <- which(as.character(strand(GR)) == select.strand)
                GR <- GR[idx]
-           }
+       }
 
-           GR <- GR[, column]
+       GR <- GR[, column]
+       chrs <- as.character(unique(seqnames(GR)))
 
-           chrs <- as.character(unique(seqnames(GR)))
-
-           ## === If genomic features are not specified ===
-           if (is.null(grfeatures)) {
-               if (length(GR) < win.size || length(GR) < step.size) {
+       ## === If genomic features are not specified ===
+       if (is.null(grfeatures)) {
+           if (length(GR) < win.size || length(GR) < step.size) {
                    stop("* 'GR'length is lesser of 'win.size' or 'step.size'")
-               }
-               all.wins = GRanges()
-               for (k in 1:length(chrs)) {
+           }
+           all.wins = GRanges()
+           for (k in 1:length(chrs)) {
                    ## get max length of chromosome
                    max.length <- max(IRanges::end(GR[seqnames(GR) == chrs[k],]))
                    ## get sliding windows
@@ -158,42 +155,46 @@ setMethod("getGRegionsStat", signature(GR="GRanges"),
                    temp.wins <- GRanges(seqnames=rep(chrs[k], numTiles),
                                    ranges=ranges)
                    all.wins <- suppressWarnings(c(all.wins, temp.wins))
-               }
+           }
 
-               ## sites of interest inside of the windows
-               Hits <- findOverlaps(GR, all.wins, maxgap=maxgap,
+           ## sites of interest inside of the windows
+           Hits <- findOverlaps(GR, all.wins, maxgap=maxgap,
                                    minoverlap=minoverlap,
                                    ignore.strand=ignore.strand,
                                    type=type)
-               all.wins <- all.wins[subjectHits(Hits)]
-               mcols(all.wins) <- mcols(GR[queryHits(Hits)])
-               chr <- seqnames(all.wins)
+           if (length(Hits) > 0) {
+                   all.wins <- all.wins[subjectHits(Hits)]
+                   mcols(all.wins) <- mcols(GR[queryHits(Hits)])
+                   chr <- seqnames(all.wins)
 
-               ## Variable to mark the limits of each GR
-               cluster.id <- data.frame(cluster.id=paste(chr, start(all.wins),
-                                   end(all.wins), sep = "_"))
-               GR <- all.wins; rm(all.wins); gc()
-           } else {
-               ## sites of interest inside of the windows
-               Hits <- findOverlaps(GR, grfeatures, maxgap=maxgap,
+                   ## Variable to mark the limits of each GR
+                   text <- paste(chr, start(all.wins), end(all.wins), sep = "_")
+                   cluster.id <- data.frame(cluster.id=text)
+                   GR <- all.wins; rm(all.wins, text); gc()
+           } else GR <- GRanges()
+
+       } else {
+           ## sites of interest inside of the windows
+           Hits <- findOverlaps(GR, grfeatures, maxgap=maxgap,
                            minoverlap=minoverlap, ignore.strand=ignore.strand,
                            type=type)
-               grfeatures <- grfeatures[subjectHits(Hits)]
-               mcols(grfeatures) <- mcols(GR[ queryHits(Hits)])
-               chr <- seqnames(grfeatures)
-               if (class(names(grfeatures)) == "character") {
-                   cluster.id <- data.frame(cluster.id=names(grfeatures))
-                   names(grfeatures) <- NULL
-               } else {
-                   cluster.id <- data.frame(cluster.id=paste(chr,
-                                                             start(grfeatures),
-                                                             end(grfeatures),
-                                                             strand(grfeatures),
-                                                             sep="_"))
-               }
-               GR <- grfeatures; rm(grfeatures); gc()
-           }
+           if (length(Hits) > 0){
+                   grfeatures <- grfeatures[subjectHits(Hits)]
+                   mcols(grfeatures) <- mcols(GR[ queryHits(Hits)])
+                   chr <- seqnames(grfeatures)
+                   if (class(names(grfeatures)) == "character") {
+                       cluster.id <- data.frame(cluster.id=names(grfeatures))
+                       names(grfeatures) <- NULL
+                   } else {
+                       text=paste(chr, start(grfeatures), end(grfeatures),
+                               strand(grfeatures), sep="_")
+                       cluster.id <- data.frame(cluster.id=text)
+                   }
+                   GR <- grfeatures; rm(grfeatures, text); gc()
+           } else GR <- GRanges()
+       }
 
+       if (length(GR) > 0) {
            mcols(GR) <- DataFrame(cluster.id, mcols(GR))
            GR <- data.table(as.data.frame(GR))
            if (length(column) < 2) {
@@ -291,8 +292,9 @@ setMethod("getGRegionsStat", signature(GR="GRanges"),
              widths=width(GR)
              GR$statistic <- (scaling * GR$statistic/widths)
            }
-           return(GR)
-          }
+       }
+       return(GR)
+   }
 )
 
 #' @aliases getGRegionsStat, list-method
