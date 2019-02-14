@@ -60,21 +60,16 @@ to perform the regression analysis. Its value must be NULL or a number
 
 \item{saveAll}{if TRUE all the temporal results are returned}
 
-\item{tasks}{integer(1). The number of tasks per job. value must be a scalar
-integer >= 0L. In this documentation a job is defined as a single call
-to a function, such as bplapply, bpmapply etc. A task is the division of
-the X argument into chunks. When tasks == 0 (default), X is divided as
-evenly as possible over the number of workers (see MulticoreParam from
-BiocParallel package).}
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 
 \item{...}{Additional parameters for function
 \code{\link[uniqueGRanges]{MethylIT}}.}
-
-\item{mc.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see bpapply function from
-BiocParallel).}
 }
 \value{
 A GRanges object with the original sample counts, bootstrap p-value

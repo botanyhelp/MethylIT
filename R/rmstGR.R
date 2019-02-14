@@ -52,15 +52,11 @@
 #' @param pAdjustMethod method used to adjust the results; default: BH
 #' @param pvalCutOff cutoff used when a p-value adjustment is performed
 #' @param saveAll if TRUE all the temporal results are returned
-#' @param mc.cores The number of cores to use, i.e. at most how many child
-#'     processes will be run simultaneously (see bpapply function from
-#'     BiocParallel).
-#' @param tasks integer(1). The number of tasks per job. value must be a scalar
-#'     integer >= 0L. In this documentation a job is defined as a single call
-#'     to a function, such as bplapply, bpmapply etc. A task is the division of
-#'     the X argument into chunks. When tasks == 0 (default), X is divided as
-#'     evenly as possible over the number of workers (see MulticoreParam from
-#'     BiocParallel package).
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... Additional parameters for function
 #'     \code{\link[uniqueGRanges]{MethylIT}}.
