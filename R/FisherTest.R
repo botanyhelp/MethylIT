@@ -1,5 +1,4 @@
 #' @rdname FisherTest
-#'
 #' @title Fisher's exact test for read counts on GRanges objects
 #' @description Given a GRanges object with the methylated and unmethylated
 #'     read counts for control and treatment in its metacolumn, Fisher's exact
@@ -27,7 +26,7 @@
 #'     control.names and treatment.names.
 #' @param control.names,treatment.names Names/IDs of control and treatment
 #'     samples, which must be included in the variable GR at the metacolumn.
-#'     Default NULL. If provided the FIsher's exact test control versus
+#'     Default NULL. If provided the Fisher's exact test control versus
 #'     trearment is performed. Default is NULL. If NULL, then it is assumed that
 #'     each GRanges object in LR has four columns of counts. The first two
 #'     columns correspond to the methylated and unmethylated counts from
@@ -44,6 +43,14 @@
 #'     provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
 #'     performing the regression analysis. Its value must be NULL or a number
 #'     0 < tv.cut < 1.
+#' @param hdiv.cut An optional cutoff for the Hellinger divergence (*hdiv*). If
+#'     the LR object derives from the previous application of function
+#'     \code{\link{estimateDivergence}}, then a column with the *hdiv* values is
+#'     provided. If combined with tv.cut, this permits a more effective
+#'     filtering of the signal from the noise. Default is NULL.
+#' @param hdiv.col Optional. Columns where *hdiv* values are located in each
+#'     GRange object from LR. It must be provided if together with *hdiv.cut*.
+#'     Default is NULL.
 #' @param pAdjustMethod method used to adjust the results; default: BH
 #' @param pvalCutOff cutoff used then a p-value adjustment is performed
 #' @param saveAll if TRUE all the temporal results are returned
@@ -100,8 +107,9 @@
 #'
 #' @seealso \code{\link[MethylIT]{rmstGR}}
 #' @export
-FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NULL,
-                       pooling.stat = "sum", tv.cut=NULL, pAdjustMethod="BH",
+FisherTest <- function(LR, count.col=1:2, control.names=NULL,
+                       treatment.names=NULL, pooling.stat = "sum", tv.cut=NULL,
+                       hdiv.cut=NULL, hdiv.col=NULL, pAdjustMethod="BH",
                        pvalCutOff=0.05, saveAll=FALSE, num.cores=1L, tasks=0L,
                        verbose=FALSE, ...) {
    if (inherits(LR, "list")) LR <- try(as(LR, "GRangesList"))
@@ -126,40 +134,63 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NU
        p2 <- p2[, 1]/rowSums(p2)
        TV = p2 - p1; rm(p1, p2); gc()
 
-       if (!is.null(tv.cut)) {
-           idx <- which(abs(TV) >= tv.cut)
+       ind <- FALSE; idx <- c()
+       if (!is.null(tv.cut)) idx.tv <- which(abs(TV) >= tv.cut)
+       if (!is.null(hdiv.cut) && !is.null(hdiv.col))
+           idx.hdiv <- which(mcols(GR[, hdiv.col])[,1] >= hdiv.cut)
+
+       if (!is.null(tv.cut) && (!is.null(hdiv.cut) && !is.null(hdiv.col))) {
+           idx <- unique(c(idx.tv, idx.hdiv))
+           ind <- !is.na(idx)
+       } else {
+           if (!is.null(tv.cut)) {idx <- idx.tv; ind <- !is.na(idx)}
+           if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
+               idx <- idx.hdiv;
+               ind <- !is.na(idx)
+            }
+       }
+
+       if (sum(ind) > 0) {
+           idx = idx[ind]
            count.matrix = as.matrix(mcols(GR[idx]))
        } else count.matrix = as.matrix(mcols(GR))
-       count.matrix = count.matrix[, 1:4]
-       sites = nrow(count.matrix)
-       GR$TV <- TV
-       GR$pvalue <- rep(1, length(GR))
-       GR$adj.pval <- rep(1, length(GR))
-       count.matrix = count.matrix[, 1:4]
-       count.matrix=split(count.matrix, row(count.matrix))
 
-       if (verbose)
-           cat("*** Performing Fisher's exact test... \n
-               # of sites after filtering: ", sites, "\n")
-       if (Sys.info()['sysname'] == "Linux") {
-           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       if (nrow(count.matrix) > 1 ) {
+           count.matrix <- count.matrix[, 1:4]
+           sites <- nrow(count.matrix)
+           GR$TV <- TV
+           GR$pvalue <- rep(1, length(GR))
+           GR$adj.pval <- rep(1, length(GR))
+           count.matrix <- count.matrix[, 1:4]
+           count.matrix <- split(count.matrix, row(count.matrix))
+           if (verbose)
+             cat("*** Performing Fisher's exact test... \n
+                 # of sites after filtering: ", sites, "\n")
+           if (Sys.info()['sysname'] == "Linux") {
+             bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+           } else {
+             bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+           }
+           pvals <- unname(unlist(bplapply(count.matrix, function(v) {
+             fisher.test(matrix(as.integer(v), 2, byrow = TRUE))$p.value
+           }, BPPARAM=bpparam)))
        } else {
-           bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+           count.matrix = count.matrix[1:4]
+           pvals <- fisher.test(matrix(count.matrix, 2, byrow = TRUE))$p.value
        }
-       pvals = unname(unlist(bplapply(count.matrix, function(v) {
-               fisher.test(matrix(as.integer(v), 2, byrow = TRUE))$p.value
-               }, BPPARAM=bpparam)))
 
-       if (!is.null(tv.cut) && !saveAll) {
+       if ((!is.null(tv.cut) | !is.null(hdiv.cut)) &&
+           !saveAll && length(idx) > 0) {
            GR <- GR[idx]
            GR$pvalue <- pvals
            GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
        } else {
-           if (!is.null(tv.cut) && saveAll) {
+           if ((!is.null(tv.cut) | !is.null(hdiv.cut)) &&
+               saveAll && length(idx) > 0) {
                GR$pvalue[idx] <- pvals
                GR$adj.pval[idx] <- p.adjust(pvals, method=pAdjustMethod)
            }
-           if (is.null(tv.cut) && saveAll) {
+           if (is.null(tv.cut) && is.null(hdiv.cut) && saveAll) {
                GR$pvalue <- pvals
                GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
            }
@@ -173,7 +204,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NU
    }
 
    if (is.null(control.names) || is.null(treatment.names)) {
-       res <- lapply(LR, function(GR) ftest(GR, ctrl=FALSE, treat=FALSE, ...) )
+       res <- lapply(LR, function(GR) ftest(GR) )
    }
 
    if (!is.null(control.names)&&!is.null(treatment.names)) {
@@ -196,7 +227,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NU
            treat <- poolFromGRlist(treat, stat=pooling.stat,
                                    num.cores=num.cores, verbose=verbose)
            GR <- uniqueGRanges(list(ctrl, treat), verbose=verbose, ...)
-           res <- ftest(GR, ctrl=FALSE, treat=FALSE, ...)
+           res <- ftest(GR)
        } else {
            res = list()
            i = 1

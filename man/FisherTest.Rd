@@ -6,8 +6,9 @@
 \usage{
 FisherTest(LR, count.col = 1:2, control.names = NULL,
   treatment.names = NULL, pooling.stat = "sum", tv.cut = NULL,
-  pAdjustMethod = "BH", pvalCutOff = 0.05, saveAll = FALSE,
-  num.cores = 1L, tasks = 0L, verbose = FALSE, ...)
+  hdiv.cut = NULL, hdiv.col = NULL, pAdjustMethod = "BH",
+  pvalCutOff = 0.05, saveAll = FALSE, num.cores = 1L, tasks = 0L,
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -30,7 +31,7 @@ control.names and treatment.names.}
 
 \item{control.names, treatment.names}{Names/IDs of control and treatment
 samples, which must be included in the variable GR at the metacolumn.
-Default NULL. If provided the FIsher's exact test control versus
+Default NULL. If provided the Fisher's exact test control versus
 trearment is performed. Default is NULL. If NULL, then it is assumed that
 each GRanges object in LR has four columns of counts. The first two
 columns correspond to the methylated and unmethylated counts from
@@ -49,6 +50,16 @@ difference of the group means of methylation levels. If tv.cut is
 provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
 performing the regression analysis. Its value must be NULL or a number
 0 < tv.cut < 1.}
+
+\item{hdiv.cut}{An optional cutoff for the Hellinger divergence (*hdiv*). If
+the LR object derives from the previous application of function
+\code{\link{estimateDivergence}}, then a column with the *hdiv* values is
+provided. If combined with tv.cut, this permits a more effective
+filtering of the signal from the noise. Default is NULL.}
+
+\item{hdiv.col}{Optional. Columns where *hdiv* values are located in each
+GRange object from LR. It must be provided if together with *hdiv.cut*.
+Default is NULL.}
 
 \item{pAdjustMethod}{method used to adjust the results; default: BH}
 
