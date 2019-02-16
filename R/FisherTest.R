@@ -161,7 +161,6 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
            GR$TV <- TV
            GR$pvalue <- rep(1, length(GR))
            GR$adj.pval <- rep(1, length(GR))
-           count.matrix <- count.matrix[, 1:4]
            count.matrix <- split(count.matrix, row(count.matrix))
            if (verbose)
              cat("*** Performing Fisher's exact test... \n
@@ -190,7 +189,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
                GR$pvalue[idx] <- pvals
                GR$adj.pval[idx] <- p.adjust(pvals, method=pAdjustMethod)
            }
-           if (is.null(tv.cut) && is.null(hdiv.cut) && saveAll) {
+           if (is.null(tv.cut) && is.null(hdiv.cut)) {
                GR$pvalue <- pvals
                GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
            }
