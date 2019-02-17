@@ -36,10 +36,11 @@ Ubuntu
     sudo apt install libmysqlclient-dev libcurl4-openssl-dev libssl-dev libxml2-dev git build-essential
 
 Install R dependencies:
-
-    BiocManager::install(c('BiocParallel', 'biovizBase', 'DESeq2', 'genefilter', 'GenomeInfoDb', 'GenomicRanges'))
     
     install.packages(c("ArgumentCheck", "caret", "Epi", "e1071", "minpack.lm", "nls2", "caTools", "rmarkdown",   "RCurl"),dependencies=TRUE)
+    
+    BiocManager::install(c('BiocParallel', 'biovizBase', 'DESeq2', 'genefilter', 'GenomeInfoDb', 'GenomicRanges'))
+
 
 You can install MethylIT from GitHub or PSU's GitLab:
 
