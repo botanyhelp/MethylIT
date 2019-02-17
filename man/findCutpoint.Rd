@@ -4,8 +4,9 @@
 \alias{findCutpoint}
 \title{Find a cutoff of divergences of methylation level values}
 \usage{
-findCutpoint(LR, min.tv, tv.cut, predcuts, tv.col, div.col = NULL,
-  pval.col = NULL, stat = 1, maximize = TRUE, num.cores = 1L)
+findCutpoint(LR, min.tv = 0.25, tv.cut = 0.5, predcuts, tv.col,
+  div.col = NULL, pval.col = NULL, stat = 1, maximize = TRUE,
+  num.cores = 1L)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -22,10 +23,12 @@ sites/ranges k with \eqn{TVD_{k} > min.tv} are analyzed. Defaul
 min.tv = 0.25.}
 
 \item{tv.cut}{A cutoff for the total variation distance to be applied to each
-site/range. If tv.cut is provided, then sites/ranges k with
-\eqn{TVD_{k} < tv.cut} are considered TRUE negatives and
-\eqn{TVD_{k} > tv.cut} TRUE postives. Its value must be NULLor a number
-\eqn{0 < tv.cut < 1}.}
+site/range. Sites/ranges k with \eqn{TVD_{k} < tv.cut} are considered
+TRUE negatives and sites with \eqn{TVD_{k} > tv.cut} TRUE positives.
+Its value must be a number \eqn{0 < tv.cut < 1}. A possible value
+for tv.cut would be, e.g., the minimum value of *TV* found in the
+treatment group after the potential DMPs are estimated. Default is
+\eqn{tv.cut = 0.5}.}
 
 \item{predcuts}{A numerical vector of possible cutoff values (cutpoints) for
 a divergence of methylation levels value or a p-value, according with the

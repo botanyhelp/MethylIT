@@ -35,10 +35,12 @@
 #'     sites/ranges k with \eqn{TVD_{k} > min.tv} are analyzed. Defaul
 #'     min.tv = 0.25.
 #' @param tv.cut A cutoff for the total variation distance to be applied to each
-#'     site/range. If tv.cut is provided, then sites/ranges k with
-#'     \eqn{TVD_{k} < tv.cut} are considered TRUE negatives and
-#'     \eqn{TVD_{k} > tv.cut} TRUE postives. Its value must be NULLor a number
-#'     \eqn{0 < tv.cut < 1}.
+#'     site/range. Sites/ranges k with \eqn{TVD_{k} < tv.cut} are considered
+#'     TRUE negatives and sites with \eqn{TVD_{k} > tv.cut} TRUE positives.
+#'     Its value must be a number \eqn{0 < tv.cut < 1}. A possible value
+#'     for tv.cut would be, e.g., the minimum value of *TV* found in the
+#'     treatment group after the potential DMPs are estimated. Default is
+#'     \eqn{tv.cut = 0.5}.
 #' @param predcuts A numerical vector of possible cutoff values (cutpoints) for
 #'     a divergence of methylation levels value or a p-value, according with the
 #'     magnitude given in div.col or in pval.col, respectively. For each
@@ -64,7 +66,7 @@
 #'     processes will be run simultaneously (see 'bplapply' function from
 #'     BiocParallel package).
 #'
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom S4Vectors mcols
 #' @importFrom caret confusionMatrix
 #' @return A list with the classification repformance results for the best
@@ -84,33 +86,37 @@
 #'                             predcuts = cuts, tv.col = 7L, div.col = 9,
 #'                             stat = 1, num.cores = 15)
 
-findCutpoint <- function(LR, min.tv, tv.cut, predcuts, tv.col, div.col=NULL,
-                          pval.col=NULL, stat = 1, maximize = TRUE,
-                          num.cores = 1L) {
-  # statistic names
-  # 0 = "All" 1 = "Accuracy", 2 = "Sensitivity", 3 = "Specificity",
-  # 4 = "Pos Pred Value", 5 = "Neg Pred Value", 6 = "Precision", 7 = "Recall",
-  # 8 = "F1",  9 = "Prevalence", 10 = "Detection Rate",
-  # 11 = "Detection Prevalence", 12 = "Balanced Accuracy"
+findCutpoint <- function(LR, min.tv=0.25, tv.cut=0.5, predcuts, tv.col,
+                       div.col=NULL, pval.col=NULL, stat = 1, maximize = TRUE,
+                       num.cores = 1L) {
+   # statistic names
+   # 0 = "All" 1 = "Accuracy", 2 = "Sensitivity", 3 = "Specificity",
+   # 4 = "Pos Pred Value", 5 = "Neg Pred Value", 6 = "Precision", 7 = "Recall",
+   # 8 = "F1",  9 = "Prevalence", 10 = "Detection Rate",
+   # 11 = "Detection Prevalence", 12 = "Balanced Accuracy"
 
-  require(BiocParallel)
-  bpparam <- MulticoreParam(workers=num.cores, tasks=0)
-  res <- bplapply(predcuts, function(k)
-    classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k, tv.col=tv.col,
-                 div.col=div.col, pval.col=pval.col, stat=stat),
-       BPPARAM = bpparam)
-  res <- unlist(res)
-  if (!all(is.na(res))) {
-    if (maximize) cutp = predcuts[which.max(res)] else
-      cutp = predcuts[which.min(res)]
-    perf <- classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=cutp,
-                         tv.col=tv.col, div.col=div.col, pval.col=pval.col,
-                         stat=0)
+   if (Sys.info()['sysname'] == "Linux") {
+       bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+   } else {
+       bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+   }
 
-    res = list(optimCutpoint=cutp, Statistic=res, Performance=perf[[1]],
-               FDR=perf[[2]])
-  } else res = list(optimCutpoint=NA, Statistic=NA, Performance=NA,
-                    FDR=NA)
-  return(res)
+   res <- bplapply(predcuts, function(k)
+               classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k,
+                           tv.col=tv.col, div.col=div.col, pval.col=pval.col,
+                           stat=stat), BPPARAM = bpparam)
+   res <- unlist(res)
+   if (!all(is.na(res))) {
+       if (maximize) cutp = predcuts[which.max(res)]
+       else  cutp = predcuts[which.min(res)]
+       perf <- classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=cutp,
+                           tv.col=tv.col, div.col=div.col, pval.col=pval.col,
+                           stat=0)
+
+       res = list(optimCutpoint=cutp, Statistic=res, Performance=perf[[1]],
+                   FDR=perf[[2]])
+   } else res = list(optimCutpoint=NA, Statistic=NA, Performance=NA,
+                   FDR=NA)
+   return(res)
 }
 
