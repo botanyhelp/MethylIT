@@ -62,9 +62,11 @@
 #'     11 = "Detection Prevalence", 12 = "Balanced Accuracy".
 #' @param maximize Whether to maximize the performance indicator given in
 #'     parameter 'stat'. Default: TRUE.
-#' @param num.cores The number of cores to use, i.e. at most how many child
-#'     processes will be run simultaneously (see 'bplapply' function from
-#'     BiocParallel package).
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
 #'
 #' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom S4Vectors mcols
@@ -88,7 +90,7 @@
 
 findCutpoint <- function(LR, min.tv=0.25, tv.cut=0.5, predcuts, tv.col,
                        div.col=NULL, pval.col=NULL, stat = 1, maximize = TRUE,
-                       num.cores = 1L) {
+                       num.cores = 1L, tasks=tasks) {
    # statistic names
    # 0 = "All" 1 = "Accuracy", 2 = "Sensitivity", 3 = "Specificity",
    # 4 = "Pos Pred Value", 5 = "Neg Pred Value", 6 = "Precision", 7 = "Recall",
@@ -101,10 +103,10 @@ findCutpoint <- function(LR, min.tv=0.25, tv.cut=0.5, predcuts, tv.col,
        bpparam <- SnowParam(workers = num.cores, type = "SOCK")
    }
 
-   res <- bplapply(predcuts, function(k)
-               classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k,
+   res <- bplapply(predcuts, function(k, LR)
+               classPerform(LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k,
                            tv.col=tv.col, div.col=div.col, pval.col=pval.col,
-                           stat=stat), BPPARAM = bpparam)
+                           stat=stat), LR, BPPARAM = bpparam)
    res <- unlist(res)
    if (!all(is.na(res))) {
        if (maximize) cutp = predcuts[which.max(res)]
