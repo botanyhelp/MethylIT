@@ -20,11 +20,10 @@ This application is under development and has not yet been officially released. 
 Installation
 ------------
 
-Be sure that both the R and bioconductor packages are up to date:
-
-    update.packages(ask = FALSE)
-    source("https://bioconductor.org/biocLite.R")
-    biocLite(ask = FALSE) 
+Be sure that both the R and bioconductor packages are up to date. To get the latest version of Bioconductor by starting R and entering the commands:
+    
+    if (!requireNamespace("BiocManager")) install.packages("BiocManager")
+    BiocManager::install()
 
 Install OS packages:
 
@@ -38,19 +37,11 @@ Ubuntu
 
 Install R dependencies:
 
- - Bioconductor packages:
-    To get the latest version of Bioconductor by starting R and entering the commands:
-    
-    if (!requireNamespace("BiocManager")) install.packages("BiocManager")
-    BiocManager::install()
-
     BiocManager::install(c('BiocParallel', 'biovizBase', 'DESeq2', 'genefilter', 'GenomeInfoDb', 'GenomicRanges'))
     
- - CRAN packages:
+    install.packages(c("ArgumentCheck", "caret", "Epi", "e1071", "minpack.lm", "nls2", "caTools", "rmarkdown",   "RCurl"),dependencies=TRUE)
 
-   install.packages(c("ArgumentCheck", "caret", "Epi", "e1071", "minpack.lm", "nls2", "caTools", "rmarkdown",   "RCurl"),dependencies=TRUE)
-
-You can install MethylIT from GitHub or PSU's GitLab
+You can install MethylIT from GitHub or PSU's GitLab:
 
     install.packages("devtools")
     devtools::install_git("https://github.com/genomaths/MethylIT.git")
