@@ -15,10 +15,7 @@ With Methyl-IT R package we are providing the functions from the R scripts used 
 
 Status
 ------
-
-!!! FOR TESTING ONLY !!!
-
-This application is under development and has not yet been officially released. Watch this repo or check the releases page for the official release.
+This application is under development and has not yet been officially released. Watch this repo or check the releases page for the official release. THE PACKAGE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
 
 Installation
 ------------
@@ -41,20 +38,28 @@ Ubuntu
 
 Install R dependencies:
 
-    source("https://bioconductor.org/biocLite.R")
-    biocLite(c('BiocParallel', 'biovizBase', 'DESeq2', 'genefilter', 'GenomeInfoDb', 'GenomicRanges'))
+ - Bioconductor packages:
+    To get the latest version of Bioconductor by starting R and entering the commands:
+    
+    if (!requireNamespace("BiocManager")) install.packages("BiocManager")
+    BiocManager::install()
 
-    install.packages(c("ArgumentCheck", "caret", "Epi", "e1071", "minpack.lm", "nls2", "caTools", "rmarkdown", "RCurl"),dependencies=TRUE)
+    BiocManager::install(c('BiocParallel', 'biovizBase', 'DESeq2', 'genefilter', 'GenomeInfoDb', 'GenomicRanges'))
+    
+ - CRAN packages:
 
-You can install MethylIT from PSU's GitLab
+   install.packages(c("ArgumentCheck", "caret", "Epi", "e1071", "minpack.lm", "nls2", "caTools", "rmarkdown",   "RCurl"),dependencies=TRUE)
+
+You can install MethylIT from GitHub or PSU's GitLab
 
     install.packages("devtools")
     devtools::install_git("https://github.com/genomaths/MethylIT.git")
+    
     Or 
+    
     devtools::install_git("https://git.psu.edu/genomath/MethylIT.git")
     
-   
-    
+       
 
 Flow diagram
 ------------
