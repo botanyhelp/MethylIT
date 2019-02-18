@@ -3,12 +3,14 @@
 #' @aliases rggamma
 #' @aliases pggamma
 #' @aliases dggamma
+#' @aliases qggamma
 #'
 #' @title Generalized Gamma distribution
 #' @description Probability density function (PDF), cummulative density function
-#'     (CDF) and random generation for the Generalized Gamma (GG) distribution
-#'     with 3 or 4 parameters: alpha, scale, mu, and psi. The function is
-#'     reduced to GGamma distribution with 3 parameters by setting mu = 0.
+#'     (CDF), quantile function and random generation for the Generalized Gamma
+#'     (GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
+#'     function is reduced to GGamma distribution with 3 parameters by setting
+#'     mu = 0.
 #' @details Details about these function can be found in references 1 to 3. You
 #'     may also see section Note at ?pgamma or ?rgamma. Herein, we are using
 #'     Stacy' s formula (references 2 to 3) with the parametrization given in
@@ -37,7 +39,8 @@
 #'     log(p).
 #'
 #' @return GG PDF values (3-parameters or 4-parameters) for dggamma,
-#'     GG probability for pggamma or GG random generated values for rggamma.
+#'     GG probability for pggamma, quaniles or GG random generated values for
+#'     rggamma.
 #'
 #' @references 1. Handbook on  STATISTICAL DISTRIBUTIONS for experimentalists
 #' (p. 73) by Christian Walck. Particle Physics Group Fysikum. University of
@@ -92,6 +95,21 @@ pggamma <- function(q, alpha=1, scale=1, mu=0,
     p <- pgamma(y, shape=psi, lower.tail = lower.tail, log.p = log.p)
   } else p <- NaN
   return(p)
+}
+
+#' @name qggamma
+#' @rdname ggamma
+#' @title Generalized Gamma distribution
+#' @description NULL
+#' @details NULL
+#' @export
+qggamma <- function(p, alpha=1, scale=1, mu=0,
+                    psi=1, lower.tail=TRUE, log.p=FALSE) {
+  if (scale > 0 && alpha > 0 && psi > 0) {
+    q <- qgamma(p, shape=psi, lower.tail = lower.tail, log.p = log.p)
+    q <- scale * q^(1/alpha) + mu
+  } else q <- NaN
+  return(q)
 }
 
 #' @name rggamma

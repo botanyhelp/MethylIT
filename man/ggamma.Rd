@@ -4,12 +4,16 @@
 \alias{ggamma}
 \alias{dggamma}
 \alias{pggamma}
+\alias{qggamma}
 \alias{rggamma}
 \title{Generalized Gamma distribution}
 \usage{
 dggamma(q, alpha = 1, scale = 1, mu = 0, psi = 1, log.p = FALSE)
 
 pggamma(q, alpha = 1, scale = 1, mu = 0, psi = 1,
+  lower.tail = TRUE, log.p = FALSE)
+
+qggamma(p, alpha = 1, scale = 1, mu = 0, psi = 1,
   lower.tail = TRUE, log.p = FALSE)
 
 rggamma(n, alpha = 1, scale = 1, psi = 1)
@@ -36,13 +40,15 @@ otherwise, P[X > x]}
 }
 \value{
 GG PDF values (3-parameters or 4-parameters) for dggamma,
-    GG probability for pggamma or GG random generated values for rggamma.
+    GG probability for pggamma, quaniles or GG random generated values for
+    rggamma.
 }
 \description{
 Probability density function (PDF), cummulative density function
-    (CDF) and random generation for the Generalized Gamma (GG) distribution
-    with 3 or 4 parameters: alpha, scale, mu, and psi. The function is
-    reduced to GGamma distribution with 3 parameters by setting mu = 0.
+    (CDF), quantile function and random generation for the Generalized Gamma
+    (GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
+    function is reduced to GGamma distribution with 3 parameters by setting
+    mu = 0.
 }
 \details{
 Details about these function can be found in references 1 to 3. You
