@@ -2,17 +2,20 @@
 % Please edit documentation in R/ggamma.R
 \name{ggamma}
 \alias{ggamma}
-\alias{rggamma}
+\alias{dggamma}
 \alias{pggamma}
+\alias{rggamma}
 \title{Generalized Gamma distribution}
 \usage{
-rggamma(n, alpha = 1, scale = 1, psi = 1)
+dggamma(q, alpha = 1, scale = 1, mu = 0, psi = 1, log.p = FALSE)
 
 pggamma(q, alpha = 1, scale = 1, mu = 0, psi = 1,
   lower.tail = TRUE, log.p = FALSE)
+
+rggamma(n, alpha = 1, scale = 1, psi = 1)
 }
 \arguments{
-\item{n}{number of observations}
+\item{q}{numeric vector}
 
 \item{alpha}{numerical parameter, strictly positive (default 1). The
 generalized gamma becomes the gamma distribution for alpha = 1.}
@@ -21,25 +24,25 @@ generalized gamma becomes the gamma distribution for alpha = 1.}
 distribution. These are numerical and strictly positives; default 1.
 (see ?pgamma).}
 
-\item{q}{numeric vector}
-
 \item{mu}{location parameter (numerical, default 0).}
+
+\item{log.p}{logical; if TRUE, probabilities/densities p are returned as
+log(p).}
 
 \item{lower.tail}{logical; if TRUE (default), probabilities are P[X<=x],
 otherwise, P[X > x]}
 
-\item{log.p}{logical; if TRUE, probabilities/densities p are returned as
-log(p).}
+\item{n}{number of observations}
 }
 \value{
-probability gamma (3-parameters or 4-parameters) for pggamma or
-    random generated values for rggamma.
+GG PDF values (3-parameters or 4-parameters) for dggamma,
+    GG probability for pggamma or GG random generated values for rggamma.
 }
 \description{
-Cummulative density function (CDF) and random generation for the
-    Generalized Gamma distribution with 3 or 4 parameters: alpha, scale, mu,
-    and psi. The function is reduced to GGamma distribution with 3
-    parameters by setting mu = 0.
+Probability density function (PDF), cummulative density function
+    (CDF) and random generation for the Generalized Gamma (GG) distribution
+    with 3 or 4 parameters: alpha, scale, mu, and psi. The function is
+    reduced to GGamma distribution with 3 parameters by setting mu = 0.
 }
 \details{
 Details about these function can be found in references 1 to 3. You
@@ -49,6 +52,12 @@ Details about these function can be found in references 1 to 3. You
     function, the cumulative distribution function (as given in equation 12,
     page 13 from reference 4) is expressed in terms of the lower incomplete
     gamma function (see ?pgamma).
+
+    The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
+    \eqn{\psi}, and \eqn{\mu} has density:
+
+    \deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
+    \beta)^\alpha) ((x-\mu)/\beta)^(\alpha * \psi - 1)/(\beta Gamma(\psi))}
 }
 \examples{
 q <- (1:9)/10
