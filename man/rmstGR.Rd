@@ -6,9 +6,9 @@
 \usage{
 rmstGR(LR, count.col = 1:2, control.names = NULL,
   treatment.names = NULL, stat = "rmst", pooling.stat = "sum",
-  tv.cut = NULL, num.permut = 100, pAdjustMethod = "BH",
-  pvalCutOff = 0.05, saveAll = FALSE, num.cores = 1L, tasks = 0L,
-  verbose = TRUE, ...)
+  tv.cut = NULL, hdiv.cut = NULL, hdiv.col = NULL,
+  num.permut = 100, pAdjustMethod = "BH", pvalCutOff = 0.05,
+  saveAll = FALSE, num.cores = 1L, tasks = 0L, verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -51,6 +51,16 @@ difference of the group means of methylation levels. If tv.cut is
 provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
 to perform the regression analysis. Its value must be NULL or a number
 0 < tv.cut < 1.}
+
+\item{hdiv.cut}{An optional cutoff for the Hellinger divergence (*hdiv*). If
+the LR object derives from the previous application of function
+\code{\link{estimateDivergence}}, then a column with the *hdiv* values is
+provided. If combined with tv.cut, this permits a more effective
+filtering of the signal from the noise. Default is NULL.}
+
+\item{hdiv.col}{Optional. Columns where *hdiv* values are located in each
+GRange object from LR. It must be provided if together with *hdiv.cut*.
+Default is NULL.}
 
 \item{num.permut}{Number of permutations.}
 

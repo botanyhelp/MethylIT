@@ -48,6 +48,14 @@
 #'     provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
 #'     to perform the regression analysis. Its value must be NULL or a number
 #'     0 < tv.cut < 1.
+#' @param hdiv.cut An optional cutoff for the Hellinger divergence (*hdiv*). If
+#'     the LR object derives from the previous application of function
+#'     \code{\link{estimateDivergence}}, then a column with the *hdiv* values is
+#'     provided. If combined with tv.cut, this permits a more effective
+#'     filtering of the signal from the noise. Default is NULL.
+#' @param hdiv.col Optional. Columns where *hdiv* values are located in each
+#'     GRange object from LR. It must be provided if together with *hdiv.cut*.
+#'     Default is NULL.
 #' @param num.permut Number of permutations.
 #' @param pAdjustMethod method used to adjust the results; default: BH
 #' @param pvalCutOff cutoff used when a p-value adjustment is performed
@@ -115,8 +123,9 @@
 #' @export
 rmstGR <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NULL,
                    stat="rmst", pooling.stat = "sum", tv.cut=NULL,
-                   num.permut=100, pAdjustMethod="BH", pvalCutOff=0.05,
-                   saveAll=FALSE, num.cores=1L, tasks=0L, verbose=TRUE, ...) {
+                   hdiv.cut=NULL, hdiv.col=NULL, num.permut=100,
+                   pAdjustMethod="BH", pvalCutOff=0.05, saveAll=FALSE,
+                   num.cores=1L, tasks=0L, verbose=TRUE, ...) {
    if (inherits(LR, "list")) LR <- try(as(LR, "GRangesList"))
    if (inherits(LR, "try-error"))
        stop("LR is not list of GRanges objects")
@@ -139,10 +148,28 @@ rmstGR <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NULL,
        p2 <- p2[, 1]/rowSums(p2)
        TV = p2 - p1; rm(p1, p2); gc()
 
-       if (!is.null(tv.cut)) {
-           idx <- which(abs(TV) >= tv.cut)
-           count.matrix = as.matrix(mcols(GR[idx]))
+       ind <- FALSE; idx <- c()
+       if (!is.null(tv.cut)) idx.tv <- which(abs(TV) >= tv.cut)
+       if (!is.null(hdiv.cut) && !is.null(hdiv.col))
+         idx.hdiv <- which(mcols(GR[, hdiv.col])[,1] >= hdiv.cut)
+
+       if (!is.null(tv.cut) && (!is.null(hdiv.cut) && !is.null(hdiv.col))) {
+         idx <- unique(c(idx.tv, idx.hdiv))
+         ind <- !is.na(idx)
+       } else {
+         if (!is.null(tv.cut)) {idx <- idx.tv; ind <- !is.na(idx)}
+         if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
+           idx <- idx.hdiv;
+           ind <- !is.na(idx)
+         }
+       }
+
+       if (sum(ind) > 0) {
+         idx = idx[ind]
+         count.matrix = as.matrix(mcols(GR[idx]))
        } else count.matrix = as.matrix(mcols(GR))
+
+       if (nrow(count.matrix) > 1 ) {
            count.matrix = count.matrix[, 1:4]
            sites = nrow(count.matrix)
            GR$TV <- TV
@@ -150,28 +177,35 @@ rmstGR <- function(LR, count.col=1:2, control.names=NULL, treatment.names=NULL,
            GR$adj.pval <- rep(1, length(GR))
            count.matrix = count.matrix[, 1:4]
            count.matrix=split(count.matrix, row(count.matrix))
-       if (verbose)
-           cat("*** Performing", stat, "test... \n
-               # of sites after filtering: ", sites, "\n")
-       if (Sys.info()['sysname'] == "Linux") {
+           if (verbose)
+               cat("*** Performing", stat, "test... \n
+                   # of sites after filtering: ", sites, "\n")
+           if (Sys.info()['sysname'] == "Linux") {
                bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
-       } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+           } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
 
-       pvals <- unname(unlist(bplapply(count.matrix, function(v) {
-                   m=matrix(as.integer(v), 2, byrow = TRUE)
-                   bootstrap2x2(x=m, stat=stat, num.permut=num.permut)},
-                   BPPARAM=bpparam)))
+           pvals <- unname(unlist(bplapply(count.matrix, function(v) {
+                           m=matrix(as.integer(v), 2, byrow = TRUE)
+                           bootstrap2x2(x=m, stat=stat, num.permut=num.permut)},
+                           BPPARAM=bpparam)))
+       } else {
+           count.matrix = count.matrix[1:4]
+           pvals <- bootstrap2x2(x=count.matrix, stat=stat,
+                                 num.permut=num.permut)
+       }
 
-       if (!is.null(tv.cut) && !saveAll) {
+       if ((!is.null(tv.cut) | !is.null(hdiv.cut)) &&
+           !saveAll && length(idx) > 0) {
            GR <- GR[idx]
            GR$pvalue <- pvals
            GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
        } else {
-           if (!is.null(tv.cut) && saveAll) {
+           if ((!is.null(tv.cut) | !is.null(hdiv.cut)) &&
+               saveAll && length(idx) > 0) {
                GR$pvalue[idx] <- pvals
                GR$adj.pval[idx] <- p.adjust(pvals, method=pAdjustMethod)
            }
-           if (is.null(tv.cut) && saveAll) {
+           if (is.null(tv.cut) && is.null(hdiv.cut) && saveAll) {
                GR$pvalue <- pvals
                GR$adj.pval <- p.adjust(pvals, method=pAdjustMethod)
            }
