@@ -118,7 +118,7 @@ qggamma <- function(p, alpha=1, scale=1, mu=0,
 #' @description NULL
 #' @details NULL
 #' @export
-rggamma <- function(n, alpha=1, scale=1, psi=1) {
+rggamma <- function(n, alpha=1, scale=1, mu=0, psi=1) {
   if (scale <= 0) stop("'scale' parameter must be positive")
   if (alpha <= 0) stop("'alpha' parameter must be positive")
   if (psi <= 0) stop("'psi' parameter must be positive")
