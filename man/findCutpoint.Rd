@@ -6,7 +6,7 @@
 \usage{
 findCutpoint(LR, min.tv = 0.25, tv.cut = 0.5, predcuts, tv.col,
   div.col = NULL, pval.col = NULL, stat = 1, maximize = TRUE,
-  num.cores = 1L)
+  num.cores = 1L, tasks = tasks)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
@@ -57,9 +57,11 @@ testing. The mapping for statistic names are:
 \item{maximize}{Whether to maximize the performance indicator given in
 parameter 'stat'. Default: TRUE.}
 
-\item{num.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see 'bplapply' function from
-BiocParallel package).}
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
 }
 \value{
 A list with the classification repformance results for the best
