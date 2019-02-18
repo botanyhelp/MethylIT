@@ -104,7 +104,7 @@ findCutpoint <- function(LR, min.tv=0.25, tv.cut=0.5, predcuts, tv.col,
    }
 
    res <- bplapply(predcuts, function(k, LR)
-               classPerform(LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k,
+               classPerform(LR=LR, min.tv=min.tv, tv.cut=tv.cut, cutoff=k,
                            tv.col=tv.col, div.col=div.col, pval.col=pval.col,
                            stat=stat), LR, BPPARAM = bpparam)
    res <- unlist(res)
