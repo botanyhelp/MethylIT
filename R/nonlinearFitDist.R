@@ -173,6 +173,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                    sample.size=sample.size, npoints=npoints, maxiter=maxiter,
                    ftol=ftol, ptol=ptol, verbose=verbose)
        }
+       x <- structure(x, class=c("ProbDistr", "data.frame"))
        return(x)
    }
    if (is.null(num.cores)) {
@@ -192,6 +193,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                  verbose=verbose, BPPARAM=bpparam)
    }
    names(x) <- sn
+   x <- structure(x, class=c("ProbDistrList", "list"))
    return(x)
 }
 
