@@ -16,7 +16,7 @@ pggamma(q, alpha = 1, scale = 1, mu = 0, psi = 1,
 qggamma(p, alpha = 1, scale = 1, mu = 0, psi = 1,
   lower.tail = TRUE, log.p = FALSE)
 
-rggamma(n, alpha = 1, scale = 1, psi = 1)
+rggamma(n, alpha = 1, scale = 1, mu = 0, psi = 1)
 }
 \arguments{
 \item{q}{numeric vector}
