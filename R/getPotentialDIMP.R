@@ -96,7 +96,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                    GGamma3P=pggamma(q, alpha=m[1], scale=m[2], psi=m[3],
                                    lower.tail = FALSE),
                    GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
-                                   psi=m[3], lower.tail = FALSE)
+                                   psi=m[4], lower.tail = FALSE)
            )
        } else p <- (1 - ECDF(q))
 
