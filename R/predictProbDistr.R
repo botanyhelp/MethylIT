@@ -60,7 +60,7 @@ predict.ProbDistr <- function(nlm, pred="quant", q=0.95, dist.name) {
                        GGamma4P = length(m) == 4
                      )
 
-   if (!arg.num) stop("The number mndel paramters does not match the model")
+   if (!arg.num) stop("The number of model parameters does not match the model")
 
    if (pred == "dens") {
        res <- try(switch(dist.name,
