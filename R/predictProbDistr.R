@@ -123,6 +123,7 @@ predict.ProbDistr <- function(nlm, pred="quant", q=0.95, dist.name) {
 
 #' @name predict.ProbDistrList
 #' @rdname predict.ProbDistr
+#' @importFrom BiocParallel MulticoreParam SnowParam bplapply
 #' @export
 
 predict.ProbDistrList<- function(nlm, ...) UseMethod("predict", nlm)
@@ -134,7 +135,7 @@ predict.ProbDistrList <- function(nlm, pred="quant", q=0.95, dist.name,
 
    res <- bplapply(nlm, function(model) {
                predict(model, pred=pred, q=q, dist.name=dist.name)
-           }
+           }, BPPARAM=bpparam
    )
    names(res) <- names(nlm)
    return(res)
