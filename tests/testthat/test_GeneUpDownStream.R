@@ -1,5 +1,5 @@
 library(testthat)
-library(GenomicWordFramework)
+library(MethylIT)
 
 context("GeneUpDownStream tests")
 
