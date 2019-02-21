@@ -139,8 +139,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, div.col=NULL,
        m <- apply(m, 2, cumsum)
        sens <- (m[nr, 2] - m[, 2])/m[nr, 2]
        spec <- m[, 1]/m[nr, 1]
-       # res <- data.frame(sens, spec, prdtr = as.numeric(rownames(m)))
        auc <- sum((sens[-1] + sens[-nr])/2 * abs(diff(1 - spec)))
+       # Youden Index
        idx <- which.max(sens[-1] + spec[-nr])
        cutpoint <- as.numeric(names(idx))
        conf.matrix <- table(dt$idiv > cutpoint, dt$status)
