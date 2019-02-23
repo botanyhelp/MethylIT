@@ -65,9 +65,9 @@ predict.ProbDistr <- function(nlm, pred="quant", q=0.95, dist.name) {
    if (pred == "dens") {
        res <- try(switch(dist.name,
                        Weibull2P=dweibull(q, shape=m[1], scale=m[2]),
-                       Weibull3P=dweibull(q, shape=m[1], scale=m[2]) + m[3],
+                       Weibull3P=dweibull(q - m[3], shape=m[1], scale=m[2]),
                        Gamma2P=dgamma(q, shape=m[1], scale=m[2]),
-                       Gamma3P=dgamma(q, shape=m[1], scale=m[2]) + m[3],
+                       Gamma3P=dgamma(q - m[3], shape=m[1], scale=m[2]),
                        GGamma3P=dggamma(q, alpha=m[1], scale=m[2], psi=m[3]),
                        GGamma4P=dggamma(q, alpha=m[1], scale=m[2], mu=m[3],
                                        psi=m[3])
