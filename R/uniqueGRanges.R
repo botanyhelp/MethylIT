@@ -103,7 +103,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
        if (inherits(ListOfGranges, "try-error")) {
          text <- paste0("Check if the metacolumn names are the same for every
                        GRanges object in the list")
-         message(test)
+         message(text)
          stop(
            "Not all the elements from the list GR are valid GRanges objects")
        }

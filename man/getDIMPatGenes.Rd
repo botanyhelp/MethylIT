@@ -43,7 +43,7 @@ Ref <- makeGRangesFromDataFrame(
                 start = 1:num.points,
                 end = 1:num.points,
                 strand = '*',
-                p1 = rbeta(num.points, shape1 = 1, shape2 = 1.5)),
+                p2 = rbeta(num.points, shape1 = 1, shape2 = 1.5)),
     keep.extra.columns = TRUE)
 
 ## List of Granges objects of individuals methylation levels
