@@ -8,8 +8,7 @@
 #'     created  without metadata columns. Additionally, all metadata must be the
 #'     same class, e.g. all numeric or all characters, or all factor
 #' @param ListOfGranges Objects to combine. A list of GRanges object or a
-#'     GRangesList object. The metacolumn names must be the same for all the
-#'     GRanges objects in the list.
+#'     GRangesList object.
 #' @param ncols integer. Number of columns to use from the meta-column of each
 #'     GRanges object. Default value: NULL. If NULL, all the columns (from
 #'     column 1 to ncols) from each GRanges will be present in the uniqueGRanges
@@ -98,20 +97,22 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
 
    if (class(ListOfGranges) == "list" && class(ListOfGranges) != "GRangesList")
    {
-       ListOfGranges <- try(as(ListOfGranges, "GRangesList"), silent=TRUE)
+       GR <- try(as(ListOfGranges, "GRangesList"), silent=TRUE)
 
        if (inherits(ListOfGranges, "try-error")) {
-         text <- paste0("Check if the metacolumn names are the same for every
-                       GRanges object in the list")
-         message(text)
-         stop(
-           "Not all the elements from the list GR are valid GRanges objects")
+         numgr <- sum(unlist(lapply(ListOfGranges, function(l)
+                                               class(l) == "GRanges")))
+           if (numgr != length(ListOfGranges)) {stop(
+               "Not all the elements from the list are valid GRanges objects")
+           } else {ListOfGranges <- GR; rm(GR); gc()}
        }
    }
 
+   # Set parallel computation
    if (Sys.info()['sysname'] == "Linux") {
        bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
    } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+
    ##samples = names(ListOfGranges)
    unlistfn <- function(x) {
        matrix(unlist(x), ncol=3, byrow=TRUE)
@@ -145,7 +146,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
    if (length(chromosomes) > 1) {
        if (verbose)
            message(" *** Building coordinates for the new GRanges object ..." )
-       granges <- bplapply(chromosomes, function(chr,ListOfGranges) {
+       granges <- bplapply(chromosomes, function(chr, ListOfGranges) {
            n <- length(ListOfGranges)
            strands = c()
            for (k in 1:n) {
