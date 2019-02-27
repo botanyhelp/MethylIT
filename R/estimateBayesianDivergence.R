@@ -72,7 +72,11 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
                                        meth.level=FALSE,
                                        preserve.gr = FALSE, verbose=TRUE) {
 
-   bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+   if (Sys.info()['sysname'] == "Linux") {
+       bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+   } else {
+       bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+   }
    ismatrix <- TRUE
    if (class(x) != "matrix") {
        HDiv <- x
