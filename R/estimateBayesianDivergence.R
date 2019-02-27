@@ -63,7 +63,7 @@
 #'     Lett 80: 206-214.
 #'
 #' @importFrom GenomicRanges GRanges
-#' @importFrom BiocParallel MulticoreParam bplapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom S4Vectors mcols<-
 #' @export
 estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
