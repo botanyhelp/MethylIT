@@ -190,7 +190,7 @@ setMethod("getGRegionsStat", signature(GR="GRanges"),
                                strand(grfeatures), sep="_")
                        cluster.id <- data.frame(cluster.id=text)
                    }
-                   GR <- grfeatures; rm(grfeatures, text); gc()
+                   GR <- grfeatures; rm(grfeatures); gc()
            } else GR <- GRanges()
        }
 
