@@ -4,7 +4,7 @@
 \alias{unlist}
 \alias{unlist.pDMP}
 \alias{unlist.InfDiv}
-\title{Flatten Lists extended to 'pDMP' and 'InfDiv' objects}
+\title{Flatten Lists extended to 'pDMP' and 'InfDiv' classes}
 \usage{
 unlist(x)
 
@@ -16,12 +16,12 @@ unlist(x)
 \item{x}{AN object from the class 'pDMP'.}
 }
 \description{
-Given a 'pDMP' or 'InfDiv' objects, unlist simplifies it to 
+Given a 'pDMP' or 'InfDiv' objects, unlist simplifies it to
     produce a GRanges object which contains all the GRanges components which
     occur in 'pDMP' or 'InfDiv' object.
 }
 \details{
-This is a method to extend unlist generic function to handle 
+This is a method to extend unlist generic function to handle
     the 'pDMP' classes of objects
 }
 \examples{
