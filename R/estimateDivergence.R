@@ -127,5 +127,6 @@ estimateDivergence <- function(ref, indiv, Bayesian=FALSE, columns=NULL,
            }, BPPARAM=bpparam, ref=ref, indv=indiv, sn=sn)
    }
    names(x) <- sn
+   x <- structure(x, class=c("InfDiv", "list"))
    return(x)
 }
