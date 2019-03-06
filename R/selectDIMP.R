@@ -81,7 +81,7 @@
 #' @export
 selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
                        cutpoint, tv.col=NULL, tv.cut=NULL) {
-   if (inherits(LR, what=c("pDMP", "InfDiv")))
+   if (!inherits(LR, what=c("pDMP", "InfDiv")))
        stop("*** LR object must be from 'pDMP' or 'InfDiv' class")
    if (is.null(div.col) && is.null(pval.col))
        stop("*** One of the parameters 'div.col'
