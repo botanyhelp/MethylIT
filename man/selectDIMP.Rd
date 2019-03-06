@@ -54,9 +54,9 @@ Theoretically a DIMP denotes a cytosine position with high
     probabilistic term and not as an absolute deterministic experimental
     output.
 
-    The uncertainty and dynamics of the DNA methylation process, the 
+    The uncertainty and dynamics of the DNA methylation process, the
     continuous action of the omnipresent thermal fluctuations, as well as,
-    the inherent stochasticity of the biochemical reactions make it 
+    the inherent stochasticity of the biochemical reactions make it
     impossible to ensure whether a specific cytosine position is methylated
     in an absolutely deterministic sense. Notice that the concept of DIMP is
     not applicable to a single cell (if we use an instrumentation/protocol

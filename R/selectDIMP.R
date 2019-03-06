@@ -11,9 +11,9 @@
 #'     probabilistic term and not as an absolute deterministic experimental
 #'     output.
 #'
-#'     The uncertainty and dynamics of the DNA methylation process, the 
+#'     The uncertainty and dynamics of the DNA methylation process, the
 #'     continuous action of the omnipresent thermal fluctuations, as well as,
-#'     the inherent stochasticity of the biochemical reactions make it 
+#'     the inherent stochasticity of the biochemical reactions make it
 #'     impossible to ensure whether a specific cytosine position is methylated
 #'     in an absolutely deterministic sense. Notice that the concept of DIMP is
 #'     not applicable to a single cell (if we use an instrumentation/protocol
@@ -81,13 +81,13 @@
 #' @export
 selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
                        cutpoint, tv.col=NULL, tv.cut=NULL) {
+   if (inherits(LR, what=c("pDMP", "InfDiv")))
+       stop("*** LR object must be from 'pDMP' or 'InfDiv' class")
    if (is.null(div.col) && is.null(pval.col))
        stop("*** One of the parameters 'div.col'
-            or 'pval.col' must be not NULL")
+           or 'pval.col' must be not NULL")
    if (is.null(div.col)) target.col = pval.col else target.col = div.col
-   if (inherits(LR, "list")) LR <- try(as(LR, "GRangesList"), silent=TRUE)
-   if (inherits(LR, "try-error")) stop("*** LR is not a list of
-                                       GRanges objects")
+
    for (k in 1:length(LR)) {
        x <- LR[[k]]
        if (!is.null(tv.cut) && !is.null(tv.col))
@@ -96,7 +96,7 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
            LR[[k]] <- x[mcols(x[, target.col])[, 1] < cutpoint]
        } else {
            if (absolute)
-             LR[[k]] <- x[abs(mcols(x[, target.col])[, 1]) > cutpoint]
+               LR[[k]] <- x[abs(mcols(x[, target.col])[, 1]) > cutpoint]
            else LR[[k]] <- x[mcols(x[, target.col])[, 1] > cutpoint]
        }
    }
