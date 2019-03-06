@@ -3,17 +3,12 @@
 \name{unlist}
 \alias{unlist}
 \alias{unlist.pDMP}
-\alias{unlist.InfDiv}
 \title{Flatten Lists extended to 'pDMP' and 'InfDiv' classes}
 \usage{
 unlist(x, recursive = TRUE, use.names = TRUE)
-
-\method{unlist}{pDMP}(x)
-
-\method{unlist}{InfDiv}(x)
 }
 \arguments{
-\item{x}{AN object from the class 'pDMP'.}
+\item{x}{Any list R object.}
 }
 \description{
 Given a 'pDMP' or 'InfDiv' objects, unlist simplifies it to
@@ -22,11 +17,11 @@ Given a 'pDMP' or 'InfDiv' objects, unlist simplifies it to
 }
 \details{
 This is a method to extend unlist generic function to handle
-    the 'pDMP' classes of objects
+    any list of objects from the same class.
 }
 \examples{
 gr1 <-GRanges(seqnames = "chr2", ranges = IRanges(3, 6),
-          strand = "+", score = 5L, GC = 0.45)
+              strand = "+", score = 5L, GC = 0.45)
 gr2 <-
   GRanges(seqnames = c("chr1", "chr1"),
           ranges = IRanges(c(7,13), width = 3),
@@ -36,7 +31,5 @@ gr3 <-
           ranges = IRanges(c(1, 4), c(3, 9)),
           strand = c("-", "-"), score = c(6L, 2L), GC = c(0.4, 0.1))
 grl <- list("gr1" = gr1, "gr2" = gr2, "gr3" = gr3)
-# unlist(grl) # It does not work
-class(grl) <-'InfDiv' # A trick
-unlist(grl) # It works
+unlist(grl)
 }
