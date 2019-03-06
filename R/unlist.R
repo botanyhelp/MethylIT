@@ -1,10 +1,8 @@
 #' @rdname unlist
-#' @aliases unlist.pDMP
-#' @aliases unlist.InfDiv
 #' @title Flatten Lists extended to 'pDMP' and 'InfDiv' classes
-#' @description Given a 'pDMP' or 'InfDiv' objects, unlist simplifies it to
-#'     produce a GRanges object which contains all the GRanges components which
-#'     occur in 'pDMP' or 'InfDiv' object.
+#' @description Given a list 'x' of R objects from the same class and same
+#'     format, unlist simplifies it to produce a new R object which contains all
+#'     the initial components which in 'x' object.
 #' @param x Any list R object.
 #' @details This is a method to extend unlist generic function to handle
 #'     any list of objects from the same class.
@@ -21,6 +19,7 @@
 #'           ranges = IRanges(c(1, 4), c(3, 9)),
 #'           strand = c("-", "-"), score = c(6L, 2L), GC = c(0.4, 0.1))
 #' grl <- list("gr1" = gr1, "gr2" = gr2, "gr3" = gr3)
+#' base::unlist(grl) # The default unlist does not work
 #' unlist(grl)
 
 setGeneric("unlist", signature = "x")
