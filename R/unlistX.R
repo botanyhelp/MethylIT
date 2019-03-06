@@ -25,8 +25,6 @@
 #' class(grl) <-'InfDiv' # A trick
 #' unlist(grl) # It works
 
-unlist <- function(x) UseMethod("unlist", x)
-
 #' @name unlist.pDMP
 #' @rdname unlistX
 #' @export
