@@ -1,5 +1,5 @@
 #' @rdname unlist
-#' @title Flatten Lists extended to 'pDMP' and 'InfDiv' classes
+#' @title Flatten lists extended to any class
 #' @description Given a list 'x' of R objects from the same class and same
 #'     format, unlist simplifies it to produce a new R object which contains all
 #'     the initial components which in 'x' object.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/unlist.R
 \name{unlist}
 \alias{unlist}
-\title{Flatten Lists extended to 'pDMP' and 'InfDiv' classes}
+\title{Flatten lists extended to any class}
 \usage{
 unlist(x, recursive = TRUE, use.names = TRUE)
 }
