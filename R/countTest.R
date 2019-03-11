@@ -59,7 +59,7 @@
 #'                                 ~ condition)
 #'     countTest(dds)
 #'
-#' @importFrom parallel mclapply
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom stats p.adjust sd
 #' @importFrom DESeq2 dispersions sizeFactors<- estimateDispersions counts
 #'     estimateDispersionsGeneEst estimateSizeFactors sizeFactors
@@ -164,12 +164,17 @@ countTest <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        }
    }
    if (num.cores > 1) {
-       tests <- mclapply(1:nrow(X),
+       if (Sys.info()['sysname'] == "Linux") {
+           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else {
+           bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+       }
+       tests <- bplapply(1:nrow(X),
                        function(k) .estimateGLM(x=X[k, ], groups=group,
                                                baseMV=baseMeanAndVar[k, ],
                                                w=w[k, ], MVrate=MVrate,
                                                test=test[1]),
-                       mc.cores=num.cores)
+                       BPPARAM=bpparam)
        tests=do.call(rbind, tests)
    }
 
