@@ -1,30 +1,34 @@
 #' @rdname predict.LogisticR
 #' @name predict.LogisticR
 #' @aliases predict.LogisticR
-#' @title Predict function for 'LogisticR' method
-#' @description Predict using a PCA-LDA model built with function 'LogisticR'
+#' @title Predict function for logistic regression model from 'LogisticR' class
+#' @description Predict using a logistic model obtained from the output of
+#'     function \code{\link{evaluateDIMPclass}}.
 #' @details This function is specific for predictions based on a logistic model
-#'     given by function 'evaluateDIMPclass'. A logistic model obtained with
-#'     'glm' regression can be used directly with function 'predict' from
-#'     'stats' package.
-#' @param object To use with function 'predict'. A 'glm' object from a logistic
-#'     model containing a list of two objects: 1) an object of class inheriting
-#'     from "lda" and 2) an object of class inheriting from "prcomp".
+#'     given by function \code{\link{evaluateDIMPclass}}. A logistic model is
+#'     obtained with 'glm' regression can be used directly with function
+#'     'predict' from 'stats' package.
+#' @param object To use with function 'predict'. An object from 'LogisticR'
+#'     class. A logistic model given by function
+#'     \code{\link{evaluateDIMPclass}}.
 #' @param newdata To use with function 'predict'. New data for classification
-#'     prediction
+#'     prediction. Optionally, a data frame in which to look for variables with
+#'     which to predict. If omitted, the fitted linear predictors are used.
 #' @param type To use with function 'predict'. . The type of prediction
-#'     required. The default is "all" given by function 'predict.lda' from MASS
-#'     package: 'class', 'posterior', and 'scores' (see ?predict.lda).
+#'     required. The default is "class". Possible outputs are:
+#'     'class', 'posterior', and 'scores' (see ?predict.lda).
 #' @param ... Not in use.
 #'
 #' @return A character vector of prediction classes or a numeric vector of
 #'   probabilities or a list containing the two vectors: prediction classes
-#'   and probabilities.
+#'   and 'posteriors' probabilities.
 #'
 #' @export
 predict.LogisticR <- function(object, ...) UseMethod("predict")
-predict.LogisticR <- function(object, newdata,
-                              type=c("class", "probabilities", "all"), ...) {
+predict.LogisticR <- function(object, newdata = NULL,
+                              type=c("class", "posteriors", "all"), ...) {
+   if (!is.element(type, c("class", "posteriors", "all")))
+       stop("The type setting '", type, "' does not exist")
    if (!inherits(object, "LogisticR")) {
        stop("* 'object' must be logistic a model from class 'LogisticR'")
    }
@@ -36,10 +40,11 @@ predict.LogisticR <- function(object, newdata,
    vn <- union(v, inter)
 
    object <- structure(object, class=c("glm", "lm"))
-   pred <- predict.glm(object, newdata=newdata[, vn], type="response")
+   if (!is.null(newdata)) newdata=newdata[, vn]
+   pred <- predict.glm(object, newdata=newdata, type="response")
    PredClass <- rep( "CT", length(pred))
    PredClass[pred > 0.5] <- "TT"
-   pred <- switch(type[1], class=PredClass, probabilities=pred,
-               all=list(class=PredClass, probabilities=pred))
+   pred <- switch(type[1], class=PredClass, posteriors=pred,
+               all=list(class=PredClass, posteriors=pred))
    return(pred)
 }

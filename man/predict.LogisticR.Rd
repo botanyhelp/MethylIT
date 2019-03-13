@@ -2,36 +2,38 @@
 % Please edit documentation in R/predictLogisticR.R
 \name{predict.LogisticR}
 \alias{predict.LogisticR}
-\title{Predict function for 'LogisticR' method}
+\title{Predict function for logistic regression model from 'LogisticR' class}
 \usage{
-\method{predict}{LogisticR}(object, newdata, type = c("class",
-  "probabilities", "all"), ...)
+\method{predict}{LogisticR}(object, newdata = NULL, type = c("class",
+  "posteriors", "all"), ...)
 }
 \arguments{
-\item{object}{To use with function 'predict'. A 'glm' object from a logistic
-model containing a list of two objects: 1) an object of class inheriting
-from "lda" and 2) an object of class inheriting from "prcomp".}
+\item{object}{To use with function 'predict'. An object from 'LogisticR'
+class. A logistic model given by function
+\code{\link{evaluateDIMPclass}}.}
 
 \item{newdata}{To use with function 'predict'. New data for classification
-prediction}
+prediction. Optionally, a data frame in which to look for variables with
+which to predict. If omitted, the fitted linear predictors are used.}
 
 \item{type}{To use with function 'predict'. . The type of prediction
-required. The default is "all" given by function 'predict.lda' from MASS
-package: 'class', 'posterior', and 'scores' (see ?predict.lda).}
+required. The default is "class". Possible outputs are:
+'class', 'posterior', and 'scores' (see ?predict.lda).}
 
 \item{...}{Not in use.}
 }
 \value{
 A character vector of prediction classes or a numeric vector of
   probabilities or a list containing the two vectors: prediction classes
-  and probabilities.
+  and 'posteriors' probabilities.
 }
 \description{
-Predict using a PCA-LDA model built with function 'LogisticR'
+Predict using a logistic model obtained from the output of
+    function \code{\link{evaluateDIMPclass}}.
 }
 \details{
 This function is specific for predictions based on a logistic model
-    given by function 'evaluateDIMPclass'. A logistic model obtained with
-    'glm' regression can be used directly with function 'predict' from
-    'stats' package.
+    given by function \code{\link{evaluateDIMPclass}}. A logistic model is
+    obtained with 'glm' regression can be used directly with function
+    'predict' from 'stats' package.
 }
