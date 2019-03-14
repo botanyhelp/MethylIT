@@ -186,6 +186,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    res <- structure(res, class = c("CutPoint", "list"))
 
    # ------------------------------------------------------------------------- #
+   if (!is.null(control.names)&&!is.null(treatment.names))
+     LR = try(LR[c(control.names, treatment.names)], silent=TRUE)
+   if (inherits(LR, "try-error"))
+     stop("List's names does not match control & treatment names")
+
    lcc <- unlist(lapply(control.names, function(k) length(LR[[k]]) > 0))
    ltt <- unlist(lapply(treatment.names, function(k) length(LR[[k]]) > 0))
    vn <- c("hdiv", "TV")
