@@ -8,9 +8,9 @@ validateClass <- function(LR, ...) UseMethod("validateClass", LR)
 #' @name validateClass.default
 #' @export
 validateClass.default <- function(LR, ...){
-  warning(paste("'validateClass' does not know how to handle object of class ",
+  warning(paste("'validateClass' does not know how to handle object of class",
                class(LR),
-               " and can only be used on classes 'pDMP', 'InfDiv'"))
+               "and can only be used on classes 'pDMP', 'InfDiv'"))
 
 }
 
