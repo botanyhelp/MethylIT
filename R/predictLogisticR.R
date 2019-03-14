@@ -27,20 +27,50 @@
 predict.LogisticR <- function(object, ...) UseMethod("predict")
 predict.LogisticR <- function(object, newdata = NULL,
                               type=c("class", "posteriors", "all"), ...) {
-   if (!is.element(type, c("class", "posteriors", "all")))
+   if (!is.element(type[1], c("class", "posteriors", "all")))
        stop("The type setting '", type, "' does not exist")
    if (!inherits(object, "LogisticR")) {
        stop("* 'object' must be logistic a model from class 'LogisticR'")
    }
-   v <- c("hdiv", "TV", "logP", "pos")
-   vn <- setdiff(names(coef(object)),"(Intercept)")
-   v <- v[is.element(vn, v)]
-   inter <- unlist(lapply(grep("[:]", vn),
-                        function(k) strsplit(vn[k], split = ":")[[1]]))
-   vn <- union(v, inter)
+
+   # ---This builds data frames from newdata from class 'pDMP' or 'InfDiv' ----#
+   if (!is.null(newdata) &&
+           (inherits(newdata, 'pDMP') || inherits(newdata, 'InfDiv'))) {
+       if (!validateClass(newdata)) {
+           stop("newdata is not a valid object from class '",
+               class(newdata),"'" )
+       }
+       position <- function(gr) {
+           chrs <- split(gr, seqnames(gr))
+           gr <- lapply(chrs, function(grc) {
+               x <- start(grc)
+               x.min <- min(x)
+               x.max <- max(x)
+               delta <-  max(c(x.max - x, 1))
+               return((x - x.min) / (delta))})
+           return(unlist(gr))
+       }
+       v <- c("hdiv", "TV", "logP", "pos")
+       vn <- setdiff(names(coef(object)),"(Intercept)")
+       v <- v[is.element(vn, v)]
+       inter <- unlist(lapply(grep("[:]", vn),
+                           function(k) strsplit(vn[k], split = ":")[[1]]))
+       vn <- union(v, inter)
+
+       dt <- data.frame()
+       for (k in 1:length(newdata)) {
+           dc <- c()
+           x <- newdata[[k]]
+           dc <- cbind(hdiv=x$hdiv, TV=x$TV, logP=log10(x$wprob + 2.2e-308),
+                       pos = position(x))
+           dt <- rbind(dt, data.frame(dc))
+       }
+       dt <- dt[, vn]
+   }
+   # ---------------------------------------------------------------------#
 
    object <- structure(object, class=c("glm", "lm"))
-   if (!is.null(newdata)) newdata=newdata[, vn]
+   if (!is.null(newdata)) newdata = dt
    pred <- predict.glm(object, newdata=newdata, type="response")
    PredClass <- rep( "CT", length(pred))
    PredClass[pred > 0.5] <- "TT"
