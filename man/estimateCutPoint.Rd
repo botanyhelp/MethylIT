@@ -5,8 +5,14 @@
 \title{Estimate cutpoints to distinguish the treatment methylation signal
     from the control}
 \usage{
-estimateCutPoint(LR, control.names, treatment.names, div.col = NULL,
-  absolute = FALSE, grouping = FALSE, verbose = TRUE)
+estimateCutPoint(LR, control.names, treatment.names, simple = TRUE,
+  column = c(hdiv = FALSE, TV = FALSE, wprob = FALSE, pos = FALSE),
+  classifier1 = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
+  "pca.qda"), classifier2 = NULL, post.cut = 0.5, clas.perf = FALSE,
+  prop = 0.6, tv.cut = 0.25, n.pc = 1, find.cut = FALSE,
+  cut.interval = c(0.5, 0.8), cut.incr = 0.01, stat = 1,
+  num.cores = 1L, tasks = 0L, tol = .Machine$double.eps^0.5,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges objects containing a divergence variable used to
@@ -17,6 +23,8 @@ must correspond to a sample, for example, sample 's1'. Then this sample
 can be accessed in the list of GRanges objects as LR$s1.}
 
 \item{treatment.names}{Same type and function as 'control.names'.}
+
+\item{verbose}{If TRUE, prints the function log to stdout.}
 
 \item{div.col}{Column number for divergence variable used in the ROC
 analysis and estimation of the cutpoints.}
@@ -32,8 +40,6 @@ here absolute must be turned TRUE.}
 grouped into one set, and the same for the treatment samples. The new
 samples are named: 'ctrl' and 'treat' and, consequently, only a cutpoint
 (treat' versus 'ctrl') is estimated.}
-
-\item{verbose}{If TRUE, prints the function log to stdout.}
 }
 \value{
 A list of three matrices cutpoint matrix values, AUC matrix values,
