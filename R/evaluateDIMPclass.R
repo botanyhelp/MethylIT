@@ -192,15 +192,19 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                              "radial", "sigmoid"),
                                seed=1234, verbose=TRUE) {
 
+   # -------------------------- valid "pDMP" object--------------------------- #
+   validateClass(LR)
+   # ---------------------------------------------------=--------------------- #
    if (sum(column) == 0)
        stop(paste("*** At least one of columns with the predictor variables",
-               " 'hdiv', 'TV', logP, or pos' must be provided"))
+               " 'hdiv', 'TV', 'wprob', or pos' must be provided"))
    if ((classifier[1] != "logistic" ) && sum(column) < n.pc) {
        stop(paste("* The number of predictor variables must be greater or ",
                "equal to n.pc"))
    }
    set.seed(seed)
 
+   # -------------------------- Auxiliary functions -------------------------- #
    position <- function(gr) {
        chrs <- split(gr, seqnames(gr))
        gr <- lapply(chrs, function(grc) {
@@ -236,7 +240,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
            if (column["pos"] || sum(grepl("pos", interaction)) > 0) {
                dc = cbind(dc, pos = position(x))
            }
-           dt <- rbind(dt, data.frame(dc, treat=sn[k]))
+           dt <- rbind(dt, data.frame(dc, treat = sn[k]))
        }
        return(dt)
    }
@@ -249,12 +253,17 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        dt$treat[dt$treat == l[1]] <- 0
        dt$treat[dt$treat == l[2]] <- 1
        dt$treat <- as.numeric(dt$treat)
-       model <- suppressWarnings(glm(formula, family=binomial(link='logit'),
-                               data=dt))
-       return(model)
+       model <- try(suppressWarnings(glm(formula, family=binomial(link='logit'),
+                               data=dt)),
+                    silent = TRUE)
+       if (!inherits(model, "try-error")) {
+         model <- structure(model, class = c("LogisticR", "glm", "lm"))
+         return(model)
+       }
+       else stop("The logistic model cannot be fitted")
    }
-
-   ## ======= To build the regression formula ======== ##
+   # -----------------------------------------------------------------=------- #
+   ## =================== To build the regression formula =================== ##
    vn <- c("hdiv", "TV", "logP", "pos")
    cn <- column; names(cn) <- c("hdiv", "TV", "logP", "pos")
    form <- as.character(outer(vn, vn, FUN=paste, sep = ":"))
@@ -279,7 +288,8 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        form <- paste0("treat ~ ", paste(vn[cn], collapse=" + "))
        formula <- as.formula(form)}
    if (verbose) message("Model: ", form)
-   ## ======== data preprocessing ======== ##
+   # ------------------------------------------------------------------------ #
+   ## ========================== data preprocessing ======================== ##
    sn <- names(LR)
    idx.ct <- match(control.names, sn)
    idx.tt <- match(treatment.names, sn)
@@ -288,7 +298,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
    TT <- LR[idx.tt]
    TT <- unlist(TT)
 
-  ## ======== computation =========== ##
+  ## =============================== Core function ========================== ##
    conf.mat <- function(k) {
        lct <- length(CT)
        ltt <- length(TT)
@@ -328,7 +338,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                center=center))
        PredTestSet <- switch(classifier[1],
                        logistic=predict.glm(model, newdata=testSet,
-                                                type="response"),
+                                           type="response"),
                        lda=predict(model,
                                newdata=testSet)$posterior[,"TT"],
                        qda=predict(model,
@@ -356,6 +366,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        FDR=m[2,1]/sum(m[2,])
        return(list(Performance=conf.mat, FDR=FDR, model=model))
    }
+  # -------------------------------------------------------------------------- #
 
    if (output != "conf.mat") {
        if (.Platform$OS.type == "unix") {
