@@ -83,6 +83,11 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
                        cutpoint, tv.col=NULL, tv.cut=NULL) {
    if (!inherits(LR, what=c("pDMP", "InfDiv")))
        stop("*** LR object must be from 'pDMP' or 'InfDiv' class")
+
+  # -------------------------- valid "pDMP" object ----------------------------
+  validateClass(LR)
+  # ------------------------------------------------------------------------- #
+
    if (is.null(div.col) && is.null(pval.col))
        stop("*** One of the parameters 'div.col'
            or 'pval.col' must be not NULL")
