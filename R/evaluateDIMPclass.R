@@ -49,14 +49,12 @@
 #'     Component (PCs) estimated with Principal Component Analysis (PCA) as
 #'     predictor variables. pca.lda" applies LDA using PCs as predictor
 #'     variables, and the option "pca.qda" applies a Quadratic Discriminant
-#'     Analysis (QDA) using PCs as predictor variables. 'SVM' applies Support
-#'     Vector Machines classifier from R package e1071.
+#'     Analysis (QDA) using PCs as predictor variables.
 #' @param pval.col Column number for p-value used in the performance
 #'     analysis and estimation of the cutpoints. Default: NULL. If NULL it is
 #'     assumed that the column is named "wprob".
-#' @param n.pc Number of principal components (PCs) to use in the LDA. Only
-#'     used if classifier = "pcaLDA". In the current case, the maximun number
-#'     of PCs is 4.
+#' @param n.pc Number of principal components (PCs) to use if the classifier is
+#'     not 'logistic'. In the current case, the maximun number of PCs is 4.
 #' @param center A logical value indicating whether the variables should be
 #'     shifted to be zero centered (same as in 'prcomp' {prcomp}). Only used if
 #'     classifier = "pcaLDA".
@@ -79,13 +77,6 @@
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
 #'     (only for Linux OS).
-#' @param cachesize To be use in SVM. Cache memory in MB (default 40).
-#' @param tolerance Only used for SVM classifier, tolerance of termination
-#'     criterion (default: 0.001)
-#' @param svm.kernel The kernel used in training and predicting in SVM
-#'     classifier. You might consider changing some of the following
-#'     parameters, depending on the kernel type: "linear", "polynomial",
-#'     "radial", "sigmoid" (see ?svm).
 #' @param seed Random seed used for random number generation.
 #' @param verbose if TRUE, prints the function log to stdout
 #'
@@ -181,16 +172,12 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                column=c(hdiv=FALSE, TV=FALSE,
                                          wprob=FALSE, pos=FALSE),
                                classifier=c("logistic", "pca.logistic", "lda",
-                                             "svm", "qda","pca.lda", "pca.qda"),
+                                             "qda","pca.lda", "pca.qda"),
                                pval.col=NULL,
                                n.pc=1, center=FALSE, scale=FALSE,
                                interaction=NULL, output="conf.mat",
                                prop=0.6, num.boot=100, num.cores=1L,
-                               tasks=0L, cachesize=250007,
-                               tolerance=0.0001,
-                               svm.kernel=c("linear", "polynomial",
-                                             "radial", "sigmoid"),
-                               seed=1234, verbose=TRUE) {
+                               tasks=0L, seed=1234, verbose=TRUE) {
 
    # -------------------------- valid "pDMP" object--------------------------- #
    validateClass(LR)
@@ -324,10 +311,6 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                tol=1.0e-4),
                        qda=qda(formula=formula, data=trainingSet,
                                tol=1.0e-4),
-                       svm=svm(formula=formula, data=trainingSet,
-                               kernel=svm.kernel[1], cachesize=cachesize,
-                               scale=scale, center = center, probability=TRUE,
-                               type="C-classification", tolerance=tolerance),
                        pca.lda=pcaLDA(formula=formula,
                                data=trainingSet, n.pc=n.pc,
                                max.pc=4, scale=scale,
@@ -343,8 +326,6 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                newdata=testSet)$posterior[,"TT"],
                        qda=predict(model,
                                newdata=testSet)$posterior[,"TT"],
-                       svm=attributes(predict(model, newdata=testSet,
-                               probability = TRUE))$prob[,"TT"],
                        pca.logistic=predict(model, newdata=testSet,
                                type="response"),
                        pca.lda=predict(model, newdata=testSet[ ,vn[cn]],

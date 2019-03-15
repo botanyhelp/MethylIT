@@ -6,12 +6,11 @@
 \usage{
 evaluateDIMPclass(LR, control.names, treatment.names, column = c(hdiv =
   FALSE, TV = FALSE, wprob = FALSE, pos = FALSE),
-  classifier = c("logistic", "pca.logistic", "lda", "svm", "qda",
-  "pca.lda", "pca.qda"), pval.col = NULL, n.pc = 1, center = FALSE,
+  classifier = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
+  "pca.qda"), pval.col = NULL, n.pc = 1, center = FALSE,
   scale = FALSE, interaction = NULL, output = "conf.mat",
   prop = 0.6, num.boot = 100, num.cores = 1L, tasks = 0L,
-  cachesize = 250007, tolerance = 1e-04, svm.kernel = c("linear",
-  "polynomial", "radial", "sigmoid"), seed = 1234, verbose = TRUE)
+  seed = 1234, verbose = TRUE)
 }
 \arguments{
 \item{LR}{A list of GRanges objects (LR) including control and treatment
@@ -42,16 +41,14 @@ Analysis (LDA); "qda" applies a Quadratic Discriminant Analysis (QDA),
 Component (PCs) estimated with Principal Component Analysis (PCA) as
 predictor variables. pca.lda" applies LDA using PCs as predictor
 variables, and the option "pca.qda" applies a Quadratic Discriminant
-Analysis (QDA) using PCs as predictor variables. 'SVM' applies Support
-Vector Machines classifier from R package e1071.}
+Analysis (QDA) using PCs as predictor variables.}
 
 \item{pval.col}{Column number for p-value used in the performance
 analysis and estimation of the cutpoints. Default: NULL. If NULL it is
 assumed that the column is named "wprob".}
 
-\item{n.pc}{Number of principal components (PCs) to use in the LDA. Only
-used if classifier = "pcaLDA". In the current case, the maximun number
-of PCs is 4.}
+\item{n.pc}{Number of principal components (PCs) to use if the classifier is
+not 'logistic'. In the current case, the maximun number of PCs is 4.}
 
 \item{center}{A logical value indicating whether the variables should be
 shifted to be zero centered (same as in 'prcomp' {prcomp}). Only used if
@@ -81,16 +78,6 @@ of the logistic regression: group versus divergence (at DIMPs).}
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
 (only for Linux OS).}
-
-\item{cachesize}{To be use in SVM. Cache memory in MB (default 40).}
-
-\item{tolerance}{Only used for SVM classifier, tolerance of termination
-criterion (default: 0.001)}
-
-\item{svm.kernel}{The kernel used in training and predicting in SVM
-classifier. You might consider changing some of the following
-parameters, depending on the kernel type: "linear", "polynomial",
-"radial", "sigmoid" (see ?svm).}
 
 \item{seed}{Random seed used for random number generation.}
 
