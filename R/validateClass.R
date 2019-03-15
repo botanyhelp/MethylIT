@@ -22,6 +22,7 @@ validateClass.pDMP <- function(LR) {
    vn <- c("hdiv", "TV", "wprob")
    if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges")))) {
        warning("At least one element from 'LR' is not a 'GRanges' object")
+       cat("\n")
        stop("LR is not a valid 'pDMP' object")
    }
    nams <- unlist(lapply(LR, function(GR) {
@@ -30,6 +31,7 @@ validateClass.pDMP <- function(LR) {
    }))
    if (any(nams != 3)) {
        warning("At least one element from 'LR' has incorrect column names")
+       cat("\n")
        stop("LR is not a valid 'pDMP' object")
    } else invisible(TRUE)
 }
@@ -39,9 +41,10 @@ validateClass.pDMP <- function(LR) {
 #' @export
 validateClass.InfDiv <- function(LR, ...) UseMethod("validateClass", LR)
 validateClass.InfDiv <- function(LR) {
-   vn <- c("hdiv", "TV", "wprob")
+   vn <- c("hdiv", "TV")
    if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges")))) {
        warning("At least one element from 'LR' is not a 'GRanges' object")
+       cat("\n")
        stop("LR is not a valid 'InfDiv' object")
    }
    nams <- unlist(lapply(LR, function(GR) {
@@ -50,6 +53,7 @@ validateClass.InfDiv <- function(LR) {
    }))
    if (any(nams != 3)) {
        warning("At least one element from 'LR' has incorrect column names")
+       cat("\n")
        stop("LR is not a valid 'InfDiv' object")
    } else invisible(TRUE)
 }
