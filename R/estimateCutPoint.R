@@ -7,44 +7,107 @@
 #'     treatments in terms of an information divergence
 #'     (given the meta-columns), the function estimates the cutpoints of the
 #'     control group versus treatment group.
-#' @details The function performs an estimation of the optimal cutpoint from
-#'     the area under the curve (AUC) of a receiver operating characteristic
-#'     (ROC) and the accuracy for the classification of the cytosine positions
-#'     based on the cutpoint into two classes: DIMPs from control and DIMPs
-#'     from treatment.
+#' @details The function performs an estimation of the optimal cutpoint for the
+#'     classification of the differentially methylated (cytosines) positions
+#'     into two classes: DMPs from control and DMPs from treatment. The simplest
+#'     approach to estimate the cutpoint  is based on the application of Youden
+#'     Index. More complexes approach based in several machine learning model
+#'     are provided as well.
 #'
-#'     In this context, the AUC is the probability of being able to distinguish
-#'     the biological regulatory signal naturally generated in the control from
-#'     that one induced by the treatment. The cytosine sites carrying a
-#'     methylation signal shall be called differentially informative methylated
-#'     positions (DIMP). Now, the probability that a DIMP is not induced by the
-#'     treatment is given by the probability of false alarm
-#'     (PFA, false positive). That is, the biological signal is naturally
-#'     present in the control as well as in the treatment.
+#'     Results of the classification perfomance resulting from the estimated
+#'     cutpoint are normally given, with the exception of those extreme
+#'     situations where the statistics to evaluate performance cannot be
+#'     estimated. More than one classifier model can be applied. For example,
+#'     one classifier (logistic model) can be used to esitmate the posterior
+#'     classification probabilities of DMP into those from control and those
+#'     from treatment. This probabilities are then used to estimate the cutpoint
+#'     in range of values from, say, 0.5 to 0.8. Next, a different classifier
+#'     can be used to evaluate the classification performance. Different
+#'     classifier models would yield different performances. Models are returned
+#'     and can be used in futher prediction with new datasets from the same
+#'     batch experiment. This is a machine learnig approach to discriminate the
+#'     biological regulatory signal naturally generated in the control from that
+#'     one induced by the treatment.
 #'
-#' @param LR A list of GRanges objects containing a divergence variable used to
-#'     perform ROC analysis and estimate the cutpoint
-#' @param control.names Names/IDs of the control samples. Each GRanges object
-#'     must correspond to a sample, for example, sample 's1'. Then this sample
-#'     can be accessed in the list of GRanges objects as LR$s1.
-#' @param treatment.names Same type and function as 'control.names'.
-#' @param div.col Column number for divergence variable used in the ROC
-#'     analysis and estimation of the cutpoints.
-#' @param absolute Logic (default, FALSE). Total variation (TV, the difference
-#'     of methylation levels) is normally an output in the downstream MathylIT
-#'     analysis. If 'absolute = TRUE', then TV is tranformed into |TV|, which is
-#'     an information divergence that can be fitted to Weibull or to Generalized
-#'     Gamma distribution. So, if the nonlinear fit was performed for |TV|, then
-#'     here absolute must be turned TRUE.
-#' @param grouping Logic (default, FALSE). If TRUE, then all control samples are
-#'     grouped into one set, and the same for the treatment samples. The new
-#'     samples are named: 'ctrl' and 'treat' and, consequently, only a cutpoint
-#'     (treat' versus 'ctrl') is estimated.
-#'@param verbose If TRUE, prints the function log to stdout.
-#' @return A list of three matrices cutpoint matrix values, AUC matrix values,
-#'     and accuracy matrices values. These matrices values derives from all
-#'     possible ROC analysis: control sample_i versus treatment sample_j (i,j =
-#'     1,2, ...).
+#' @param LR An object from 'pDMP' class. This obejct is previously obtained
+#'     with function \code{\link{getPotentialDIMP}}.
+#' @param control.names,treatment.names Names/IDs of the control and
+#'     treatment samples, which must be include in the variable LR.
+#' @param simple Logic (default, TRUE). If TRUE, then Youden Index is used to
+#'     estimate the cutpoint.
+#' @param column a logical vector for column names for the predictor variables
+#'     to be used: Hellinger divergence "hdiv", total variation "TV",
+#'     probability of potential DIMP "wprob", and the relative cytosine site
+#'     position "pos" in respect to the chromosome where it is located. The
+#'     relative position is estimated as (x - x.min)/(x.max - x), where x.min
+#'     and x.max are the maximum and minimum for the corresponding chromosome,
+#'     repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+#'     be used as predictor in place of "wprob".
+#' @param classifier1,classifier2 Classification model to use. Option "logistic"
+#'     applies a logistic regression model; option "lda" applies a Linear
+#'     Discriminant Analysis (LDA); "qda" applies a Quadratic Discriminant
+#'     Analysis (QDA), "pca.logistic" applies logistic regression model using
+#'     the Principal Component (PCs) estimated with Principal Component Analysis
+#'     (PCA) as predictor variables. pca.lda" applies LDA using PCs as predictor
+#'     variables, and the option "pca.qda" applies a Quadratic Discriminant
+#'     Analysis (QDA) using PCs as predictor variables. If classifier2 is not
+#'     NULL, then it will be used to evaluate the classification performance,
+#'     and the corresponding best fitted model will be returned.
+#' @param tv.cut A cutoff for the total variation distance to be applied to each
+#'     site/range. Only sites/ranges *k* with \eqn{TVD_{k} > tv.cut} are
+#'     are used in the analysis. Its value must be a number
+#'     \eqn{0 < tv.cut < 1}. Default is \eqn{tv.cut = 0.25}.
+#' @param div.col Column number for divergence variable for which the estimation
+#'     of the cutpoint will be performed.
+#' @param clas.perf Logic. Whether to evaluate the classification performance
+#'     for the estimated cutpoint using a model classifier when 'simple=TRUE'.
+#'     Default, FALSE.
+#' @param post.cut If 'simple=FALSE', this is posterior probability to dicide
+#'     whether a DMPs belong to treatment group. Default *post.cut* = 0.5.
+#' @param prop Proportion to split the dataset used in the logistic regression:
+#'     group versus divergence (at DIMPs) into two subsets, training and
+#'     testing.
+#' @param n.pc Number of principal components (PCs) to use if the classifier is
+#'     not 'logistic'. In the current case, the maximun number of PCs is 4.
+#' @param find.cut Logic. Wether to search for an optimal cutoff value to
+#'     classify DMPs based on given specifications.
+#' @param cut.interval 0 < *cut.interval* < 0.1. If *find.cut*= TRUE, the
+#'     interval of treatment group posterior probabilities where to search for a
+#'     cutpoint. Deafult *cut.interval* = c(0.5, 0.8).
+#' @param cut.incr 0 < *cut.incr* < 0.1. If *find.cut*= TRUE, the sucesive
+#'     increamental values runing on the interval *cut.interval*. Deafult,
+#'     *cut.incr* = 0.01.
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
+#' @param stat An integer number indicating the statistic to be used in the
+#'     testing when *find.cut* = TRUE. The mapping for statistic names are:
+#'     0 = "Accuracy", 1 = "Sensitivity", 2 = "Specificity",
+#'     3 = "Pos Pred Value", 4 = "Neg Pred Value", 5 = "Precision",
+#'     6 = "Recall", 7 = "F1",  8 = "Prevalence", 9 = "Detection Rate",
+#'     10 = "Detection Prevalence", 11 = "Balanced Accuracy", 12 = FDR.
+#' @return Depending the paramter setting will return the following list with
+#'     elements:
+#'     \enumerate{
+#'         \item cutpoint: Estimated cutpoint
+#'         \item testSetPerformance: Performance evaluation on the test set
+#'         \item testSetModel.FDR: False discovery rate on the test set
+#'         \item model: Model used to performance evaluation
+#'         \item modelConfMatrix: Confusion matrix for the whole dataset derived
+#'               applying the model classifier used in the performance
+#'               evaluation.
+#'         \item initModel: Initial classifier model pallied to estimate
+#'               posterior classifications used in the cutpoint estimation.
+#'         \item postProbCut: POsterior probability used to estimate the
+#'               cutpoint
+#'         \item classifier: Name of the model classifier used in the
+#'               performance evaluation.
+#'         \item statistic: Name of the performance statistic used to find the
+#'               cutpoint when find.cut =  TRUE.
+#'         \item optStatVal: Value of the performance statistic at the cutpoint.
+#'     }
 #'
 #' @examples
 #'
@@ -94,16 +157,16 @@
 #'                               treatment.names = c("sample2"),
 #'                               div.col = 1, verbose = FALSE)
 #' @importFrom S4Vectors mcols
+#' @importFrom caret confusionMatrix
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        column=c(hdiv=TRUE, TV=TRUE, wprob=FALSE, pos=FALSE),
                        classifier1=c("logistic", "pca.logistic", "lda",
                                    "qda","pca.lda", "pca.qda"),
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
-                       post.cut = 0.5, clas.perf = FALSE, prop=0.6, n.pc=1,
+                       clas.perf = FALSE, post.cut = 0.5, prop=0.6, n.pc=1,
                        find.cut=FALSE, cut.interval = c(0.5, 0.8),
-                       cut.incr = 0.01, stat = 1, num.cores=1L, tasks=0L,
-                       tol = .Machine$double.eps^0.5, verbose = TRUE, ...) {
+                       cut.incr = 0.01, stat = 1, num.cores=1L, tasks=0L, ...) {
    if (!simple && sum(column) == 0) {
        cat("\n")
        stop(paste("*** At least one of columns with the predictor \n",
@@ -125,7 +188,17 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    # --------------------------- valid "pDMP" object-------------------------- #
    validateClass(LR)
    # ------------------------------------------------------------------------- #
+   # -----------------------Divergences  are positives ------------------------#
+   # In case that TV column would be used as source to get TVD
    sn <- names(LR)
+   if (any(unlist(
+       lapply(LR, function(GR) min(GR[, div.col], na.rm = TRUE))) < 0)) {
+        LR <- lapply(1:length(LR), function(k) {
+           GR <- LR[[k]]
+           mcols(GR[, div.col])[, 1] <- abs(mcols(GR[, div.col])[, 1])
+           return(GR)
+       }, keep.attr = TRUE)
+   }
 
    # -------------------------- Auxiliary functions -------------------------- #
    infDiv <- function(LR, div.col = NULL) {
@@ -229,6 +302,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        tv.col = match("TV", colnames(mcols(LR[[1]])))
        classes <- c(rep("CT", length(LR$ctrl)),
                     rep("TT", length(LR$treat)))
+       classes <- factor(classes)
 
        if (simple) {
            reslt <- roc(dt = infDiv(LR, div.col = div.col))
@@ -236,6 +310,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            predClasses <- unlist(LR)$hdiv > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
+           predClasses <- factor(predClasses)
+           conf.mat <- confusionMatrix(data=predClasses, reference=classes,
+                                       positive="TT")
 
            if (clas.perf && !find.cut) {
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
@@ -248,21 +325,24 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            prop=prop,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tolerance=tol,
                                            tasks=tasks, verbose = FALSE, ...)
 
                predClasses <- predict(object = conf.mat$model, newdata = LR)
+               predClasses <- factor(predClasses)
+               conf.matrix <- confusionMatrix(data=predClasses,
+                                               reference=classes,
+                                               positive="TT")
 
                res$cutpoint <- cutpoint
                res$testSetPerformance <- conf.mat$Performance
                res$testSetModel.FDR <- conf.mat$FDR
                res$model <- conf.mat$model
-               res$modelConfMatrix <- table(classes, predClasses)
+               res$modelConfMatrix <- conf.matrix
                res$initModel <- "Youden Index"
                res$classifier <- classifier1[1]
            } else {
                res$cutpoint <- cutpoint
-               res$modelConfMatrix <- table(classes, predClasses)
+               res$modelConfMatrix <- conf.mat
                res$acc <- reslt$acc
                res$auc <- res$AUC
                res$initModel <- "Youden Index"
@@ -290,7 +370,6 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            prop = prop,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tolerance=tol,
                                            tasks=tasks, verbose = FALSE, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
@@ -305,12 +384,17 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        "0.5 will be applied", sep = "")
 
                    predClasses <- predict(object = conf.mat$model, newdata = LR)
+                   predClasses <- factor(predClasses)
+                   conf.matrix <- confusionMatrix(data=predClasses,
+                                                  reference=classes,
+                                                  positive="TT")
+
                    res$postProbCut <- 0.5
                    res$cutpoint <- cutFun(divs = unlist(LR), 0.5)
                    res$testSetPerformance <- conf.mat$Performance
                    res$testSetModel.FDR <- conf.mat$FDR
                    res$model <- conf.mat$model
-                   res$modelConfMatrix <- table(classes, predClasses)
+                   res$modelConfMatrix <- conf.matrix
                    res$initModel <- classifier1[1]
                    res$classifier <- classifier1[1]
                } else {
@@ -321,18 +405,21 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                prop = prop,
                                                output = "conf.mat",
                                                num.cores=num.cores,
-                                               tolerance=tol,
                                                tasks=tasks, verbose = FALSE,
                                                ...)
 
                    predClasses <- predict(object = conf.mat$model, newdata = LR)
+                   predClasses <- factor(predClasses)
+                   conf.matrix <- confusionMatrix(data=predClasses,
+                                                  reference=classes,
+                                                  positive="TT")
 
                    res$cutpoint <- cutpoint
                    res$postProbCut <- post.cut
                    res$testSetPerformance <- conf.mat$Performance
                    res$testSetModel.FDR <- conf.mat$FDR
                    res$model <- conf.mat$model
-                   res$modelConfMatrix <- table(classes, predClasses)
+                   res$modelConfMatrix <- conf.matrix
                    res$initModel <- classifier1[1]
                    res$classifier <- classifier2[1]
                }
@@ -347,7 +434,6 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                          classifier=classifier1[1], prop=prop,
                                          output = "conf.mat",
                                          num.cores=num.cores,
-                                         tolerance=tol,
                                          tasks=tasks, verbose = FALSE, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
@@ -395,6 +481,10 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                }
 
                predClasses <- predict(object = conf.mat$model, newdata = LR)
+               predClasses <- factor(predClasses)
+               conf.matrix <- confusionMatrix(data=predClasses,
+                                              reference=classes,
+                                              positive="TT")
 
                STAT <- c("Accuracy", "Sensitivity", "Specificity",
                        "Pos Pred Value", "Neg Pred Value","Precision", "Recall",
@@ -405,7 +495,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                res$testSetPerformance <- conf.mat$Performance
                res$testSetModel.FDR <- conf.mat$FDR
                res$model <- conf.mat$model
-               res$modelConfMatrix <- table(classes, predClasses)
+               res$modelConfMatrix <- conf.matrix
                res$initModel <- classifier1[1]
                res$postProbCut <- cuts[k]
                res$classifier <- classifier2[1]
