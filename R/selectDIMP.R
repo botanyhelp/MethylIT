@@ -49,7 +49,7 @@
 #' @param tv.col Column number for the total variation to be used for filtering
 #'     cytosine positions (if provided).
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
-#'     abs(TV_k) < tv.cut are removed before to perform the ROC analysis.
+#'     abs(TV_k) < tv.cut are removed.
 #'
 #' @return A list of GRanges containing only differentially informative
 #'     position (DIMPs).

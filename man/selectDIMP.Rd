@@ -35,7 +35,7 @@ with the function 'estimateCutPoint'.}
 cytosine positions (if provided).}
 
 \item{tv.cut}{If tv.cut and tv.col are provided, then cytosine sites k with
-abs(TV_k) < tv.cut are removed before to perform the ROC analysis.}
+abs(TV_k) < tv.cut are removed.}
 }
 \value{
 A list of GRanges containing only differentially informative
