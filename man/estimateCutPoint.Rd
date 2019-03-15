@@ -90,19 +90,19 @@ use, i.e. at most how many child processes will be run simultaneously
 (only for Linux OS).}
 }
 \value{
-Depending the paramter setting will return the following list with
+Depending the parameter setting will return the following list with
     elements:
     \enumerate{
-        \item cutpoint: Estimated cutpoint
-        \item testSetPerformance: Performance evaluation on the test set
-        \item testSetModel.FDR: False discovery rate on the test set
-        \item model: Model used to performance evaluation
+        \item cutpoint: Cutpoint estimated.
+        \item testSetPerformance: Performance evaluation on the test set.
+        \item testSetModel.FDR: False discovery rate on the test set.
+        \item model: Model used in the performance evaluation.
         \item modelConfMatrix: Confusion matrix for the whole dataset derived
               applying the model classifier used in the performance
               evaluation.
-        \item initModel: Initial classifier model pallied to estimate
+        \item initModel: Initial classifier model applied to estimate
               posterior classifications used in the cutpoint estimation.
-        \item postProbCut: POsterior probability used to estimate the
+        \item postProbCut: Posterior probability used to estimate the
               cutpoint
         \item classifier: Name of the model classifier used in the
               performance evaluation.
@@ -142,50 +142,61 @@ The function performs an estimation of the optimal cutpoint for the
     one induced by the treatment.
 }
 \examples{
+set.seed(123) ## To set a seed for random number generation
+## GRanges object of the reference with methylation levels in
+## its matacolumn
+num.points <- 5000
+Ref <- makeGRangesFromDataFrame(
+  data.frame(chr = '1',
+             start = 1:num.points,
+             end = 1:num.points,
+             strand = '*',
+             p1 = rbeta(num.points, shape1 = 1, shape2 = 1.5)),
+  keep.extra.columns = TRUE)
 
-    set.seed(123)
-    num.points <- 1000
+## List of Granges objects of individuals methylation levels
+Indiv <- GRangesList(
+  sample11 = makeGRangesFromDataFrame(
+    data.frame(chr = '1',
+               start = 1:num.points,
+               end = 1:num.points,
+               strand = '*',
+               p2 = rbeta(num.points, shape1 = 1.5, shape2 = 2)),
+    keep.extra.columns = TRUE),
+  sample12 = makeGRangesFromDataFrame(
+    data.frame(chr = '1',
+               start = 1:num.points,
+               end = 1:num.points,
+               strand = '*',
+               p2 = rbeta(num.points, shape1 = 1.6, shape2 = 2)),
+    keep.extra.columns = TRUE),
+  sample21 = makeGRangesFromDataFrame(
+    data.frame(chr = '1',
+               start = 1:num.points,
+               end = 1:num.points,
+               strand = '*',
+               p2 = rbeta(num.points, shape1 = 40, shape2 = 4)),
+    keep.extra.columns = TRUE),
+  sample22 = makeGRangesFromDataFrame(
+    data.frame(chr = '1',
+               start = 1:num.points,
+               end = 1:num.points,
+               strand = '*',
+               p2 = rbeta(num.points, shape1 = 41, shape2 = 4)),
+    keep.extra.columns = TRUE))
+## To estimate Hellinger divergence using only the methylation levels.
+HD <- estimateDivergence(ref = Ref, indiv = Indiv, meth.level = TRUE,
+                         columns = 1)
+## To perform the nonlinear regression analysisx
+nlms <- nonlinearFitDist(HD, column = 4, verbose = FALSE)
 
-    ## A list of GRanges objects with simulated Hellinger divergences in
-    ## their metacolumns.
-    HD <- GRangesList(
-        sample1 = makeGRangesFromDataFrame(
-                    data.frame(chr = "chr1", start = 1:num.points,
-                            end = 1:num.points, strand = '*',
-                            hdiv = rweibull(1:num.points, shape = 0.45,
-                                    scale = 0.2)),
-                    keep.extra.columns = TRUE),
-        sample2 = makeGRangesFromDataFrame(
-                    data.frame(chr = "chr1", start = 1:num.points,
-                            end = 1:num.points, strand = '*',
-                            hdiv = rweibull(1:num.points, shape = 0.75,
-                                    scale = 1)),
-                    keep.extra.columns = TRUE))
+## Next, the potential signal can be estimated
+PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 4, alpha = 0.05)
 
-    ## Nonlinear fit of Weiblul distribution
-    nlms <- nonlinearFitDist(HD, column = 1, verbose = FALSE)
-
-    ## Estimation of the potential signal and cutpoints
-    PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 1, alpha = 0.05)
-    cutpoints <- estimateCutPoint(PS, control.names = "sample1",
-                                    treatment.names = c("sample2"),
-                                    div.col = 1, verbose = FALSE)
-# Let's add an empty GRanges
-PS$sample1.1 <- GRanges()
-# The empty GRanges will be ignored
-cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
-                              treatment.names = c("sample2"),
-                              div.col = 1, verbose = FALSE)
-# Let's make both control GRanges empty.
-PS$sample1 <- GRanges()
-# Warning is given
-cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
-                              treatment.names = c("sample2"),
-                              div.col = 1, verbose = FALSE)
-# Let's make the treatment GRange empty.
-PS$sample2 <- GRanges()
-# The error is reported
-cutpoints <- estimateCutPoint(PS, control.names = c("sample1", "sample1.1"),
-                              treatment.names = c("sample2"),
-                              div.col = 1, verbose = FALSE)
+cutpoint <- estimateCutPoint(LR = PS, simple = TRUE, find.cut = FALSE,
+                             column = c(hdiv = TRUE, TV = TRUE,
+                                        wprob = TRUE, pos = TRUE),
+                             interaction = "hdiv:TV", clas.perf = FALSE,
+                             control.names = c("sample11", "sample12"),
+                             treatment.names = c("sample21", "sample22"))
 }
