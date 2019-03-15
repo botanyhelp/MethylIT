@@ -9,8 +9,8 @@ getPotentialDIMP(LR, nlms = NULL, div.col, dist.name = "Weibull2P",
   min.coverage = NULL)
 }
 \arguments{
-\item{LR}{A list of GRanges objects. Each GRanges object carrying information
-divergence values for each cytosine site in its meta-column.}
+\item{LR}{An object from 'InfDiv' class. This obejct is previously obtained
+with function \code{\link{estimateDivergence}}.}
 
 \item{nlms}{A list of distribution fitted models (output of
 'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical

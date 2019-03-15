@@ -12,8 +12,8 @@
 #'     sites are selected based on the corresponding fitted Weilbull
 #'     distribution model that has been supplied.
 #'
-#' @param LR A list of GRanges objects. Each GRanges object carrying information
-#'     divergence values for each cytosine site in its meta-column.
+#' @param LR An object from 'InfDiv' class. This obejct is previously obtained
+#'     with function \code{\link{estimateDivergence}}.
 #' @param nlms A list of distribution fitted models (output of
 #'     'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical
 #'     cumulative distribution function is used to get the potential DIMPs.
