@@ -96,20 +96,23 @@
 #' @importFrom S4Vectors mcols
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
-                       column=c(hdiv=FALSE, TV=FALSE, wprob=FALSE, pos=FALSE),
+                       column=c(hdiv=TRUE, TV=TRUE, wprob=FALSE, pos=FALSE),
                        classifier1=c("logistic", "pca.logistic", "lda",
                                    "qda","pca.lda", "pca.qda"),
-                       classifier2=NULL, post.cut = 0.5, clas.perf = FALSE,
-                       prop=0.6, tv.cut = 0.25, n.pc=1, find.cut=FALSE,
-                       cut.interval = c(0.5, 0.8), cut.incr = 0.01, stat = 1,
-                       num.cores=1L, tasks=0L,
+                       classifier2=NULL, tv.cut = 0.25, div.col = NULL,
+                       post.cut = 0.5, clas.perf = FALSE, prop=0.6, n.pc=1,
+                       find.cut=FALSE, cut.interval = c(0.5, 0.8),
+                       cut.incr = 0.01, stat = 1, num.cores=1L, tasks=0L,
                        tol = .Machine$double.eps^0.5, verbose = TRUE, ...) {
-   if (sum(column) == 0)
-       stop(paste("*** At least one of columns with the predictor variables",
-               " 'hdiv', 'TV', logP, or pos' must be provided"))
+   if (!simple && sum(column) == 0) {
+       cat("\n")
+       stop(paste("*** At least one of columns with the predictor \n",
+               "variables: 'hdiv', 'TV', 'wprob', or 'pos' must be provided"))
+   }
    if ((classifier1[1] != "logistic" ) && sum(column) < n.pc) {
-       stop(paste("* The number of predictor variables must be greater or ",
-               "equal to n.pc"))
+       cat("\n")
+       stop(paste("* The number of predictor variables must be greater \n",
+               "or equal to n.pc"))
    }
 
    if (is.null(classifier2[1])) {
@@ -195,6 +198,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    ltt <- unlist(lapply(treatment.names, function(k) length(LR[[k]]) > 0))
    vn <- c("hdiv", "TV")
    vn <- vn[match(TRUE, column[vn])]
+   if (is.null(div.col)) div.col <- vn
 
    if (sum(ltt) < length(LR[treatment.names])) {
        if (sum(ltt) == 0) {
@@ -207,7 +211,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    if (sum(lcc) == 0) {
        LR <- LR[treatment.names]
        min.div <- min(unlist(lapply(LR, function(l)
-           min(l@elementMetadata[, vn], na.rm = TRUE))), na.rm = TRUE)
+           min(l@elementMetadata[, div.col], na.rm = TRUE))), na.rm = TRUE)
        min.div <- min.div[min.div > 0]
        text <- c("All the GRanges objects from your control are empty ", "\n",
                        "So, the cutpoint is the min(div) > 0 value found", "\n",
@@ -227,14 +231,14 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                     rep("TT", length(LR$treat)))
 
        if (simple) {
-           reslt <- roc(dt = infDiv(LR, div.col = vn))
+           reslt <- roc(dt = infDiv(LR, div.col = div.col))
            cutpoint <- reslt$cutpoint
            predClasses <- unlist(LR)$hdiv > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
 
            if (clas.perf && !find.cut) {
-               dmps <- selectDIMP(LR, div.col = vn, cutpoint = cutpoint,
+               dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
 
                conf.mat <- evaluateDIMPclass(dmps, column = column,
@@ -292,7 +296,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posteriors")
                cutpoint <- cutFun(divs = unlist(LR), post.cut)
-               dmps <- selectDIMP(LR, div.col = vn, cutpoint = cutpoint,
+               dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
                if (length(dmps$ctrl) == 0) {
                    warning("For the estimated cutpoint = ", cutpoint,
@@ -353,7 +357,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                k = 1; opt <- FALSE; overcut <- FALSE;
                while (k < length(cuts) && !opt && !overcut) {
                    cutpoint <- cutFun(divs = unlist(LR), cuts[k])
-                   dmps <- selectDIMP(LR, div.col = vn,
+                   dmps <- selectDIMP(LR, div.col = div.col,
                                    cutpoint = cutpoint,
                                    tv.col=tv.col, tv.cut=tv.cut)
                    if (length(dmps$ctrl) > 0) {
