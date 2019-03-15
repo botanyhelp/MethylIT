@@ -51,7 +51,7 @@ validateClass.InfDiv <- function(LR) {
        ns <- colnames(mcols(GR))
        sum(is.element(vn, ns))
    }))
-   if (any(nams != 3)) {
+   if (any(nams != 2)) {
        warning("At least one element from 'LR' has incorrect column names")
        cat("\n")
        stop("LR is not a valid 'InfDiv' object")
