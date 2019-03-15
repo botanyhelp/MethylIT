@@ -133,5 +133,5 @@ FisherTest(LR = data, control.names = c("C1", "C2"),
 
 }
 \seealso{
-\code{\link[MethylIT]{rmstGR}}
+\code{\link{rmstGR}}
 }
