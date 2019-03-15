@@ -59,6 +59,11 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                              absolute=FALSE, alpha=0.05, tv.col=NULL,
                              tv.cut=NULL, min.coverage=NULL) {
 
+   # -------------------------- valid "InfDiv" object ------------------------ #
+   validateClass(LR)
+   # ------------------------------------------------------------------------- #
+
+
    P <- function(k) {
        d <- LR[[k]]
 

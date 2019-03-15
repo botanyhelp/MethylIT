@@ -134,6 +134,11 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                              tol = 1e-12, ftol = 1e-12, ptol = 1e-12,
                              minFactor = 10^-6, num.cores = NULL, tasks = 0L,
                              maxfev = 1e+5, verbose = TRUE) {
+
+   # ------------------------- valid "InfDiv" object ------------------------- #
+   validateClass(LR)
+   # ------------------------------------------------------------------------- #
+
    sn <- names(LR)
    toFit <- function(k, sample.size, npoints, npoints0, maxiter, tol, ftol,
                    ptol, minFactor, verbose) {
