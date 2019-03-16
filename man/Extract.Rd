@@ -15,7 +15,7 @@
 \item{x}{A list-like or vector-like object}
 
 \item{i}{Index specifying elements to extract or replace. Index can be a
-numeric or character vector. See ?base::\code{\link[base]{Extract}} for
+numeric or a character vector. See ?base::\code{\link[base]{Extract}} for
 a description of these arguments.}
 }
 \value{
@@ -25,14 +25,6 @@ Same as in ?base::\code{\link[base]{Extract}}, but preserving
 \description{
 \eqn{x[i]} returns an object of the length as \eqn{i} preserving
     the class from the original object \eqn{x}.
-}
-\examples{
-# Create a list
-x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
-class(x) <- "nice"
-
-# Preserves attributes
-x[1:2]
 }
 \seealso{
 base::\code{\link[base]{Extract}}

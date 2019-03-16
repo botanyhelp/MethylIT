@@ -2,7 +2,7 @@
 #' @title Subscript operator for objects from "InfDiv" and "pDMP" class
 #' @param x A list-like or vector-like object
 #' @param i Index specifying elements to extract or replace. Index can be a
-#'     numeric or character vector. See ?base::\code{\link[base]{Extract}} for
+#'     numeric or a character vector. See ?base::\code{\link[base]{Extract}} for
 #'     a description of these arguments.
 #' @description \eqn{x[i]} returns an object of the length as \eqn{i} preserving
 #'     the class from the original object \eqn{x}.
