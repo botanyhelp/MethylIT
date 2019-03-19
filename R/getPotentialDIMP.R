@@ -23,7 +23,8 @@
 #'     "Weibull2P"), Weibull three-parameters (Weibull3P), gamma with
 #'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 #'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
-#'     ("GGamma4P"), and the empirical cumulative distribution function (ECDF).
+#'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
+#'     "None".
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -37,6 +38,10 @@
 #'     cytosine positions (if provided).
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
 #'     abs(TV_k) < tv.cut are removed before to perform the ROC analysis.
+#' @param hdiv.col Optional. A column number for the Hellinger distance to be
+#'     used for filtering cytosine positions. Fedault is NULL.
+#' @param hdiv.cut If hdiv.cut and hdiv.col are provided, then cytosine sites k
+#'     with hdiv < hdiv.cut are removed.
 #' @param min.coverage Cytosine sites with coverage less than min.coverage are
 #'     discarded. Default: 0
 #'
@@ -57,12 +62,38 @@
 #'
 getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                              absolute=FALSE, alpha=0.05, tv.col=NULL,
-                             tv.cut=NULL, min.coverage=NULL) {
+                             tv.cut=NULL, min.coverage=NULL, hdiv.col = NULL,
+                             hdiv.cut = NULL) {
 
    # -------------------------- valid "InfDiv" object ------------------------ #
    validateClass(LR)
    # ------------------------------------------------------------------------- #
 
+   cl <- inherits(LR, "testDMP")
+
+   if (!is.null(hdiv.cut) && is.null(hdiv.col)) {
+       cat("\n")
+       stop("You set hdiv.cut = ", hdiv.cut, ".",
+            " You must provide 'hdiv.col' as well")
+   }
+
+   if (is.null(hdiv.cut) && !is.null(hdiv.col)) {
+       cat("\n")
+       stop("You set hdiv.col = ", hdiv.col, ".",
+           " You must provide 'hdiv.cut' as well")
+   }
+
+   if (!is.null(tv.cut) && is.null(tv.col)) {
+       cat("\n")
+       stop("You set tv.cut = ", tv.cut, ".",
+           " You must provide 'tv.col' as well")
+   }
+
+   if (is.null(hdiv.cut) && !is.null(hdiv.col)) {
+       cat("\n")
+       stop("You set tv.col = ", tv.col, ".",
+           " You must provide 'tv.cut' as well")
+   }
 
    P <- function(k) {
        d <- LR[[k]]
@@ -86,9 +117,12 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
        if (!is.null(nlms)) {
            m <- nlms[[k]]
            m <- m[, 1]
-       } else {dist.name="ECDF"; ECDF <- ecdf(q)}
+       } else  if (!cl) {
+                       dist.name <- "ECDF"
+                       ECDF <- ecdf(q)
+               }
 
-       if (dist.name != "ECDF") {
+       if (dist.name != "ECDF" && !inherits(LR, "testDMP")) {
            p <- switch(dist.name,
                    Weibull2P=pweibull(q, shape=m[1], scale=m[2],
                                       lower.tail=FALSE),
@@ -103,17 +137,27 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                    GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
                                    psi=m[4], lower.tail = FALSE)
            )
-       } else p <- (1 - ECDF(q))
+       } else {
+               if (dist.name == "ECDF") p <- (1 - ECDF(q))
+               else if (cl) p <- d$adj.pval
+       }
 
        idx <- which(p < alpha)
        p <- p[idx]
        d <- d[idx]
-       mcols(d) <- data.frame(mcols(d), wprob=p)
+       if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
+           idx <- which(mcols(d[, hdiv.col])[, 1] > hdiv.cut)
+           d <- d[ idx ]
+           p <- p[ idx ]
+       }
+       mcols(d) <- data.frame(mcols(d), wprob = p)
        return(d)
    }
    sn <- names(LR)
-   LR <- lapply(1:length(LR), P)
+   LR <- lapply(1:length(LR), P, keep.attr = TRUE)
    names(LR) <- sn
-   LR <- structure(LR, class = c("pDMP", "InfDiv", "list"))
+   if (cl) {
+       LR <- structure(LR, class = c("pDMP", "InfDiv", "testDMP", "list"))
+   } else LR <- structure(LR, class = c("pDMP", "InfDiv", "list"))
    return(LR)
 }

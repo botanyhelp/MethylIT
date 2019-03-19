@@ -247,5 +247,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
            }
        }
    }
+   cl <- class(LR)
+   res <- structure(res, class = c(cl, "testDMP"))
    return(res)
 }

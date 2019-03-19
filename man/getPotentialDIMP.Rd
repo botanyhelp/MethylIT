@@ -6,7 +6,7 @@
 \usage{
 getPotentialDIMP(LR, nlms = NULL, div.col, dist.name = "Weibull2P",
   absolute = FALSE, alpha = 0.05, tv.col = NULL, tv.cut = NULL,
-  min.coverage = NULL)
+  min.coverage = NULL, hdiv.col = NULL, hdiv.cut = NULL)
 }
 \arguments{
 \item{LR}{An object from 'InfDiv' class. This obejct is previously obtained
@@ -23,7 +23,8 @@ meta-column.}
 "Weibull2P"), Weibull three-parameters (Weibull3P), gamma with
 three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 generalized gamma with three-parameter ("GGamma3P") or four-parameter
-("GGamma4P"), and the empirical cumulative distribution function (ECDF).}
+("GGamma4P"), the empirical cumulative distribution function (ECDF) or
+"None".}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
@@ -44,6 +45,12 @@ abs(TV_k) < tv.cut are removed before to perform the ROC analysis.}
 
 \item{min.coverage}{Cytosine sites with coverage less than min.coverage are
 discarded. Default: 0}
+
+\item{hdiv.col}{Optional. A column number for the Hellinger distance to be
+used for filtering cytosine positions. Fedault is NULL.}
+
+\item{hdiv.cut}{If hdiv.cut and hdiv.col are provided, then cytosine sites k
+with hdiv < hdiv.cut are removed.}
 }
 \value{
 A list of GRanges objects, each GRanges object carrying the selected
