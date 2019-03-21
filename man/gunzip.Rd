@@ -33,3 +33,4 @@ This function is originally from the R packages 'R.utils'. Herein,
 \author{
 Original author: Henrik Bengtsson.
 }
+\keyword{internal}

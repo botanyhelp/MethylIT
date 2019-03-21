@@ -42,3 +42,4 @@ Perform Poisson and Negative Binomial regression analysis to
     Evaluated models are "Poisson", "Quasipoisson", "Neg.Binomial.W", and
     "Neg.Binomial"
 }
+\keyword{internal}

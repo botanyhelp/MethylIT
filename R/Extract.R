@@ -14,6 +14,7 @@
 #' @name "[.InfDiv"
 #' @rdname Extract
 #' @export
+#' @keywords internal
 "[.InfDiv" <- function(x, i) {
   cl <- class(x)
   x <- .subset(x, i)
@@ -24,6 +25,7 @@
 #' @name "[.pDMP"
 #' @rdname Extract
 #' @export
+#' @keywords internal
 "[.pDMP" <- function(x, i) {
   cl <- class(x)
   x <- .subset(x, i)

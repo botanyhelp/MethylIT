@@ -38,8 +38,8 @@ A comment about size factor estimation by DEseq based on Simon
 \examples{
     dds <- makeExampleDESeqDataSet(n = 1000, m = 4)
     MethylIT:::.computeSizeFactors(dds)
-
 }
 \references{
 http://seqanswers.com/forums/showpost.php?p=16468&postcount=13
 }
+\keyword{internal}

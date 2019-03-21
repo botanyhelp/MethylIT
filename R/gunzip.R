@@ -15,6 +15,7 @@
 #' @return Invisibly, the number of bytes read.
 #'
 #' @author Original author: Henrik Bengtsson.
+#' @keywords internal
 .gunzip <- function(filename, destname=gsub("[.]gz$", "", filename),
                overwrite=FALSE, remove=TRUE, BFR.SIZE=1e+07) {
 

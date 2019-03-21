@@ -16,7 +16,7 @@
 #'    distribution.
 #'
 #' @importFrom stats ecdf optim nlm pbeta
-#'
+#' @keywords internal
 .estimateBetaDist <- function(q, init.pars=c(1, 1)) {
    ## q: prior probabilities
    ## init.pars: initial parameter values. Defaults to alpha = 1

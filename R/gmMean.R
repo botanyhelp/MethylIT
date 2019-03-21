@@ -7,7 +7,7 @@
 #' @param na.rm Logical value. If TRUE, the NA values will be removed
 #'
 #' @return geometric mean
-#'
+#' @keywords internal
 .gmMean <- function(x, na.rm=TRUE){
    exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
 }

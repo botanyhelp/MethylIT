@@ -30,6 +30,7 @@
 #'
 #' @importFrom stats glm poisson quasipoisson relevel glm.control
 #' @importFrom MASS glm.nb negative.binomial
+#' @keywords internal
 .estimateGLM <- function(x, groups, baseMV, w, MVrate,
                          test = c("Wald", "LRT")) {
 

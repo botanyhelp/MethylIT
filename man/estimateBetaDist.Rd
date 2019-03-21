@@ -26,3 +26,4 @@ In order to obtain the estimates for shape parameters of beta
     cummulative density function (ecdf) & the theoretical cdf is minimized
     using the Non-Linear Minimization function of 'stats' package.
 }
+\keyword{internal}

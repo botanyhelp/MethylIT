@@ -29,7 +29,7 @@
 #' @examples
 #'     dds <- makeExampleDESeqDataSet(n = 1000, m = 4)
 #'     MethylIT:::.computeSizeFactors(dds)
-#'
+#' @keywords internal
 .computeSizeFactors <- function(dss) {
    y <- counts(dss)
    ## cn = colnames( y )

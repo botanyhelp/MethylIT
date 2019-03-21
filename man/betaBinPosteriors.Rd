@@ -65,3 +65,4 @@ The posterior methylation levels are estimated as
     2015. 3. Baldi P, Brunak S (2001) Bioinformatics: the machine learning
     approach. Second. Cambridge: MIT Press. 452 p.
 }
+\keyword{internal}

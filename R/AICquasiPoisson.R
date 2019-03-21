@@ -8,7 +8,7 @@
 #' @return numeric AIC for Quasi-Poisson glm model
 #'
 #' @importFrom stats predict coef dpois
-#'
+#' @keywords internal
 .AICquasiPoisson <- function(fitObj) {
    LogLike <- sum(dpois(fitObj$data$count, lambda=exp(predict(fitObj)),
                        log=TRUE))

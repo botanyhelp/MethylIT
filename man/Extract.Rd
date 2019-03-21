@@ -29,3 +29,4 @@ Same as in ?base::\code{\link[base]{Extract}}, but preserving
 \seealso{
 base::\code{\link[base]{Extract}}
 }
+\keyword{internal}

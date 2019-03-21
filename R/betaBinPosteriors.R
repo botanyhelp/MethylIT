@@ -49,7 +49,7 @@
 #'     https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4165320/ Accessed 26 August
 #'     2015. 3. Baldi P, Brunak S (2001) Bioinformatics: the machine learning
 #'     approach. Second. Cambridge: MIT Press. 452 p.
-#'
+#' @keywords internal
 .betaBinPosteriors <- function(success, trials, a, b) {
    (a + success)/(a + b + trials)
 }

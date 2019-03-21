@@ -15,3 +15,4 @@ numeric AIC for Quasi-Poisson glm model
 \description{
 AIC for Quasi-Poisson glm model dpois
 }
+\keyword{internal}

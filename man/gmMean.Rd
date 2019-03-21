@@ -17,3 +17,4 @@ geometric mean
 \description{
 Calculate the geometric mean
 }
+\keyword{internal}
