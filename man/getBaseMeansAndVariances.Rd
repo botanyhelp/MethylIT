@@ -17,3 +17,4 @@ data.frame with means and variances by row
 \description{
 Calculate the means and variances in each row
 }
+\keyword{internal}
