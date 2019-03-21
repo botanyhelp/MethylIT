@@ -2,9 +2,21 @@
 % Please edit documentation in R/getDIMPatGenes.R
 \name{getDIMPatGenes}
 \alias{getDIMPatGenes}
+\alias{getDIMPatGenes.default}
+\alias{getDIMPatGenes.pDMP}
+\alias{getDIMPatGenes.InfDiv}
+\alias{getDIMPatGenes.list}
 \title{Count DIMPs at gene-body}
 \usage{
-getDIMPatGenes(GR, GENES, ignore.strand = TRUE)
+getDIMPatGenes(GR, ...)
+
+\method{getDIMPatGenes}{default}(GR, GENES, ignore.strand = TRUE)
+
+\method{getDIMPatGenes}{pDMP}(GR, GENES, ignore.strand = TRUE)
+
+\method{getDIMPatGenes}{InfDiv}(GR, GENES, ignore.strand = TRUE)
+
+\method{getDIMPatGenes}{list}(GR, GENES, ignore.strand = TRUE)
 }
 \arguments{
 \item{GR}{A GRanges object with the coordinates of DIMPs}

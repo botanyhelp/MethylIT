@@ -1,11 +1,12 @@
 #' @rdname getDIMPatGenes
-#'
+#' @aliases getDIMPatGenes.default
 #' @title Count DIMPs at gene-body
 #' @description The function counts DIMPs overlapping with gene-body. In fact,
 #'     this function also can be used to count DIMPs overlapping with any set of
 #'     regions given in a GRanges object.
 #'
-#' @param GR A GRanges object with the coordinates of DIMPs
+#' @param GR An obects object from the any of the classes: 'pDMP', 'InfDiv',
+#'     GRangesList, GRanges or a list of GRanges.
 #' @param GENES A GRanges object with gene coordinates and gene IDs. A
 #'     meta-column named 'gene_id' carying the gene ids should be included. If
 #'     the meta-column named 'gene_id' is not provided, then gene (region) ids
@@ -90,7 +91,13 @@
 #' @importFrom rtracklayer import
 #'
 #' @export
-getDIMPatGenes <- function(GR, GENES, ignore.strand=TRUE) {
+
+getDIMPatGenes <- function(GR, ...) UseMethod("getDIMPatGenes", GR)
+
+#' @name getDIMPatGenes.default
+#' @rdname getDIMPatGenes
+#' @export
+getDIMPatGenes.default <- function(GR, GENES, ignore.strand=TRUE) {
    gene_id <- GENES$gene_id
    if (is.null(gene_id)) {
        chr = seqnames(GENES)
@@ -113,3 +120,29 @@ getDIMPatGenes <- function(GR, GENES, ignore.strand=TRUE) {
    mcols(GENES) <- data.frame(GeneID=GENES$gene_id, DIMPs=DIMP$DIMPs)
    return(unique(GENES))
 }
+
+#' @name getDIMPatGenes.pDMP
+#' @rdname getDIMPatGenes
+#' @export
+#'
+getDIMPatGenes.pDMP <- function(GR, GENES, ignore.strand=TRUE) {
+   return(lapply(GR, getDIMPatGenes.default, GENES = GENES, keep.attr = TRUE))
+}
+
+#' @name getDIMPatGenes.pDMP
+#' @rdname getDIMPatGenes
+#' @export
+#'
+getDIMPatGenes.InfDiv <- function(GR, GENES, ignore.strand=TRUE) {
+   return(lapply(GR, getDIMPatGenes.default, GENES = GENES, keep.attr = TRUE))
+}
+
+#' @name getDIMPatGenes.list
+#' @rdname getDIMPatGenes
+#' @export
+#'
+getDIMPatGenes.list <- function(GR, GENES, ignore.strand=TRUE) {
+   return(lapply(GR, getDIMPatGenes.default, GENES = GENES ))
+}
+
+

@@ -2,6 +2,10 @@
 
 S3method("[",InfDiv)
 S3method("[",pDMP)
+S3method(getDIMPatGenes,InfDiv)
+S3method(getDIMPatGenes,default)
+S3method(getDIMPatGenes,list)
+S3method(getDIMPatGenes,pDMP)
 S3method(lapply,default)
 S3method(predict,LogisticR)
 S3method(predict,pcaLDA)
