@@ -71,7 +71,9 @@ Some simple examples
 MethylIT Package Manual:
 ------------
 
-[https://git.psu.edu/genomath/MethylIT/blob/master/MethylIT-manual.pdf](https://git.psu.edu/genomath/MethylIT/blob/master/MethylIT-manual.pdf)
+[MethylIT PDF manual](https://github.com/genomaths/MethylIT/blob/master/MethylIT.pdf)
+
+[MethylIT browser manual](https://genomaths.github.io/MethylIT_HTML_Manual/MethylIT_Manual.html)
 
 --------
 
