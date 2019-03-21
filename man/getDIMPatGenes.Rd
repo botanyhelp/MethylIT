@@ -19,7 +19,8 @@ getDIMPatGenes(GR, ...)
 \method{getDIMPatGenes}{list}(GR, GENES, ignore.strand = TRUE)
 }
 \arguments{
-\item{GR}{A GRanges object with the coordinates of DIMPs}
+\item{GR}{An obects object from the any of the classes: 'pDMP', 'InfDiv',
+GRangesList, GRanges or a list of GRanges.}
 
 \item{GENES}{A GRanges object with gene coordinates and gene IDs. A
 meta-column named 'gene_id' carying the gene ids should be included. If
