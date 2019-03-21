@@ -66,6 +66,7 @@
 #' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom S4Vectors mcols<-
 #' @export
+#' @keywords internal
 estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
                                        tasks=0L,
                                        columns=c(mC1=1, uC1=2, mC2=3, uC2=4),

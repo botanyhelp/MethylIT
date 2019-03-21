@@ -82,3 +82,4 @@ For the current version, the Information divergence of methylation
     two discrete populations based on the Hellinger distance. Stat Probab
     Lett 80: 206-214.
 }
+\keyword{internal}
