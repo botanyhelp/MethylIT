@@ -209,8 +209,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    if (any(unlist(
        lapply(LR, function(GR) min(mcols(GR[, div.col])[, 1],
                                    na.rm = TRUE))) < 0)) {
-        LR <- lapply(1:length(LR), function(k) {
-           GR <- LR[[k]]
+        LR <- lapply(LR, function(GR) {
            mcols(GR[, div.col])[, 1] <- abs(mcols(GR[, div.col])[, 1])
            return(GR)
        }, keep.attr = TRUE)
@@ -258,10 +257,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        auc <- sum((sens[-1] + sens[-nr])/2 * abs(diff(1 - spec)))
        # Youden Index
        idx <- which.max(sens[-1] + spec[-nr])
-       cutpoint <- as.numeric(names(idx))
-       conf.matrix <- table(dt$idiv > cutpoint, dt$status)
-       list(cutpoint=cutpoint, acc=sum(diag(conf.matrix)) / sum(conf.matrix),
-           AUC=auc)
+       return(as.numeric(names(idx)))
    }
 
    res <- list(cutpoint = NA,
@@ -279,9 +275,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
 
    # ------------------------------------------------------------------------- #
    if (!is.null(control.names)&&!is.null(treatment.names))
-     LR = try(LR[c(control.names, treatment.names)], silent=TRUE)
+       LR <- try(LR[c(control.names, treatment.names)], silent=TRUE)
    if (inherits(LR, "try-error"))
-     stop("List's names does not match control & treatment names")
+       stop("List's names does not match control & treatment names")
 
    lcc <- unlist(lapply(control.names, function(k) length(LR[[k]]) > 0))
    ltt <- unlist(lapply(treatment.names, function(k) length(LR[[k]]) > 0))
@@ -315,15 +311,14 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        tv.col = match("TV", colnames(mcols(LR[[1]])))
        classes <- c(rep("CT", length(LR$ctrl)),
                     rep("TT", length(LR$treat)))
-       classes <- factor(classes)
+       classes <- factor(classes, levels = c("CT", "TT"))
 
        if (simple) {
-           reslt <- roc(dt = infDiv(LR, div.col = div.col))
-           cutpoint <- reslt$cutpoint
+           cutpoint <- roc(dt = infDiv(LR, div.col = div.col))
            predClasses <- unlist(LR)$hdiv > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
-           predClasses <- factor(predClasses)
+           predClasses <- factor(predClasses, levels = c("CT", "TT"))
            conf.mat <- confusionMatrix(data=predClasses, reference=classes,
                                        positive="TT")
 
@@ -341,7 +336,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            tasks=tasks, verbose = FALSE, ...)
 
                predClasses <- predict(object = conf.mat$model, newdata = LR)
-               predClasses <- factor(predClasses)
+               predClasses <- factor(predClasses, levels = c("CT", "TT"))
                conf.matrix <- confusionMatrix(data=predClasses,
                                                reference=classes,
                                                positive="TT")
@@ -356,8 +351,6 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            } else {
                res$cutpoint <- cutpoint
                res$modelConfMatrix <- conf.mat
-               res$acc <- reslt$acc
-               res$auc <- res$AUC
                res$initModel <- "Youden Index"
            }
        } else {
@@ -397,7 +390,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        "0.5 will be applied", sep = "")
 
                    predClasses <- predict(object = conf.mat$model, newdata = LR)
-                   predClasses <- factor(predClasses)
+                   predClasses <- factor(predClasses, levels = c("CT", "TT"))
                    conf.matrix <- confusionMatrix(data=predClasses,
                                                   reference=classes,
                                                   positive="TT")
@@ -422,7 +415,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                ...)
 
                    predClasses <- predict(object = conf.mat$model, newdata = LR)
-                   predClasses <- factor(predClasses)
+                   predClasses <- factor(predClasses, levels = c("CT", "TT"))
                    conf.matrix <- confusionMatrix(data=predClasses,
                                                   reference=classes,
                                                   positive="TT")
@@ -494,7 +487,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                }
 
                predClasses <- predict(object = conf.mat$model, newdata = LR)
-               predClasses <- factor(predClasses)
+               predClasses <- factor(predClasses, levels = c("CT", "TT"))
                conf.matrix <- confusionMatrix(data=predClasses,
                                               reference=classes,
                                               positive="TT")

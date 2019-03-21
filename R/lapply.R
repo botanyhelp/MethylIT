@@ -30,8 +30,9 @@ lapply <- function(x, FUN,...) UseMethod("lapply", x)
 lapply.default <- function(x, FUN, keep.attr = FALSE, ...) {
   if (keep.attr) {
        cl <- class(x)
+       nm <- names(x)
        x <- base::lapply(x, FUN, ...)
-       attr(x, "class") <- cl
+       x <- structure(x, class = cl, names = nm)
   } else x <- base::lapply(x, FUN, ...)
   return(x)
 }
