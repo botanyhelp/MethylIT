@@ -71,9 +71,10 @@ Some simple examples
 MethylIT Package Manual:
 ------------
 
-[MethylIT PDF manual](https://github.com/genomaths/MethylIT/blob/master/MethylIT.pdf)
+<a href="https://github.com/genomaths/MethylIT/blob/master/MethylIT.pdf" target="_blank">MethylIT PDF manual</a>
 
-[MethylIT browser manual](https://genomaths.github.io/MethylIT_HTML_Manual/MethylIT_Manual.html)
+
+<a href="https://genomaths.github.io/MethylIT_HTML_Manual/MethylIT_Manual.html" target="_blank">MethylIT browser manual</a>
 
 --------
 
