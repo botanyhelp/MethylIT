@@ -84,10 +84,21 @@
 #'     (only for Linux OS).
 #' @param stat An integer number indicating the statistic to be used in the
 #'     testing when *find.cut* = TRUE. The mapping for statistic names are:
-#'     0 = "Accuracy", 1 = "Sensitivity", 2 = "Specificity",
-#'     3 = "Pos Pred Value", 4 = "Neg Pred Value", 5 = "Precision",
-#'     6 = "Recall", 7 = "F1",  8 = "Prevalence", 9 = "Detection Rate",
-#'     10 = "Detection Prevalence", 11 = "Balanced Accuracy", 12 = FDR.
+#'     \itemize{
+#'         \item 0 = "Accuracy"
+#'         \item 1 = "Sensitivity"
+#'         \item 2 = "Specificity"
+#'         \item 3 = "Pos Pred Value"
+#'         \item 4 = "Neg Pred Value"
+#'         \item 5 = "Precision"
+#'         \item 6 = "Recall"
+#'         \item 7 = "F1"
+#'         \item 8 = "Prevalence"
+#'         \item 9 = "Detection Rate"
+#'         \item 10 = "Detection Prevalence"
+#'         \item 11 = "Balanced Accuracy"
+#'         \item 12 = FDR
+#'    }
 #' @return Depending the parameter setting will return the following list with
 #'     elements:
 #'     \enumerate{
