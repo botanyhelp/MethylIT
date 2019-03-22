@@ -210,7 +210,12 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
    if (!is.null(maxGrpCV)) {
        if (length(maxGrpCV) == 1 && is.numeric(maxGrpCV))
            maxGrpCV = c(maxGrpCV, maxGrpCV)
-       dc <- counts(DS, normalized=FALSE)
+       dc <- counts(DS, normalized = FALSE)
+       # Add Bayesian correction assuming uniform prior
+       # distribution for count data.
+       if (any(dc == 0)) dc <- dc + 1
+       # ----------------------------------------------------#
+
        if (nrow(dc) > 1) {
            g1 <- which(lev[1] ==  group)
            g2 <- which(lev[2] ==  group)
@@ -221,8 +226,8 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
            cv1 <- apply(dc[ ,g1], 1, sd)/m1
            cv2 <- apply(dc[ ,g2], 1, sd)/m2
        } else {
-           m1 <- max(mean(dc[ ,g1]), 1)
-           m2 <- max(mean(dc[ ,g2]), 1)
+           m1 <- max(mean(dc[g1]), 1)
+           m2 <- max(mean(dc[g2]), 1)
            cv1 <- sd(dc[ ,g1])/m1
            cv2 <- sd(dc[ ,g2])/m2
        }
