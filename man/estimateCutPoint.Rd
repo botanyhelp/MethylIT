@@ -45,7 +45,7 @@ and the corresponding best fitted model will be returned.}
 
 \item{tv.cut}{A cutoff for the total variation distance to be applied to each
 site/range. Only sites/ranges *k* with \eqn{TVD_{k} > tv.cut} are
-are used in the analysis. Its value must be a number
+are used in the analysis. Its value must be a number.
 \eqn{0 < tv.cut < 1}. Default is \eqn{tv.cut = 0.25}.}
 
 \item{div.col}{Column number for divergence variable for which the estimation
