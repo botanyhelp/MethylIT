@@ -1,5 +1,5 @@
-#' @name pcaQDA
 #' @rdname pcaQDA
+#' @name pcaQDA
 #' @title Quadratic Discriminant Analysis (QDA) using Principal Component
 #'     Analysis (PCA)
 #' @description The principal components (PCs) for predictor variables provided
@@ -45,12 +45,6 @@
 #' table(x)
 #' @importFrom MASS qda
 #' @importFrom stats prcomp
-#'
-#' @rdname pcaQDA
-#' @name predict.pcaQDA
-#' @title Linear Discriminant Analysis (qda) using Principal Component Analysis
-#' @description NULL
-#' @details NULL
 #' @export
 pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
                    center=FALSE, tol=1.0e-4, method="moment", max.pc=NULL) {
@@ -146,7 +140,28 @@ predict.pcaQDA <- function(object, newdata,
        stop("* 'object' must be a model from class 'pcaQDA'")
    }
    vn <- rownames(object$pca$rotation)
-   newdata <- newdata[vn]
+
+   if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv"))) {
+       newdata <- unlist(newdata)
+       if (is.element("pos", vn)) {
+           position <- function(gr) {
+                           chrs <- split(gr, seqnames(gr))
+                           gr <- lapply(chrs, function(grc) {
+                                   x <- start(grc)
+                                   x.min <- min(x)
+                                   x.max <- max(x)
+                                   delta <-  max(c(x.max - x, 1))
+                                   return((x - x.min) / (delta))})
+                               return(unlist(gr))
+           }
+           newdata$pos <- position(newdata)
+       }
+       newnam <- colnames(mcols(newdata))
+       newdata$logP <- log10(newdata$wprob)
+       newdata <- mcols(newdata)
+       newdata <- newdata[vn]
+       newdata <- as.matrix(newdata)
+   } else newdata <- newdata[vn]
 
    ## Centering and scaling new individuals
    dt.scaled <- scale(newdata, center=object$pca$center, scale=object$pca$scale)
