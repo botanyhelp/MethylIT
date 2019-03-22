@@ -334,13 +334,14 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                type="posterior")[ ,"TT"])
        PredTestClass <- rep( "CT", length(PredTestSet))
        PredTestClass[PredTestSet > 0.5] <- "TT"
-       PredTestClass <- factor(PredTestClass)
+       PredTestClass <- factor(PredTestClass, levels = c("CT", "TT"))
        if (length(levels(PredTestClass)) < 2 ) {
            warning(paste0("Predictions only have one classification level, ",
                    levels(PredTestClass),
                    ", consider increasing the proportion to split the ",
                    "dataset or to vary the number of predictor variables \n"))
        }
+       testSet$treat <- factor(testSet$treat, levels = c("CT", "TT"))
        conf.mat=confusionMatrix(data=PredTestClass, reference=testSet$treat,
                                 positive="TT")
        m=conf.mat$table
