@@ -44,7 +44,7 @@ NULL, then it will be used to evaluate the classification performance,
 and the corresponding best fitted model will be returned.}
 
 \item{tv.cut}{A cutoff for the total variation distance to be applied to each
-site/range. Only sites/ranges *k* with \eqn{TVD_{k} > tv.cut} are
+site/range. Only sites/ranges \emph{k} with \eqn{TVD_{k} > tv.cut} are
 are used in the analysis. Its value must be a number.
 \eqn{0 < tv.cut < 1}. Default is \eqn{tv.cut = 0.25}.}
 
@@ -56,7 +56,7 @@ for the estimated cutpoint using a model classifier when 'simple=TRUE'.
 Default, FALSE.}
 
 \item{post.cut}{If 'simple=FALSE', this is posterior probability to dicide
-whether a DMPs belong to treatment group. Default *post.cut* = 0.5.}
+whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.}
 
 \item{prop}{Proportion to split the dataset used in the logistic regression:
 group versus divergence (at DIMPs) into two subsets, training and
@@ -68,16 +68,16 @@ not 'logistic'. In the current case, the maximun number of PCs is 4.}
 \item{find.cut}{Logic. Wether to search for an optimal cutoff value to
 classify DMPs based on given specifications.}
 
-\item{cut.interval}{0 < *cut.interval* < 0.1. If *find.cut*= TRUE, the
+\item{cut.interval}{0 < \emph{cut.interval} < 0.1. If \emph{find.cut} = TRUE, the
 interval of treatment group posterior probabilities where to search for a
-cutpoint. Deafult *cut.interval* = c(0.5, 0.8).}
+cutpoint. Deafult \emph{cut.interval} = c(0.5, 0.8).}
 
-\item{cut.incr}{0 < *cut.incr* < 0.1. If *find.cut*= TRUE, the sucesive
-increamental values runing on the interval *cut.interval*. Deafult,
-*cut.incr* = 0.01.}
+\item{cut.incr}{0 < \emph{cut.incr} < 0.1. If \emph{find.cut} = TRUE, the sucesive
+increamental values runing on the interval \emph{cut.interval}. Deafult,
+\emph{cut.incr} = 0.01.}
 
 \item{stat}{An integer number indicating the statistic to be used in the
- testing when *find.cut* = TRUE. The mapping for statistic names are:
+ testing when \emph{find.cut} = TRUE. The mapping for statistic names are:
  \itemize{
      \item 0 = "Accuracy"
      \item 1 = "Sensitivity"
