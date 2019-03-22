@@ -344,10 +344,14 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            prop=prop,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tasks=tasks, verbose = FALSE, ...)
+                                           tasks=tasks, verbose = FALSE)
 
-               predClasses <- predict(object = conf.mat$model, newdata = LR)
+               predClasses <- predict(object = conf.mat$model,
+                                       newdata = dmps, type = "class")
                predClasses <- factor(predClasses, levels = c("CT", "TT"))
+               classes <- c(rep("CT", length(dmps$ctrl)),
+                            rep("TT", length(dmps$treat)))
+               classes <- factor(classes, levels = c("CT", "TT"))
                conf.matrix <- confusionMatrix(data=predClasses,
                                                reference=classes,
                                                positive="TT")
@@ -400,8 +404,12 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        "A classification model with posterior probability = \n",
                        "0.5 will be applied", sep = "")
 
-                   predClasses <- predict(object = conf.mat$model, newdata = LR)
+                   predClasses <- predict(object = conf.mat$model,
+                                           newdata = dmps, type = "class" )
                    predClasses <- factor(predClasses, levels = c("CT", "TT"))
+                   classes <- c(rep("CT", length(dmps$ctrl)),
+                                rep("TT", length(dmps$treat)))
+                   classes <- factor(classes, levels = c("CT", "TT"))
                    conf.matrix <- confusionMatrix(data=predClasses,
                                                   reference=classes,
                                                   positive="TT")
@@ -425,8 +433,12 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                tasks=tasks, verbose = FALSE,
                                                ...)
 
-                   predClasses <- predict(object = conf.mat$model, newdata = LR)
+                   predClasses <- predict(object = conf.mat$model,
+                                           newdata = dmps, type = "class")
                    predClasses <- factor(predClasses, levels = c("CT", "TT"))
+                   classes <- c(rep("CT", length(dmps$ctrl)),
+                                rep("TT", length(dmps$treat)))
+                   classes <- factor(classes, levels = c("CT", "TT"))
                    conf.matrix <- confusionMatrix(data=predClasses,
                                                   reference=classes,
                                                   positive="TT")
@@ -497,8 +509,12 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                    }
                }
 
-               predClasses <- predict(object = conf.mat$model, newdata = LR)
+               predClasses <- predict(object = conf.mat$model, newdata = dmps,
+                                       type = "class")
                predClasses <- factor(predClasses, levels = c("CT", "TT"))
+               classes <- c(rep("CT", length(dmps$ctrl)),
+                            rep("TT", length(dmps$treat)))
+               classes <- factor(classes, levels = c("CT", "TT"))
                conf.matrix <- confusionMatrix(data=predClasses,
                                               reference=classes,
                                               positive="TT")
