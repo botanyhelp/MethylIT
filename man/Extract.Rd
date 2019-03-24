@@ -5,11 +5,19 @@
 \alias{[.InfDiv}
 \alias{"[.pDMP"}
 \alias{[.pDMP}
-\title{Subscript operator for objects from "InfDiv" and "pDMP" class}
+\alias{"[.glmDataSet"}
+\alias{[.glmDataSet}
+\alias{"[.RangedGlmDataSet"}
+\alias{[.RangedGlmDataSet}
+\title{Subscript operator for objects from several Methyl-IT classes}
 \usage{
 \method{[}{InfDiv}(x, i)
 
 \method{[}{pDMP}(x, i)
+
+\method{[}{glmDataSet}(x, i, j, ...)
+
+\method{[}{RangedGlmDataSet}(x, i, j, ...)
 }
 \arguments{
 \item{x}{A list-like or vector-like object}
@@ -24,7 +32,9 @@ Same as in ?base::\code{\link[base]{Extract}}, but preserving
 }
 \description{
 \eqn{x[i]} returns an object of the length as \eqn{i} preserving
-    the class from the original object \eqn{x}.
+    the class from the original object \eqn{x}. The following Methyl-IT
+    classes are considered: "InfDiv","pDMP", "glmDataSet", and
+    "RangedGlmDataSet".
 }
 \seealso{
 base::\code{\link[base]{Extract}}
