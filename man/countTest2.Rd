@@ -11,7 +11,8 @@ countTest2(DS, num.cores = 1, countFilter = TRUE, CountPerBp = NULL,
   tasks = 0L, saveAll = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{DS}{DESeqDataSet object}
+\item{DS}{A 'glmDataSet' object, which is created with function
+\code{link{glmDataSet}}.}
 
 \item{num.cores, tasks}{Paramaters for parallele computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
@@ -59,10 +60,14 @@ treatment is differentially expressed in respect to the control}
 
 \item{test}{A character string matching one of "Wald" or "LRT". If test =
 "Wald", then the p-value of the Wald test for the coefficient of the
-independent variable (\emph{treatment group}) will be reported p-value. If
-test = "LRT", then the p-value from a likelihood ratio test given by
-\code{\link[stats]{anova}} function from \emph{stats} packages will be the
-reported p-value for the group comparison.}
+independent variable (\emph{treatment group}) will be reported.
+If test = "LRT", then the p-value from a likelihood ratio test given by
+\code{\link[stats]{anova}} function from \emph{stats} packages will be
+the reported p-value for the group comparison when the best fitted model
+is the negative binomial. As suggested for \code{link[stats]{glm}}, if
+best fitted model is Poisson or quasi-Poisson, then the best test is
+'Chi-squared' or 'F-test', respectively. So, for the sake of simplicity,
+the corresponding suitable test will be applied when test = "LRT".}
 
 \item{scaling}{integer (default 1). Scaling factor estimate the
 signal density as: scaling * "DIMP-Count-Per-Bp". For example,
@@ -80,24 +85,38 @@ a data frame or GRanges object (if the DS contain the GRanges
 }
 \description{
 Perform Poisson and Negative Binomial regression analysis to
-  compare the counts from different groups, treatment and control. The
-  difference between functions 'countTest2' and 'countTest' resides in the
-  estimation of the prior weights used in Negative Binomial generalized
-  linear model.
+    compare the counts from different groups, treatment and control. The
+    difference between functions 'countTest2' and 'countTest' resides in the
+    estimation of the prior weights used in Negative Binomial generalized
+    linear model.
+}
+\details{
+A pairwise group comparison, control versus treatment, is performed.
+    The experimental desing settings must be introduced using function
+    \code{link{glmDataSet}} to provide dataset (DS) object.
 }
 \examples{
-    countData <- matrix(1:40,ncol = 4)
-    condition <- factor(c("A","A","B","B"))
-    dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
-                                ~ condition)
-    countTest2(dds, verbose = FALSE)
+set.seed(133) # Set a seed
+## A GRanges ogbject with the count matrix in the metacolumns is created
+countData <- matrix(sample.int(200, 10000, replace = TRUE), ncol = 4)
+colnames(countData) <- c("A1","A2","B1","B2")
+start <- seq(1, 25e5, 1000)
+end <- start + 2000
+chr <- c(rep("chr1", 1200), rep("chr2", 1300))
+GR <- GRanges(seqnames = chr, IRanges(start = start, end = end))
+mcols(GR) <- countData
+## Gene IDs
+names(GR) <- paste0("gene", 1:length(GR))
 
-    # Parallel computation. Package 'BiocParallel' must be installed
-    # set.seed(133)
-    # countData <- matrix(sample.int(200, 10000, replace = TRUE), ncol = 4)
-    # condition <- factor(c("A","A","B","B"))
-    # dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition),
-                            ~ condition)
-    # countTest2(dds, num.cores = 4L)
+## An experiment design is set We are looking whether
+colData <- data.frame(condition = factor(c("A","A","B","B")),
+                      c("A1","A2","B1","B2"),
+                      row.names = 2)
+## A RangedGlmDataSet is created
+ds <- glmDataSet(GR = GR, colData = colData)
+
+## The gneralized linear model pairwise group comparison, group 'A'
+## ('control') versus 'B' (treatment) is performed.
+countTest2(ds, num.cores = 1L, maxGrpCV = c(0.4, 0.4), verbose = FALSE)
 
 }
