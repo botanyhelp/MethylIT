@@ -20,11 +20,15 @@
 #' @param w group weights used in glm procedure
 #' @param MVrate Minimum Mean/Variance rate.
 #' @param test A character string matching one of "Wald" or "LRT". If test =
-#'   "Wald", then the p-value of the Wald test for the coefficient of the
-#'   independent variable (\emph{treatment group}) will be reported p-value. If
-#'   test = "LRT", then the p-value from a likelihood ratio test given by
-#'   \code{\link[stats]{anova}} function from \emph{stats} packages will be the
-#'   reported p-value for the group comparison.
+#'     "Wald", then the p-value of the Wald test for the coefficient of the
+#'     independent variable (\emph{treatment group}) will be reported.
+#'     If test = "LRT", then the p-value from a likelihood ratio test given by
+#'     \code{\link[stats]{anova}} function from \emph{stats} packages will be
+#'     the reported p-value for the group comparison when the best fitted model
+#'     is the negative binomial. As suggested for \code{link[stats]{glm}}, if
+#'     best fitted model is Poisson or quasi-Poisson, then the best test is
+#'     'Chi-squared' or 'F-test', respectively. So, for the sake of simplicity,
+#'     the corresponding suitable test will be applied when test = "LRT".
 #'
 #' @return GLM model of the group comparison for the given genomic region
 #'
@@ -87,9 +91,7 @@
        mdl$NBW <- .evaluateModel(model(dat, "Neg.Binomial.W", weights=w),
                                  test = test[1])
        aic <- c(mdl$P$AIC, mdl$Q$AIC, mdl$NB$AIC, mdl$NBW$AIC)
-       # print(data.frame(mdl=mdls, aic = aic,
-       #                eva=c(mdl$P$AIC, mdl$Q$AIC, mdl$NB$AIC, mdl$NBW$AIC)))
-       # print(mdl$NBW$Eval)
+
        aic <- aic[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdls <- mdls[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdl <- mdl[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
@@ -102,14 +104,10 @@
                                  test = test[1])
 
        aic <- c(mdl$Q$AIC, mdl$NB$AIC, mdl$NBW$AIC)
-       # print(data.frame(mdl=mdls, aic = aic,
-       #                eva=c(mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)))
-       # print(mdl$NBW$Eval)
 
        aic <- aic[c(mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdls <- mdls[c(mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdl <- mdl[c(mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
-       # print(mdls)
    }
    if (length(mdl) > 0) {
        Eval <- TRUE
