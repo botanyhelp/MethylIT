@@ -40,8 +40,10 @@
 #' @export
 #' @keywords internal
 "[.glmDataSet" <- function(x, i, j, ...) {
-   if (missing(j)) j <- 1:ncol(x$counts)
-   x$counts <- .subset(x$counts, i, j)
+   if (is.null(nrow(x$counts))) X <- t(x$counts)
+   else X <- x$counts
+   if (missing(j)) j <- 1:ncol(X)
+   x$counts <- .subset(X, i, j)
    rn <- rownames(x$colData)
    if (isS4(x$colData)) {
        x$colData <- DataFrame(x$colData[j, ])
@@ -62,9 +64,11 @@
 #' @export
 #' @keywords internal
 "[.RangedGlmDataSet" <- function(x, i, j, ...) {
-   if (missing(j)) j <- 1:ncol(x$counts)
+   if (is.null(nrow(x$counts))) X <- t(x$counts)
+   else X <- x$counts
+   if (missing(j)) j <- 1:ncol(X)
    x$GR <- x$GR[i]
-   x$counts <- .subset(x$counts, i, j)
+   x$counts <- .subset(X, i, j)
    rn <- rownames(x$colData)
    if (isS4(x$colData)) {
        x$colData <- DataFrame(x$colData[j, ])

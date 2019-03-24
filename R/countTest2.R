@@ -124,8 +124,8 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        dc <- DS$counts
        g1 <- which(lev[1] ==  group)
        g2 <- which(lev[2] ==  group)
-       m1 <- rowMeans(dc[ ,g1])
-       m2 <- rowMeans(dc[ ,g2])
+       m1 <- rowMeans(data.frame(dc[ ,g1]))
+       m2 <- rowMeans(data.frame(dc[ ,g2]))
        idx <- which(m1 >= minCountPerIndv |
                    m2 >= minCountPerIndv)
        res <- NULL
@@ -202,13 +202,20 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
    if (!is.null(res)) {
        # == A rough estimation of prior weights ===
        X <- DS$counts
-       baseMeanAndVar <- data.frame(baseMean=rowMeans(X),
-                                baseVar=rowVars(X))
+       # if only one range:
+       if (is.null(nrow(X))) { # A trick
+           baseMeanAndVar <- data.frame(baseMean = mean(X),
+                                        baseVar = var(X))
+           X <- data.frame(t(X))
+       } else {
+           baseMeanAndVar <- data.frame(baseMean=rowMeans(X),
+                                       baseVar=rowVars(X))
+       }
 
-       m1 <- rowMeans(log(X[ ,group == lev[1]] + 1))
-       m2 <- rowMeans(log(X[ ,group == lev[2]] + 1))
-       v1 <- rowVars(log(X[ ,group == lev[1]] + 1))
-       v2 <- rowVars(log(X[ ,group == lev[2]] + 1))
+       m1 <- rowMeans(log(X[, group == lev[1]] + 1))
+       m2 <- rowMeans(log(X[, group == lev[2]] + 1))
+       v1 <- rowVars(as.matrix(log(X[, group == lev[1]] + 1)))
+       v2 <- rowVars(as.matrix(log(X[, group == lev[2]] + 1)))
        v12 <- var(c(m1, m2), na.rm = TRUE, use = "everything")
        logBaseMean <- log(baseMeanAndVar[, 1] + 1)
        disp <- v1/(v12/(logBaseMean - m1)^2) + v2/(v12/(logBaseMean - m2)^2)
@@ -259,7 +266,6 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        # ================= Post processing filtering Block =================== #
        DS$optionData <- DataFrame(tests)
        DS <- DS[!is.na(tests$log2FC)]
-
        if (FilterLog2FC && is.null(pvalCutOff) && !saveAll) {
            DS <- DS[abs(DS$optionData$log2FC) > Minlog2FC]
        }
@@ -313,6 +319,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
                                    TT.SignalDensity=double(),
                                    SignalDensityVariation=double())
        } else {
+           res <- GRanges()
            x <- matrix(integer(), nrow = 1, ncol = length(sample.names))
            colnames(x) <- sample.names
            mcols(res) <- DataFrame(x[NULL,], log2FC=double(), pvalue=double(),
