@@ -21,13 +21,13 @@
 #'
 #' @return A character vector of prediction classes or a numeric vector of
 #'   probabilities or a list containing the two vectors: prediction classes
-#'   and 'posteriors' probabilities.
+#'   and 'posterior' probabilities.
 #'
 #' @export
 predict.LogisticR <- function(object, ...) UseMethod("predict")
 predict.LogisticR <- function(object, newdata = NULL,
-                              type=c("class", "posteriors", "all"), ...) {
-   if (!is.element(type[1], c("class", "posteriors", "all")))
+                              type=c("class", "posterior", "all"), ...) {
+   if (!is.element(type[1], c("class", "posterior", "all")))
        stop("The type setting '", type, "' does not exist")
    if (!inherits(object, "LogisticR")) {
        stop("* 'object' must be logistic a model from class 'LogisticR'")
@@ -74,7 +74,7 @@ predict.LogisticR <- function(object, newdata = NULL,
    pred <- predict.glm(object, newdata=newdata, type="response")
    PredClass <- rep( "CT", length(pred))
    PredClass[pred > 0.5] <- "TT"
-   pred <- switch(type[1], class=PredClass, posteriors=pred,
-               all=list(class=PredClass, posteriors=pred))
+   pred <- switch(type[1], class=PredClass, posterior=pred,
+               all=list(class=PredClass, posterior=pred))
    return(pred)
 }

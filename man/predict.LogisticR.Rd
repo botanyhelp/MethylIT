@@ -5,7 +5,7 @@
 \title{Predict function for logistic regression model from 'LogisticR' class}
 \usage{
 \method{predict}{LogisticR}(object, newdata = NULL, type = c("class",
-  "posteriors", "all"), ...)
+  "posterior", "all"), ...)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from 'LogisticR'
@@ -25,7 +25,7 @@ required. The default is "class". Possible outputs are:
 \value{
 A character vector of prediction classes or a numeric vector of
   probabilities or a list containing the two vectors: prediction classes
-  and 'posteriors' probabilities.
+  and 'posterior' probabilities.
 }
 \description{
 Predict using a logistic model obtained from the output of

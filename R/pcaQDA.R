@@ -141,8 +141,8 @@ predict.pcaQDA <- function(object, newdata,
    }
    vn <- rownames(object$pca$rotation)
 
-   if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv"))) {
-       newdata <- unlist(newdata)
+   if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv", "GRanges"))) {
+       if (inherits(newdata, c("pDMP", "InfDiv"))) newdata <- unlist(newdata)
        if (is.element("pos", vn)) {
            position <- function(gr) {
                            chrs <- split(gr, seqnames(gr))
