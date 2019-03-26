@@ -373,13 +373,15 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        # ------------------------------------------------------------------- #
        # Auxiliar function to find cutpoint/intersection point of the two
        # gamma distributions
-           cutFun <- function(divs, post.cut) {
-               idx <- which(post > post.cut)
+           cutFun <- function(divs, post.cut, classifier) {
+               if (classifier == "logistic") idx <- which(post > post.cut)
+               else idx <- which(post[, 2] > post.cut)
                TT <- divs[idx]
                CT <- divs[-idx]
                CT <- unlist(CT)
                TT <- unlist(TT)
-               return(max(c(max(CT$hdiv),min(TT$hdiv))))
+               return(min(c(max(CT$hdiv, na.rm = TRUE),
+                            min(TT$hdiv, na.rm = TRUE))))
            }
        # --------------------------------------------------------------------- #
            if (!find.cut) {
@@ -388,14 +390,15 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            control.names = "ctrl",
                                            treatment.names = "treat",
                                            classifier = classifier1[1],
-                                           prop = prop,
+                                           prop = prop, n.pc = n.pc,
                                            output = "conf.mat",
                                            num.cores=num.cores,
                                            tasks=tasks, verbose = FALSE, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
-                               type = "posteriors")
-               cutpoint <- cutFun(divs = unlist(LR), post.cut)
+                               type = "posterior")
+               cutpoint <- cutFun(divs = unlist(LR), post.cut,
+                                  classifier = classifier1[1])
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
                if (length(dmps$ctrl) == 0) {
@@ -415,7 +418,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                   positive="TT")
 
                    res$postProbCut <- 0.5
-                   res$cutpoint <- cutFun(divs = unlist(LR), 0.5)
+                   res$cutpoint <- cutFun(divs = unlist(LR), 0.5,
+                                          classifier = classifier1[1])
                    res$testSetPerformance <- conf.mat$Performance
                    res$testSetModel.FDR <- conf.mat$FDR
                    res$model <- conf.mat$model
@@ -466,22 +470,23 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                          tasks=tasks, verbose = FALSE, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
-                               type = "posteriors")
+                               type = "posterior")
 
                cuts <- seq(cut.interval[1], cut.interval[2], cut.incr)
                k = 1; opt <- FALSE; overcut <- FALSE;
                while (k < length(cuts) && !opt && !overcut) {
-                   cutpoint <- cutFun(divs = unlist(LR), cuts[k])
+                   cutpoint <- cutFun(divs = unlist(LR), cuts[k],
+                                      classifier = classifier1[1])
                    dmps <- selectDIMP(LR, div.col = div.col,
                                    cutpoint = cutpoint,
                                    tv.col=tv.col, tv.cut=tv.cut)
                    if (length(dmps$ctrl) > 0) {
-                       conf.mat <- evaluateDIMPclass(dmps, column = column,
-                                               control.names = control.names,
-                                               treatment.names=treatment.names,
+                       conf.mat <- evaluateDIMPclass(LR = dmps, column = column,
+                                               control.names = "ctrl",
+                                               treatment.names="treat",
                                                classifier=classifier2[1],
                                                prop=prop, output = "conf.mat",
-                                               num.cores=num.cores,
+                                               n.pc = n.pc, num.cores=num.cores,
                                                tasks=tasks,
                                                verbose = FALSE, ...)
                        if (stat == 0) {
@@ -503,9 +508,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        overcut <- TRUE
                        if (k == 1) {
                            st <- conf.mat$Performance$byClass[stat]
-                           cutpoint <- cutFun(divs = unlist(LR), cuts[k])
+                           cutpoint <- cutFun(divs = unlist(LR), cuts[k],
+                                              classifier = classifier1[1])
                        }
-                       else cutpoint <- cutFun(divs = unlist(LR), cuts[k - 1])
+                       else cutpoint <- cutFun(divs = unlist(LR), cuts[k - 1],
+                                               classifier = classifier1[1])
                    }
                }
 
