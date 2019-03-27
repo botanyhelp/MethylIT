@@ -18,9 +18,9 @@
 #'     cutpoint are normally given, with the exception of those extreme
 #'     situations where the statistics to evaluate performance cannot be
 #'     estimated. More than one classifier model can be applied. For example,
-#'     one classifier (logistic model) can be used to esitmate the posterior
+#'     one classifier (logistic model) can be used to estimate the posterior
 #'     classification probabilities of DMP into those from control and those
-#'     from treatment. This probabilities are then used to estimate the cutpoint
+#'     from treatment. These probabilities are then used to estimate the cutpoint
 #'     in range of values from, say, 0.5 to 0.8. Next, a different classifier
 #'     can be used to evaluate the classification performance. Different
 #'     classifier models would yield different performances. Models are returned
@@ -180,6 +180,7 @@
 #'                              treatment.names = c("sample21", "sample22"))
 #' @importFrom S4Vectors mcols
 #' @importFrom caret confusionMatrix
+#' @seealso \code{\link[MethylIT]{evaluateDIMPclass}}
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        column=c(hdiv=TRUE, TV=TRUE, wprob=FALSE, pos=FALSE),
@@ -337,14 +338,14 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
 
-               conf.mat <- evaluateDIMPclass(dmps, column = column,
+               conf.mat <- evaluateDIMPclass(LR = dmps, column = column,
                                            control.names = "ctrl",
                                            treatment.names = "treat",
                                            classifier=classifier1[1],
-                                           prop=prop,
+                                           prop=prop, n.pc = n.pc,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tasks=tasks, verbose = FALSE)
+                                           tasks=tasks, verbose = FALSE, ...)
 
                predClasses <- predict(object = conf.mat$model,
                                        newdata = dmps, type = "class")
@@ -431,7 +432,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                control.names = "ctrl",
                                                treatment.names = "treat",
                                                classifier = classifier2[1],
-                                               prop = prop,
+                                               prop = prop, n.pc = n.pc,
                                                output = "conf.mat",
                                                num.cores=num.cores,
                                                tasks=tasks, verbose = FALSE,
@@ -465,9 +466,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                          control.names = "ctrl",
                                          treatment.names = "treat",
                                          classifier=classifier1[1], prop=prop,
-                                         output = "conf.mat",
-                                         num.cores=num.cores,
-                                         tasks=tasks, verbose = FALSE, ...)
+                                         output = "conf.mat", n.pc = n.pc,
+                                         num.cores=num.cores, tasks=tasks,
+                                         verbose = FALSE, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posterior")
