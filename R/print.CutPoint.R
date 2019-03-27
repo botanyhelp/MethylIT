@@ -34,7 +34,7 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
        cat("Model classifier", x$classifier, "\n")
        cat("\n")
    } else {
-       if (!is.na(x$initModel)) {
+       if (x$initMode != "Youden Index") {
            cat("Posterior probability used to get the cutpoint =",
                postProbCut, "\n")
            cat("Cutpoint =", cutpoint, "\n")
@@ -46,7 +46,7 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
            cat("Model classifier", x$classifier, "\n")
            cat("\n")
        }
-       if (is.na(x$initModel)) {
+       if (x$initModel == "Youden Index") {
            cat("Simple cutpoint estimation \n")
            cat("Cutpoint =", cutpoint, "\n")
            cat("\n")
