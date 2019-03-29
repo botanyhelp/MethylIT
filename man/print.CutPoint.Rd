@@ -15,3 +15,4 @@
 \description{
 Printing object from 'CutPoint' class by simple print methods
 }
+\keyword{internal}

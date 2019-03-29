@@ -3,6 +3,7 @@
 #' @title Printing object from 'CutPoint' class by simple print methods
 #' @param x Object of class \code{"CutPoint"}
 #' @param digits Number of significant digits to be used.
+#' @keywords internal
 #' @export
 
 print.CutPoint <- function(x, ...) UseMethod("print", x)
