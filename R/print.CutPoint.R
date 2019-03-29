@@ -12,7 +12,8 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
    cutpoint <- format(signif(x$cutpoint, max(1L, digits - 2L)))
 
    if (x$initModel != "Youden Index" ) {
-     cat("Cutpoint estimation with", x$initModel, "classifier \n")
+     cat("Cutpoint estimation with '", x$initModel, "' classifier \n",
+         sep = "")
    } else {
      cat("Cutpoint estimation with '", x$initModel, "' \n", sep = "")
    }
@@ -31,7 +32,7 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
            postProbCut, "have a \n")
        cat("divergence value >=", cutpoint, "\n")
        cat("\n")
-       cat("Model classifier", x$classifier, "\n")
+       cat("Model classifier '", x$classifier, "' \n", sep = "")
        cat("\n")
    } else {
        if (x$initMode != "Youden Index") {

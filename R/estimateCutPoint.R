@@ -235,13 +235,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        if (is.null(div.col))
            stop(paste("* Provide a divergence column"))
 
-       sn <- c("ctrl", "treat")
-       dt <- list()
-       for (k in 1:2) {
-           x = LR[[k]]@elementMetadata[, div.col]
-           dt[[k]] <- data.frame(idiv = abs(x), treat = sn[k])
-       }
-       names(dt) <- sn
+       dt <- list(ctrl = data.frame(), treat = data.frame())
+       dt$ctrl <- data.frame(idiv = abs(mcols(LR$ctrl[, div.col])[, 1]),
+                               treat = "ctrl")
+       dt$treat <- data.frame(idiv = abs(mcols(LR$treat[, div.col])[, 1]),
+                               treat = "treat")
        return(dt)
    }
    roc <- function(dt) {
@@ -326,7 +324,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        classes <- factor(classes, levels = c("CT", "TT"))
 
        if (simple) {
-           cutpoint <- roc(dt = infDiv(LR, div.col = div.col))
+           cutpoint <- roc(dt = infDiv(LR=LR, div.col = div.col))
            predClasses <- unlist(LR)$hdiv > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
@@ -376,13 +374,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        # gamma distributions
            cutFun <- function(divs, post.cut, classifier) {
                if (classifier == "logistic") idx <- which(post > post.cut)
-               else idx <- which(post[, 2] > post.cut)
-               TT <- divs[idx]
-               CT <- divs[-idx]
-               CT <- unlist(CT)
-               TT <- unlist(TT)
-               return(min(c(max(CT$hdiv, na.rm = TRUE),
-                            min(TT$hdiv, na.rm = TRUE))))
+               else idx <- which(post[, 2] > 0.1)
+               return(min(mcols(divs[idx, div.col])[, 1]))
            }
        # --------------------------------------------------------------------- #
            if (!find.cut) {
@@ -472,12 +465,13 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
 
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posterior")
-
                cuts <- seq(cut.interval[1], cut.interval[2], cut.incr)
-               k = 1; opt <- FALSE; overcut <- FALSE;
+               if (stat == 12) st = 1 else st = 0
+               k = 1; opt <- FALSE; overcut <- FALSE; cutprob <- cuts[1]
+
                while (k < length(cuts) && !opt && !overcut) {
                    cutpoint <- cutFun(divs = unlist(LR), cuts[k],
-                                      classifier = classifier1[1])
+                                       classifier = classifier1[1])
                    dmps <- selectDIMP(LR, div.col = div.col,
                                    cutpoint = cutpoint,
                                    tv.col=tv.col, tv.cut=tv.cut)
@@ -491,17 +485,29 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                tasks=tasks,
                                                verbose = FALSE, ...)
                        if (stat == 0) {
-                           st <- conf.mat$Performance$overall[1]
+                           st0 <- conf.mat$Performance$overall[1]
+                           if (st < st0) {
+                               st <- st0
+                               cutprob <- cuts[k]
+                           }
                            if (st == 1) opt <- TRUE
                            k <- k + 1
                        }
                        if (is.element(stat, 1:11)) {
-                           st <- conf.mat$Performance$byClass[stat]
+                           st0 <- conf.mat$Performance$byClass[stat]
+                           if (st < st0) {
+                               st <- st0
+                               cutprob <- cuts[k]
+                           }
                            if (st == 1) opt <- TRUE
                            k <- k + 1
                        }
                        if (stat == 12) {
-                           st <- conf.mat$FDR
+                           st0 <- conf.mat$FDR
+                           if (st > st0) {
+                               st <- st0
+                               cutprob <- cuts[k]
+                           }
                            if (st == 0) opt <- TRUE
                            k <- k + 1
                        }
@@ -509,13 +515,13 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        overcut <- TRUE
                        if (k == 1) {
                            st <- conf.mat$Performance$byClass[stat]
-                           cutpoint <- cutFun(divs = unlist(LR), cuts[k],
-                                              classifier = classifier1[1])
+                           warning("Model classifier ", classifier1[1],
+                                   " is enough")
                        }
-                       else cutpoint <- cutFun(divs = unlist(LR), cuts[k - 1],
-                                               classifier = classifier1[1])
                    }
                }
+               cutpoint <- cutFun(divs = unlist(LR), cutprob,
+                                  classifier = classifier1[1])
 
                predClasses <- predict(object = conf.mat$model, newdata = dmps,
                                        type = "class")
@@ -538,7 +544,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                res$model <- conf.mat$model
                res$modelConfMatrix <- conf.matrix
                res$initModel <- classifier1[1]
-               res$postProbCut <- cuts[k]
+               res$postProbCut <- cutprob
                res$classifier <- classifier2[1]
                res$statistic <- STAT[stat + 1]
                res$optStatVal <- st
