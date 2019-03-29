@@ -141,9 +141,9 @@ The function performs an estimation of the optimal cutpoint for the
     cutpoint are normally given, with the exception of those extreme
     situations where the statistics to evaluate performance cannot be
     estimated. More than one classifier model can be applied. For example,
-    one classifier (logistic model) can be used to esitmate the posterior
+    one classifier (logistic model) can be used to estimate the posterior
     classification probabilities of DMP into those from control and those
-    from treatment. This probabilities are then used to estimate the cutpoint
+    from treatment. These probabilities are then used to estimate the cutpoint
     in range of values from, say, 0.5 to 0.8. Next, a different classifier
     can be used to evaluate the classification performance. Different
     classifier models would yield different performances. Models are returned
@@ -210,4 +210,7 @@ cutpoint <- estimateCutPoint(LR = PS, simple = TRUE, find.cut = FALSE,
                              interaction = "hdiv:TV", clas.perf = FALSE,
                              control.names = c("sample11", "sample12"),
                              treatment.names = c("sample21", "sample22"))
+}
+\seealso{
+\code{\link[MethylIT]{evaluateDIMPclass}}
 }
