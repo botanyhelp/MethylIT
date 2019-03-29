@@ -64,7 +64,9 @@ Some simple examples
 
 [<img src="man/figures/cancer_example.png" />](https://git.psu.edu/genomath/MethylIT_Data/blob/master/cancer_example_04-03-18.pdf)
 
-[An example with simulated datasets](https://genomaths.github.io/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.
+[An example with simulated datasets](https://genomaths.github.io/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.   
+
+[A guide for methylation analysis based on optimal cutpoint with_Methyl-IT](https://genomaths.github.io/Cutpoint_estimation_with_Methyl-IT.html).
 
 --------
 
