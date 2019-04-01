@@ -99,6 +99,8 @@ increamental values runing on the interval \emph{cut.interval}. Deafult,
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
 (only for Linux OS).}
+
+\item{...}{arguments passed to or from other methods.}
 }
 \value{
 Depending the parameter setting will return the following list with

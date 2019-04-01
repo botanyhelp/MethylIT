@@ -99,6 +99,7 @@
 #'         \item 11 = "Balanced Accuracy"
 #'         \item 12 = FDR
 #'    }
+#' @param ... arguments passed to or from other methods.
 #' @return Depending the parameter setting will return the following list with
 #'     elements:
 #'     \enumerate{
