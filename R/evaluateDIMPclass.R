@@ -346,6 +346,8 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                 positive="TT")
        m=conf.mat$table
        FDR=m[2,1]/sum(m[2,])
+       if (class(model) == "lda") model <- structure(model, class = "ldaDMP")
+       if (class(model) == "qda") model <- structure(model, class = "qdaDMP")
        return(list(Performance=conf.mat, FDR=FDR, model=model))
    }
   # -------------------------------------------------------------------------- #
