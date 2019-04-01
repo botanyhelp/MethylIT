@@ -52,7 +52,7 @@ predict.LogisticR <- function(object, newdata = NULL,
        }
        v <- c("hdiv", "TV", "logP", "pos")
        vn <- setdiff(names(coef(object)),"(Intercept)")
-       v <- v[is.element(vn, v)]
+       v <- v[na.omit(match(vn, v))]
        inter <- unlist(lapply(grep("[:]", vn),
                            function(k) strsplit(vn[k], split = ":")[[1]]))
        vn <- union(v, inter)
