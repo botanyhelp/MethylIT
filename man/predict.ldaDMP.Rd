@@ -5,8 +5,8 @@
 \alias{predict.pcaLDA}
 \title{Predict function for 'ldaDMP' method}
 \usage{
-\method{predict}{ldaDMP}(object, newdata, type = c("lda.pred", "class",
-  "posterior", "scores", "pca.ind.coord"), ...)
+\method{predict}{ldaDMP}(object, newdata, type = c("class", "posterior",
+  "scores"), ...)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from class 'ldaDMP'}
@@ -19,7 +19,7 @@ required. The default is "all" given by function 'predict.lda' from MASS
 package: 'class', 'posterior', and 'scores' (cases scores on discriminant
 variables, see \code{link[MASS]{lda}}).}
 
-\item{...}{Not in use.}
+\item{...}{arguments passed to or from other methods.}
 }
 \description{
 Predict using a LDA model built with function
@@ -28,3 +28,4 @@ Predict using a LDA model built with function
 \seealso{
 \code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}
 }
+\keyword{internal}

@@ -21,7 +21,7 @@ print.glmDataSet <- function(x, digits = getOption("digits")) {
        " with factor levels ", "'", lvs[1],"'", " and '", lvs[2],"' \n",
        sep = "")
    cat("The accessible objects in the dataset are: \n")
-   print(summary(x))
+   print(summary(x), digits = digits)
 }
 
 #' @rdname print.glmDataSet

@@ -12,13 +12,13 @@
 #'     required. The default is "all" given by function 'predict.lda' from MASS
 #'     package: 'class', 'posterior', and 'scores' (cases scores on discriminant
 #'     variables, see \code{link[MASS]{lda}}).
-#' @param ... Not in use.
+#' @param ... arguments passed to or from other methods.
 #' @seealso \code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}
+#' @keywords internal
 #' @export
 predict.ldaDMP <- function(object, ...) UseMethod("predict")
 predict.ldaDMP <- function(object, newdata,
-                           type = c("lda.pred", "class", "posterior",
-                                    "scores", "pca.ind.coord"), ...) {
+                           type = c("class", "posterior", "scores"), ...) {
    if (!inherits(object, "ldaDMP")) {
        stop("* 'object' must be a model from class 'ldaDMP'")
    }
