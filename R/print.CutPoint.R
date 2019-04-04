@@ -36,7 +36,7 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
        cat("Model classifier '", x$classifier, "' \n", sep = "")
        cat("\n")
    } else {
-       if (x$initMode != "Youden Index") {
+       if (x$initModel != "Youden Index") {
            cat("Posterior probability used to get the cutpoint =",
                postProbCut, "\n")
            cat("Cutpoint =", cutpoint, "\n")
