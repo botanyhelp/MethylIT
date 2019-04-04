@@ -184,7 +184,7 @@
 #' @seealso \code{\link[MethylIT]{evaluateDIMPclass}}
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
-                       column=c(hdiv=TRUE, TV=TRUE, wprob=FALSE, pos=FALSE),
+                       column=c(hdiv=TRUE, TV=TRUE, wprob=TRUE, pos=TRUE),
                        classifier1=c("logistic", "pca.logistic", "lda",
                                    "qda","pca.lda", "pca.qda"),
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
@@ -330,7 +330,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
            predClasses <- factor(predClasses, levels = c("CT", "TT"))
-           conf.mat <- confusionMatrix(data=predClasses, reference=classes,
+           cf.mat <- confusionMatrix(data=predClasses, reference=classes,
                                        positive="TT")
 
            if (clas.perf && !find.cut) {
@@ -362,10 +362,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                res$model <- conf.mat$model
                res$modelConfMatrix <- conf.matrix
                res$initModel <- "Youden Index"
+               res$initModelConfMatrix <- cf.mat
                res$classifier <- classifier1[1]
            } else {
                res$cutpoint <- cutpoint
-               res$modelConfMatrix <- conf.mat
+               res$modelConfMatrix <- cf.mat
                res$initModel <- "Youden Index"
            }
        } else {
@@ -374,13 +375,13 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        # Auxiliar function to find cutpoint/intersection point of the two
        # gamma distributions
            cutFun <- function(divs, post.cut, classifier) {
-               if (classifier == "logistic") idx <- which(post > post.cut)
+               if (classifier[1] == "logistic") idx <- which(post > post.cut)
                else idx <- which(post[, 2] > 0.1)
                return(min(mcols(divs[idx, div.col])[, 1]))
            }
        # --------------------------------------------------------------------- #
            if (!find.cut) {
-               if (is.null(classifier2)) classifier2 <- classifier1
+               if (is.null(classifier2[1])) classifier2 <- classifier1[1]
                conf.mat <- evaluateDIMPclass(LR, column = column,
                                            control.names = "ctrl",
                                            treatment.names = "treat",
@@ -392,7 +393,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
 
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posterior")
-               cutpoint <- cutFun(divs = unlist(LR), post.cut,
+               cutpoint <- cutFun(divs = unlist(LR), post.cut = post.cut,
                                   classifier = classifier1[1])
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
@@ -413,7 +414,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                   positive="TT")
 
                    res$postProbCut <- 0.5
-                   res$cutpoint <- cutFun(divs = unlist(LR), 0.5,
+                   res$cutpoint <- cutFun(divs = unlist(LR), post.cut = 0.5,
                                           classifier = classifier1[1])
                    res$testSetPerformance <- conf.mat$Performance
                    res$testSetModel.FDR <- conf.mat$FDR
@@ -454,7 +455,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
 
        # -------------------- To search for a cutpoint --------------------- #
            if (find.cut) {
-               if (is.null(classifier2)) classifier2 <- classifier1
+               if (is.null(classifier2[1])) classifier2 <- classifier1[1]
                conf.mat <- evaluateDIMPclass(LR, column = column,
                                          control.names = "ctrl",
                                          treatment.names = "treat",
@@ -469,7 +470,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                k = 1; opt <- FALSE; overcut <- FALSE; cutprob <- cuts[1]
 
                while (k < length(cuts) && !opt && !overcut) {
-                   cutpoint <- cutFun(divs = unlist(LR), cuts[k],
+                   cutpoint <- cutFun(divs = unlist(LR), post.cut = cuts[k],
                                        classifier = classifier1[1])
                    dmps <- selectDIMP(LR, div.col = div.col,
                                    cutpoint = cutpoint,
@@ -518,7 +519,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        }
                    }
                }
-               cutpoint <- cutFun(divs = unlist(LR), cutprob,
+               cutpoint <- cutFun(divs = unlist(LR), post.cut = cutprob,
                                   classifier = classifier1[1])
 
                predClasses <- predict(object = conf.mat$model, newdata = dmps,

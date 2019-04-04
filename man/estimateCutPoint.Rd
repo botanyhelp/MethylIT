@@ -6,7 +6,7 @@
     from the control}
 \usage{
 estimateCutPoint(LR, control.names, treatment.names, simple = TRUE,
-  column = c(hdiv = TRUE, TV = TRUE, wprob = FALSE, pos = FALSE),
+  column = c(hdiv = TRUE, TV = TRUE, wprob = TRUE, pos = TRUE),
   classifier1 = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
   "pca.qda"), classifier2 = NULL, tv.cut = 0.25, div.col = NULL,
   clas.perf = FALSE, post.cut = 0.5, prop = 0.6, n.pc = 1,
