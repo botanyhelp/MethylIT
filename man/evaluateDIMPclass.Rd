@@ -10,7 +10,7 @@ evaluateDIMPclass(LR, control.names, treatment.names, column = c(hdiv =
   "pca.qda"), pval.col = NULL, n.pc = 1, center = FALSE,
   scale = FALSE, interaction = NULL, output = "conf.mat",
   prop = 0.6, num.boot = 100, num.cores = 1L, tasks = 0L,
-  seed = 1234, verbose = TRUE)
+  seed = 1234, verbose = FALSE)
 }
 \arguments{
 \item{LR}{A list of GRanges objects (LR) including control and treatment

@@ -177,7 +177,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                n.pc=1, center=FALSE, scale=FALSE,
                                interaction=NULL, output="conf.mat",
                                prop=0.6, num.boot=100, num.cores=1L,
-                               tasks=0L, seed=1234, verbose=TRUE) {
+                               tasks=0L, seed=1234, verbose=FALSE) {
 
    # -------------------------- valid "pDMP" object--------------------------- #
    validateClass(LR)

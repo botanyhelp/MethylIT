@@ -344,7 +344,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            prop=prop, n.pc = n.pc,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tasks=tasks, verbose = FALSE, ...)
+                                           tasks=tasks, ...)
 
                predClasses <- predict(object = conf.mat$model,
                                        newdata = dmps, type = "class")
@@ -388,7 +388,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                            prop = prop, n.pc = n.pc,
                                            output = "conf.mat",
                                            num.cores=num.cores,
-                                           tasks=tasks, verbose = FALSE, ...)
+                                           tasks=tasks, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posterior")
@@ -429,8 +429,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                prop = prop, n.pc = n.pc,
                                                output = "conf.mat",
                                                num.cores=num.cores,
-                                               tasks=tasks, verbose = FALSE,
-                                               ...)
+                                               tasks=tasks, ...)
 
                    predClasses <- predict(object = conf.mat$model,
                                            newdata = dmps, type = "class")
@@ -461,8 +460,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                          treatment.names = "treat",
                                          classifier=classifier1[1], prop=prop,
                                          output = "conf.mat", n.pc = n.pc,
-                                         num.cores=num.cores, tasks=tasks,
-                                         verbose = FALSE, ...)
+                                         num.cores=num.cores, tasks=tasks, ...)
 
                post <- predict(object = conf.mat$model, newdata = LR,
                                type = "posterior")
@@ -483,8 +481,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                classifier=classifier2[1],
                                                prop=prop, output = "conf.mat",
                                                n.pc = n.pc, num.cores=num.cores,
-                                               tasks=tasks,
-                                               verbose = FALSE, ...)
+                                               tasks=tasks, ...)
                        if (stat == 0) {
                            st0 <- conf.mat$Performance$overall[1]
                            if (st < st0) {
