@@ -28,7 +28,7 @@ predict.LogisticR <- function(object, ...) UseMethod("predict")
 predict.LogisticR <- function(object, newdata = NULL,
                               type=c("class", "posterior", "all"), ...) {
    if (!is.element(type[1], c("class", "posterior", "all")))
-       stop("The type setting '", type, "' does not exist")
+       stop("The type setting '", type[1], "' does not exist")
    if (!inherits(object, "LogisticR")) {
        stop("* 'object' must be logistic a model from class 'LogisticR'")
    }
