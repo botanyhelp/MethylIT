@@ -62,7 +62,7 @@ Flow diagram
 Some simple examples
 --------
 
-[<img src="man/figures/cancer_example.png" />](https://git.psu.edu/genomath/MethylIT_Data/blob/master/cancer_example_04-03-18.pdf)
+[<img src="man/figures/cancer_example.png" />](https://genomaths.github.io/CancerExample/cancer_example_04-03-19.html)
 
 [An example with simulated datasets](https://genomaths.github.io/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.   
 
