@@ -21,3 +21,4 @@ validateClass(LR, ...)
 \description{
 Function to validate S3 classes in MethylIT
 }
+\keyword{internal}

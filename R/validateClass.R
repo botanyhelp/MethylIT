@@ -1,11 +1,13 @@
 #' @rdname validateClass
 #' @title Function to validate S3 classes in MethylIT
 #' @param LR An object from class 'pDMP' or 'InfDiv'
+#' @keywords internal
 #' @export
 validateClass <- function(LR, ...) UseMethod("validateClass", LR)
 
 #' @rdname validateClass
 #' @name validateClass.default
+#' @keywords internal
 #' @export
 validateClass.default <- function(LR, ...){
   warning(paste("'validateClass' does not know how to handle object of class",
@@ -16,6 +18,7 @@ validateClass.default <- function(LR, ...){
 
 #' @rdname validateClass
 #' @name validateClass.pDMP
+#' @keywords internal
 #' @export
 validateClass.pDMP <- function(LR, ...) UseMethod("validateClass", LR)
 validateClass.pDMP <- function(LR) {
@@ -38,6 +41,7 @@ validateClass.pDMP <- function(LR) {
 
 #' @rdname validateClass
 #' @name validateClass.InfDiv
+#' @keywords internal
 #' @export
 validateClass.InfDiv <- function(LR, ...) UseMethod("validateClass", LR)
 validateClass.InfDiv <- function(LR) {
