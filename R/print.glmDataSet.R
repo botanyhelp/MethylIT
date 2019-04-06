@@ -22,6 +22,7 @@ print.glmDataSet <- function(x, digits = getOption("digits")) {
        sep = "")
    cat("The accessible objects in the dataset are: \n")
    print(summary(x), digits = digits)
+   cat("\n")
 }
 
 #' @rdname print.glmDataSet
@@ -39,5 +40,6 @@ print.RangedGlmDataSet <- function(x, digits = getOption("digits")) {
        sep = "")
   cat("The accessible objects in the dataset are: \n")
   print(summary(x))
+  cat("\n")
 }
 
