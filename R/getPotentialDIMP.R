@@ -11,9 +11,9 @@
 #'     DIV_k > DIV(alpha = 0.01) can be selected. For each sample, cytosine
 #'     sites are selected based on the corresponding fitted Weilbull
 #'     distribution model that has been supplied.
-#'
-#' @param LR An object from 'InfDiv' class. This obejct is previously obtained
-#'     with function \code{\link{estimateDivergence}}.
+#' @param LR An object from 'InfDiv' or "testDMP" class. These objects are
+#'     previously obtained with function \code{\link{estimateDivergence}} or
+#'     \code{\link{FisherTest}}.
 #' @param nlms A list of distribution fitted models (output of
 #'     'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical
 #'     cumulative distribution function is used to get the potential DIMPs.
@@ -24,7 +24,7 @@
 #'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 #'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
 #'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-#'     "None".
+#'     NULL. If LR is from "testDMP" class, the dist.name must be set NULL.
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -39,7 +39,7 @@
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
 #'     abs(TV_k) < tv.cut are removed before to perform the ROC analysis.
 #' @param hdiv.col Optional. A column number for the Hellinger distance to be
-#'     used for filtering cytosine positions. Fedault is NULL.
+#'     used for filtering cytosine positions. Default is NULL.
 #' @param hdiv.cut If hdiv.cut and hdiv.col are provided, then cytosine sites k
 #'     with hdiv < hdiv.cut are removed.
 #' @param min.coverage Cytosine sites with coverage less than min.coverage are
@@ -122,7 +122,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                        ECDF <- ecdf(q)
                }
 
-       if (dist.name != "ECDF" && !inherits(LR, "testDMP")) {
+       if (dist.name != "ECDF" && !cl) {
            p <- switch(dist.name,
                    Weibull2P=pweibull(q, shape=m[1], scale=m[2],
                                       lower.tail=FALSE),
@@ -137,10 +137,10 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                    GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
                                    psi=m[4], lower.tail = FALSE)
            )
-       } else {
-               if (dist.name == "ECDF") p <- (1 - ECDF(q))
-               else if (cl) p <- d$adj.pval
        }
+       if (dist.name == "ECDF") p <- (1 - ECDF(q))
+       if (is.null(dist.name) && cl) p <- d$adj.pval
+       if (is.null(dist.name) && !cl) p <- (1 - ECDF(q))
 
        idx <- which(p < alpha)
        p <- p[idx]

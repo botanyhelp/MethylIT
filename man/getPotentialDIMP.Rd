@@ -9,8 +9,9 @@ getPotentialDIMP(LR, nlms = NULL, div.col, dist.name = "Weibull2P",
   min.coverage = NULL, hdiv.col = NULL, hdiv.cut = NULL)
 }
 \arguments{
-\item{LR}{An object from 'InfDiv' class. This obejct is previously obtained
-with function \code{\link{estimateDivergence}}.}
+\item{LR}{An object from 'InfDiv' or "testDMP" class. These objects are
+previously obtained with function \code{\link{estimateDivergence}} or
+\code{\link{FisherTest}}.}
 
 \item{nlms}{A list of distribution fitted models (output of
 'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical
@@ -24,7 +25,7 @@ meta-column.}
 three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 generalized gamma with three-parameter ("GGamma3P") or four-parameter
 ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-"None".}
+NULL. If LR is from "testDMP" class, the dist.name must be set NULL.}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
@@ -47,7 +48,7 @@ abs(TV_k) < tv.cut are removed before to perform the ROC analysis.}
 discarded. Default: 0}
 
 \item{hdiv.col}{Optional. A column number for the Hellinger distance to be
-used for filtering cytosine positions. Fedault is NULL.}
+used for filtering cytosine positions. Default is NULL.}
 
 \item{hdiv.cut}{If hdiv.cut and hdiv.col are provided, then cytosine sites k
 with hdiv < hdiv.cut are removed.}
