@@ -108,7 +108,7 @@ mcols(GR) <- countData
 ## Gene IDs
 names(GR) <- paste0("gene", 1:length(GR))
 
-## An experiment design is set We are looking whether
+## An experiment design is set.
 colData <- data.frame(condition = factor(c("A","A","B","B")),
                       c("A1","A2","B1","B2"),
                       row.names = 2)
