@@ -30,7 +30,7 @@
 #' @param dist.name name of the distribution to fit: Weibull (default:
 #'     "Weibull"), gamma with three-parameter (Gamma3P), gamma with
 #'     two-parameter (Gamma2P), generalized gamma with three-parameter
-#'     ("GGamma3P") or four-parameter ("GGamma4P").
+#'     ("GGamma3P") or four-parameter ("GGamma4P"), and Log-Normal (LogNorm).
 #' @param sample.size size of the sample
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (GGamma) including the location parameter, i.e., a GGamma
@@ -148,30 +148,34 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
        if (absolute) x = abs(x)
        x <- x[x > 0]
        x <- switch(dist.name,
-           Weibull=weibull3P(x, sample.size=sample.size,npoints=npoints,
-                           npoints0=npoints0, maxiter=maxiter, tol=tol,
-                           ftol=ftol, ptol=ptol, minFactor=minFactor,
-                           verbose=verbose),
-           Gamma2P=fitGammaDist(x, location.par=FALSE,
-                           summarized.data=summarized.data,
-                           sample.size=sample.size, npoints=npoints,
-                           maxiter=maxiter, ftol=ftol, ptol=ptol,
-                           verbose=verbose),
-           Gamma3P=fitGammaDist(x, location.par=TRUE,
-                           summarized.data=summarized.data,
-                           sample.size=sample.size, npoints=npoints,
-                           maxiter=maxiter, ftol=ftol, ptol=ptol,
-                           verbose=verbose),
-           GGamma3P=fitGGammaDist(x, location.par=FALSE,
-                           summarized.data=summarized.data,
-                           sample.size=sample.size, npoints=npoints,
-                           maxiter=maxiter, ftol=ftol, ptol=ptol,
-                           verbose=verbose),
-           GGamma4P=fitGGammaDist(x, location.par=TRUE,
-                           summarized.data=summarized.data,
-                           sample.size=sample.size, npoints=npoints,
-                           maxiter=maxiter, ftol=ftol, ptol=ptol,
-                           verbose=verbose))
+                   LogNorm=fitLogNormDist(x, summarized.data=summarized.data,
+                                       sample.size=sample.size, npoints=npoints,
+                                       maxiter=maxiter, ftol=ftol, ptol=ptol,
+                                       verbose=verbose),
+                   Weibull=weibull3P(x, sample.size=sample.size,npoints=npoints,
+                                   npoints0=npoints0, maxiter=maxiter, tol=tol,
+                                   ftol=ftol, ptol=ptol, minFactor=minFactor,
+                                   verbose=verbose),
+                   Gamma2P=fitGammaDist(x, location.par=FALSE,
+                                       summarized.data=summarized.data,
+                                       sample.size=sample.size, npoints=npoints,
+                                       maxiter=maxiter, ftol=ftol, ptol=ptol,
+                                       verbose=verbose),
+                   Gamma3P=fitGammaDist(x, location.par=TRUE,
+                                       summarized.data=summarized.data,
+                                       sample.size=sample.size, npoints=npoints,
+                                       maxiter=maxiter, ftol=ftol, ptol=ptol,
+                                       verbose=verbose),
+                   GGamma3P=fitGGammaDist(x, location.par=FALSE,
+                                       summarized.data=summarized.data,
+                                       sample.size=sample.size, npoints=npoints,
+                                       maxiter=maxiter, ftol=ftol, ptol=ptol,
+                                       verbose=verbose),
+                   GGamma4P=fitGGammaDist(x, location.par=TRUE,
+                                       summarized.data=summarized.data,
+                                       sample.size=sample.size, npoints=npoints,
+                                       maxiter=maxiter, ftol=ftol, ptol=ptol,
+                                       verbose=verbose))
        if (dist.name == "GGamma4P" && sum(is.na(x)) == 15 ) {
            x <- fitGGammaDist(x, location.par=FALSE,
                    summarized.data=summarized.data,

@@ -21,7 +21,7 @@ where the information divergence is given. Default column = 1}
 \item{dist.name}{name of the distribution to fit: Weibull (default:
 "Weibull"), gamma with three-parameter (Gamma3P), gamma with
 two-parameter (Gamma2P), generalized gamma with three-parameter
-("GGamma3P") or four-parameter ("GGamma4P").}
+("GGamma3P") or four-parameter ("GGamma4P"), and Log-Normal (LogNorm).}
 
 \item{sample.size}{size of the sample}
 

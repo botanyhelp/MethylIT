@@ -124,18 +124,20 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
 
        if (dist.name != "ECDF" && !cl) {
            p <- switch(dist.name,
-                   Weibull2P=pweibull(q, shape=m[1], scale=m[2],
-                                      lower.tail=FALSE),
-                   Weibull3P=pweibull(q - m[3], shape=m[1], scale=m[2],
+                       LogNorm=plnorm(q, meanlog=m[1], sdlog=m[2],
+                                       lower.tail=FALSE),
+                       Weibull2P=pweibull(q, shape=m[1], scale=m[2],
+                                       lower.tail=FALSE),
+                       Weibull3P=pweibull(q - m[3], shape=m[1], scale=m[2],
                                        lower.tail = FALSE),
-                   Gamma2P=pgamma(q, shape=m[1], scale=m[2],
-                                   lower.tail = FALSE),
-                   Gamma3P=pgamma(q - m[3], shape=m[1], scale=m[2],
-                                   lower.tail = FALSE),
-                   GGamma3P=pggamma(q, alpha=m[1], scale=m[2], psi=m[3],
-                                   lower.tail = FALSE),
-                   GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
-                                   psi=m[4], lower.tail = FALSE)
+                       Gamma2P=pgamma(q, shape=m[1], scale=m[2],
+                                       lower.tail = FALSE),
+                       Gamma3P=pgamma(q - m[3], shape=m[1], scale=m[2],
+                                       lower.tail = FALSE),
+                       GGamma3P=pggamma(q, alpha=m[1], scale=m[2], psi=m[3],
+                                       lower.tail = FALSE),
+                       GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
+                                       psi=m[4], lower.tail = FALSE)
            )
        }
        if (dist.name == "ECDF") p <- (1 - ECDF(q))
