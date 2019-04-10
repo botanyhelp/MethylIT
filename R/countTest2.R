@@ -144,7 +144,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
            !is.null(CountPerBp) && class(DS$GR) == "GRanges") {
            ## For each group the count per bp must be equal or greater
            ## than CountPerBp
-           size <- width(DS)
+           size <- width(DS$GR)
            idx <- which((unname((rowMeans(dc[,g1])) / size) >= CountPerBp) |
                        (unname((rowMeans(dc[,g2])) / size) >= CountPerBp))
            if (length(idx) == 0) {
