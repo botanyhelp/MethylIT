@@ -18,8 +18,8 @@ are estimated using the empirical cumulative distribution function
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
 the locator paramter is included (mu != 0), this must be given as
-parameter.values = list(alpha = 'value', scale = 'value', mu = 'value') 
-or if mu = 0, as: parameter.values = list(alpha = 'value', 
+parameter.values = list(alpha = 'value', scale = 'value', mu = 'value')
+or if mu = 0, as: parameter.values = list(alpha = 'value',
 scale = 'value'). If not provided, then an initial guess is provided.}
 
 \item{location.par}{whether to consider the fitting to generalized gamma
@@ -74,7 +74,7 @@ The algorithm tries to fit the two-parameter Gamma CDF
 
     If the number of values to fit is >10^6, the fitting to a GGamma CDF
     would be a time consuming task. To reduce the computational time, the
-    option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE, 
+    option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
     the original variable values are summarized into 'npoint' bins and their
     midpoints are used as the new predictors. In this case, only the
     goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
