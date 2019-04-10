@@ -8,12 +8,16 @@ countTest(DS, num.cores = 1, countFilter = TRUE, CountPerBp = NULL,
   minCountPerIndv = 3, maxGrpCV = NULL, FilterLog2FC = TRUE,
   pAdjustMethod = "BH", pvalCutOff = 0.05, MVrate = 0.98,
   Minlog2FC = 0.5, test = c("Wald", "LRT"), scaling = 1L,
-  saveAll = FALSE, verbose = TRUE)
+  saveAll = FALSE, tasks = 0, verbose = TRUE)
 }
 \arguments{
 \item{DS}{DESeqDataSet object}
 
-\item{num.cores}{number of cores used}
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
 
 \item{countFilter}{whether or not to filter the counts according to the
 minimum count per region per each individual/sample, which is setting by
