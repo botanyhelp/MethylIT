@@ -25,7 +25,7 @@ meta-column.}
 three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 generalized gamma with three-parameter ("GGamma3P") or four-parameter
 ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-NULL. If LR is from "testDMP" class, the dist.name must be set NULL.}
+"None". If LR is from "testDMP" class, the dist.name must be set "None".}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT

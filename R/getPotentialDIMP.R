@@ -24,7 +24,7 @@
 #'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 #'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
 #'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-#'     NULL. If LR is from "testDMP" class, the dist.name must be set NULL.
+#'     "None". If LR is from "testDMP" class, the dist.name must be set "None".
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -139,8 +139,8 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            )
        }
        if (dist.name == "ECDF") p <- (1 - ECDF(q))
-       if (is.null(dist.name) && cl) p <- d$adj.pval
-       if (is.null(dist.name) && !cl) p <- (1 - ECDF(q))
+       if (dist.name == "None" && cl) p <- d$adj.pval
+       if (dist.name == "None" && !cl) p <- (1 - ECDF(q))
 
        idx <- which(p < alpha)
        p <- p[idx]
