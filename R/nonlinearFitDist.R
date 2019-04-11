@@ -64,9 +64,9 @@
 #'     sum of squares has been decreased or until the step-size factor has been
 #'     reduced below this limit. Default value: 10^-6.
 #' @param maxfev integer; termination occurs when the number of calls to fn has
-#'   reached maxfev. Note that nls.lm sets the value of maxfev to
-#'   100*(length(par) + 1) if maxfev = integer(), where par is the list or
-#'   vector of parameters to be optimized.
+#'     reached maxfev. Note that nls.lm sets the value of maxfev to
+#'     100*(length(par) + 1) if maxfev = integer(), where par is the list or
+#'     vector of parameters to be optimized.
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bplapply function from
 #'     BiocParallel package).
