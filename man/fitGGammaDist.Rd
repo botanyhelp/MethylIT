@@ -18,10 +18,10 @@ are estimated using the empirical cumulative distribution function
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
 the locator paramter is included (mu != 0), this must be given as
-parameter.values = list(alpha = 'value', scale = 'value', mu = 'value', psi
-= 'value') or if mu = 0, as: parameter.values =list(alpha = 'value', scale
-= 'value', psi = 'value'). If not provided, then an initial guess is
-provided.}
+parameter.values = list(alpha = 'value', scale = 'value', mu = 'value',
+psi = 'value') or if mu = 0, as: parameter.values =list(alpha = 'value',
+scale = 'value', psi = 'value'). If not provided, then an initial guess
+is provided.}
 
 \item{location.par}{whether to consider the fitting to generalized gamma
 distribution (GGamma) including the location parameter, i.e., a GGamma
@@ -32,7 +32,10 @@ data based on 'npoints' are used to perform the nonlinear fit.}
 
 \item{sample.size}{size of the sample.}
 
-\item{npoints}{number of points used in the fit.}
+\item{npoints}{number of points used in the fit. If the number of points if
+greater than 10^6, then the fit is automatically set to npoints = 999999.
+However, the reported values for R.Cross.val, AIC, and BIC are
+computed taking into account the whole set of points.}
 
 \item{maxiter}{positive integer. Termination occurs when the number of
 iterations reaches maxiter. Default value: 1024.}
