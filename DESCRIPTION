@@ -8,7 +8,7 @@ Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
               person("Jose Raul ", "Barreras", email = "jrb428@psu.edu",
                   role = c("ctb")))
 Maintainer: Robersy Sanchez <rus547@psu.edu>
-Description: Methylation Analysis based on Information Theory.
+Description: Methylation Analysis based on Signal Detection Theory.
 Depends: 
   R (>= 3.4.0),
   DESeq2,
