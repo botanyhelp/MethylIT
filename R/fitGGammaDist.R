@@ -55,6 +55,7 @@
 #'     100*(length(par) + 1) if maxfev = integer(), where par is the list or
 #'     vector of parameters to be optimized.
 #' @param verbose if TRUE, prints the function log to stdout
+#' @param ... arguments passed to or from other methods.
 #'
 #' @return Model table with coefficients and goodness-of-fit results:
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
@@ -81,45 +82,45 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
                           location.par=FALSE, summarized.data=FALSE,
                           sample.size=20, npoints=NULL, maxiter=1024,
                           ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
-                          verbose=TRUE) {
+                          verbose=TRUE, ...) {
   ind <- which(x > 0)
   if (length(ind) > sample.size) {
-    x <- x[ind]
-    if (missing(probability.x)) Fy <- ecdf(x)
+       x <- x[ind]
+       if (missing(probability.x)) Fy <- ecdf(x)
   } else stop("*** Sample size is lower than the set minimun size: ",
               sample.size)
 
-  if (location.par) {
-    formula <- as.formula("Y ~ pggamma(X, alpha, scale, mu, psi)")
-    getPreds <- function(par, q) pggamma(q, alpha = par[1], scale = par[2],
+   if (location.par) {
+       formula <- as.formula("Y ~ pggamma(X, alpha, scale, mu, psi)")
+       getPreds <- function(par, q) pggamma(q, alpha = par[1], scale = par[2],
                                          mu = par[3], psi = par[4])
-  } else {
-    formula <- as.formula("Y ~ pggamma(X, alpha, scale, mu = 0, psi)")
-    getPreds <- function(par, q) pggamma(q, alpha = par[1], scale = par[2],
+   } else {
+      formula <- as.formula("Y ~ pggamma(X, alpha, scale, mu = 0, psi)")
+      getPreds <- function(par, q) pggamma(q, alpha = par[1], scale = par[2],
                                          psi = par[3])
-  }
+   }
 
-  optFun <- function(par, probfun, quantiles, prob, eval = FALSE) {
-    START <- as.list(par)
-    START$q <- quantiles
-    EVAL <- try(do.call(probfun, START), silent = TRUE)
-    if (inherits(EVAL, "try-error")) return(NA)
-    EVAL[is.nan(EVAL)] <- 0
-    RSS <- (prob - EVAL) ^ 2
-    if (eval) {
-      return(EVAL)
-    } else return(RSS)
-  }
+   optFun <- function(par, probfun, quantiles, prob, eval = FALSE) {
+       START <- as.list(par)
+       START$q <- quantiles
+       EVAL <- try(do.call(probfun, START), silent = TRUE)
+       if (inherits(EVAL, "try-error")) return(NA)
+       EVAL[is.nan(EVAL)] <- 0
+       RSS <- (prob - EVAL) ^ 2
+       if (eval) {
+           return(EVAL)
+       } else return(RSS)
+   }
 
-  N <- length(x)
-  if (N > 10 ^ 6) npoints = 999999
-  if (summarized.data && is.null(npoints))  npoints = min(10 ^ 6, N)
+   N <- length(x)
+   if (N > 10 ^ 6) npoints = 999999
+   if (summarized.data && is.null(npoints))  npoints = min(10 ^ 6, N)
 
    if (!is.null(npoints) && npoints < N) {
-       F0 <- estimateECDF(x, npoints = npoints)
-       X0 <- knots(F0)
-       pX0 <- F0(X0)
-       N <- length(X0)
+       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
+       x0 <- DENS$mids
+       y0 <- DENS$density
+       N <- length(x0)
        if (verbose && location.par) {
            message(paste0("*** Trying nonlinear fit to a generalized 4P Gamma ",
                        "distribution model (summarized data: ",
@@ -141,8 +142,17 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        }
    }
 
-   if (summarized.data || !is.null(npoints)) {X = X0; pX = pX0}
-   else {X = x; pX = Fy(x)}
+   if (summarized.data || !is.null(npoints)) {
+       F0 <- estimateECDF(x, npoints = npoints)
+       X <- knots(F0)
+       Y <- F0(X)
+       N <- length(X)
+   }
+   else {
+       X = x
+       Y = Fy(x)
+   }
+   probFun <- pggamma
 
    ## =============== starting parameter values =========== #
    if (missing(parameter.values)) {
@@ -153,7 +163,7 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        alpha = MEAN^2/VAR
        mu = MIN
        scale = VAR/MEAN
-       psi = c(0.75, 1.05, 1.1)
+       psi = 0.75
 
        if (location.par) {
            starts <- c(alpha = alpha, scale = scale, mu = mu[1], psi = 1)
@@ -163,52 +173,47 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
    ## ============ END starting parameter values ========== #
 
    ## ==================== Fitting models ================= #
-   FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pggamma,
-                   quantiles = X, prob = pX,
+   FIT <- try(nls.lm(par = starts, fn = optFun, probfun = probFun,
+                   quantiles = X, prob = Y,
                    control = nls.lm.control(maxiter = maxiter, ftol = ftol,
                                            maxfev = maxfev, ptol = 1e-12)),
                silent = TRUE)
-
    if (inherits( FIT, "try-error") && location.par) {
-       messg = paste0("* The model did not fit the initial parameter model.\n",
-                       "Trying with alternative parameter settings ...")
-       message(messg)
-       k = 2
-       while (inherits( FIT, "try-error") && k <= length(psi)) {
-           starts$psi = psi[k]
-           FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pggamma,
-                           quantiles = X, prob = pX,
-                           control = nls.lm.control(maxiter = maxiter,
-                                                   ftol = ftol, maxfev = maxfev,
-                                                   ptol = 1e-12)),
+       starts <- c(alpha = alpha, scale = scale, psi = 1)
+       FIT <- try(nls.lm(par = starts, fn = optFun, probfun = probFun,
+                       quantiles = X, prob = Y,
+                       control = nls.lm.control(maxiter = maxiter, ftol = ftol,
+                                               maxfev = maxfev, ptol = 1e-12)),
                    silent = TRUE)
-           k = k + 1
-       }
    }
-   # Try with 'GGamma3P'
-   if (inherits( FIT, "try-error")) {
-       if (location.par) {
-           messg = paste0("* The model did not fit 'GGamma4P' model.\n",
-                        "Trying to fit 'GGamma3P' model ...")
-           message(messg)
-           k = 1
-           starts <- c(alpha = alpha, scale = scale, psi = 1)
-       } else k = 2
-       while (inherits( FIT, "try-error") && k <= length(psi)) {
-           starts$psi = psi[k]
-           FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pggamma,
-                        quantiles = X, prob = pX,
-                        control = nls.lm.control(maxiter = maxiter,
-                                               ftol = ftol, maxfev = maxfev,
-                                               ptol = 1e-12)),
+   if (inherits( FIT, "try-error") && location.par && probFun != dggamma) {
+       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
+       X <- DENS$mids
+       Y <- DENS$density
+       probFun <- dggamma
+       FIT <- try(nls.lm(par = starts, fn = optFun, probfun = probFun,
+                       quantiles = X, prob = Y,
+                       control = nls.lm.control(maxiter = maxiter, ftol = ftol,
+                                               maxfev = maxfev, ptol = 1e-12)),
                    silent = TRUE)
-           k = k + 1
-       }
    }
+   if (inherits( FIT, "try-error") && !location.par && probFun != dggamma) {
+       starts <- c(alpha = alpha, scale = scale, psi = 1)
+       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
+       X <- DENS$mids
+       Y <- DENS$density
+       probFun <- dggamma
+       FIT <- try(nls.lm(par = starts, fn = optFun, probfun = probFun,
+                       quantiles = X, prob = Y,
+                       control = nls.lm.control(maxiter = maxiter, ftol = ftol,
+                                               maxfev = maxfev, ptol = 1e-12)),
+                   silent = TRUE)
+   }
+
    if (!inherits( FIT, "try-error" )) {
        ## **** R squares ****
        Adj.R.Square <- (1 - (deviance(FIT) / ((N - length(coef(FIT))) *
-                                             var(pX, use="everything"))))
+                                             var(Y, use="everything"))))
        Adj.R.Square <- ifelse(is.na(Adj.R.Square) || Adj.R.Square < 0,
                            0, Adj.R.Square)
 
@@ -227,29 +232,29 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        cros.ind.2 <- setdiff(1:N, cros.ind.1)
        starts1 <- as.list(coef(FIT))
 
-       FIT1 <- try(nls.lm(par=starts1, fn=optFun, probfun=pggamma,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+       FIT1 <- try(nls.lm(par=starts1, fn=optFun, probfun=probFun,
+                           quantiles=X[ cros.ind.1 ], prob=Y[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
 
        if (inherits( FIT1, "try-error")) {
-           FIT1 <- try(nls.lm(par=starts, fn=optFun, probfun=pggamma,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+           FIT1 <- try(nls.lm(par=starts, fn=optFun, probfun=probFun,
+                           quantiles=X[ cros.ind.1 ], prob=Y[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        }
 
-       FIT2 <- try(nls.lm(par=starts1, fn=optFun, probfun=pggamma,
-                       quantiles=X[cros.ind.2], prob=pX[cros.ind.2],
+       FIT2 <- try(nls.lm(par=starts1, fn=optFun, probfun=probFun,
+                       quantiles=X[cros.ind.2], prob=Y[cros.ind.2],
                        control=nls.lm.control(maxiter=maxiter, ftol = ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent=TRUE)
 
        if (inherits( FIT2, "try-error")) {
-           FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=pggamma,
-                           quantiles=X[ cros.ind.1 ], prob = pX[cros.ind.1],
+           FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=probFun,
+                           quantiles=X[ cros.ind.2 ], prob = Y[cros.ind.2],
                            control=nls.lm.control(maxiter = maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
@@ -260,7 +265,7 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        else {
            if (summarized.data || !is.null(npoints)) {
                n <- length(x)
-               pX <- Fy(x)
+               Y <- ecdf(x)(x)
                cros.ind.1 <- sample.int(n, size = round(n / 2))
                cros.ind.2 <- setdiff(1:n, cros.ind.1)
            }
@@ -268,15 +273,15 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
 
            ## prediction using model 1
            p.FIT1 <- getPreds(coef(FIT1), x[cros.ind.2])
-           R.FIT1 <- cor(p.FIT1, pX[cros.ind.2], use="complete.obs")
+           R.FIT1 <- cor(p.FIT1, Y[cros.ind.2], use="complete.obs")
            ## prediction using model 2
            p.FIT2 <- getPreds(coef(FIT2), x[cros.ind.1])
-           R.FIT2 <- cor(p.FIT2, pX[cros.ind.1], use="complete.obs")
+           R.FIT2 <- cor(p.FIT2, Y[cros.ind.1], use="complete.obs")
 
            R.cross.FIT <- (length(p.FIT1) * R.FIT1 + length(p.FIT2) * R.FIT2) /
              (length(p.FIT1) + length(p.FIT2))
        }
-       res <- pX - getPreds(coef(FIT), x)
+       res <- Y - getPreds(coef(FIT), x)
 
        if (length( coef(FIT)) > 3) {
            COV = try(vcov(FIT), silent = TRUE)

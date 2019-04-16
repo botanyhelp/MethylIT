@@ -7,7 +7,7 @@
 fitGGammaDist(x, probability.x, parameter.values, location.par = FALSE,
   summarized.data = FALSE, sample.size = 20, npoints = NULL,
   maxiter = 1024, ftol = 1e-12, ptol = 1e-12, maxfev = 1e+05,
-  verbose = TRUE)
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{numerical vector}
@@ -56,6 +56,8 @@ reached maxfev. Note that nls.lm sets the value of maxfev to
 vector of parameters to be optimized.}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
+
+\item{...}{arguments passed to or from other methods.}
 }
 \value{
 Model table with coefficients and goodness-of-fit results:
