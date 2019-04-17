@@ -28,12 +28,10 @@
 #'     concept holds in the mentioned circumstances where the uncertainty of
 #'     methylation is present.
 #'
-#' @param LR A list of GRanges objects including control and treatment GRanges.
-#'     Each GRanges object must correspond to a sample. For example, if a
-#'     sample is named 's1', then this sample can be accessed in the list of
-#'     GRanges objects as LR$s1.
+#' @param LR An object from "pDMP" class.
 #' @param div.col Number of the column where the divergence variable (i.e.,
-#'     Hellinger divergence) is located in the GRanges meta-columns.
+#'     Hellinger divergence or total variation) is located in the GRanges
+#'     meta-columns.
 #' @param pval.col If the cutpoints is a p-value, then the column number for
 #'     p-values should be provided. Default: NULL. Notice that one of the
 #'     parameter values div.col or pval.col must be given.
@@ -51,8 +49,8 @@
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
 #'     abs(TV_k) < tv.cut are removed.
 #'
-#' @return A list of GRanges containing only differentially informative
-#'     position (DIMPs).
+#' @return An object from "pDMP" class containing only differentially
+#'     informative position (DIMPs).
 #'
 #' @examples
 #' num.points <- 1000

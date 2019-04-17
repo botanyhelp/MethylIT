@@ -8,13 +8,11 @@ selectDIMP(LR, div.col = NULL, pval.col = NULL, absolute = FALSE,
   cutpoint, tv.col = NULL, tv.cut = NULL)
 }
 \arguments{
-\item{LR}{A list of GRanges objects including control and treatment GRanges.
-Each GRanges object must correspond to a sample. For example, if a
-sample is named 's1', then this sample can be accessed in the list of
-GRanges objects as LR$s1.}
+\item{LR}{An object from "pDMP" class.}
 
 \item{div.col}{Number of the column where the divergence variable (i.e.,
-Hellinger divergence) is located in the GRanges meta-columns.}
+Hellinger divergence or total variation) is located in the GRanges
+meta-columns.}
 
 \item{pval.col}{If the cutpoints is a p-value, then the column number for
 p-values should be provided. Default: NULL. Notice that one of the
@@ -38,8 +36,8 @@ cytosine positions (if provided).}
 abs(TV_k) < tv.cut are removed.}
 }
 \value{
-A list of GRanges containing only differentially informative
-    position (DIMPs).
+An object from "pDMP" class containing only differentially
+    informative position (DIMPs).
 }
 \description{
 For a given cutpoint (previously estimated with the function
