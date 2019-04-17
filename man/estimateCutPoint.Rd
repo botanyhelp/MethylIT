@@ -10,18 +10,21 @@ estimateCutPoint(LR, control.names, treatment.names, simple = TRUE,
   classifier1 = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
   "pca.qda"), classifier2 = NULL, tv.cut = 0.25, div.col = NULL,
   clas.perf = FALSE, post.cut = 0.5, prop = 0.6, n.pc = 1,
-  find.cut = FALSE, cut.interval = c(0.5, 0.8), cut.incr = 0.01,
-  stat = 1, num.cores = 1L, tasks = 0L, ...)
+  cut.values = NULL, stat = 1, num.cores = 1L, tasks = 0L, ...)
 }
 \arguments{
-\item{LR}{An object from 'pDMP' class. This obejct is previously obtained
+\item{LR}{An object from 'pDMP' class. This object is previously obtained
 with function \code{\link{getPotentialDIMP}}.}
 
 \item{control.names, treatment.names}{Names/IDs of the control and
 treatment samples, which must be include in the variable LR.}
 
 \item{simple}{Logic (default, TRUE). If TRUE, then Youden Index is used to
-estimate the cutpoint.}
+estimate the cutpoint. If FALSE, the minimum information divergence value
+with posterior classification probability greater than \emph{post.cut}
+(usually \emph{post.cut} = 0.5) as estimated by \emph{classifier1} will
+be the reported cutpoint, except if a better cutpoint is found in the set
+of values provided by the user in the parameter \emp{cut.values}.}
 
 \item{column}{a logical vector for column names for the predictor variables
 to be used: Hellinger divergence "hdiv", total variation "TV",
@@ -65,19 +68,13 @@ testing.}
 \item{n.pc}{Number of principal components (PCs) to use if the classifier is
 not 'logistic'. In the current case, the maximun number of PCs is 4.}
 
-\item{find.cut}{Logic. Wether to search for an optimal cutoff value to
-classify DMPs based on given specifications.}
-
-\item{cut.interval}{0 < \emph{cut.interval} < 0.1. If \emph{find.cut} = TRUE, the
-interval of treatment group posterior probabilities where to search for a
-cutpoint. Deafult \emph{cut.interval} = c(0.5, 0.8).}
-
-\item{cut.incr}{0 < \emph{cut.incr} < 0.1. If \emph{find.cut} = TRUE, the sucesive
-increamental values runing on the interval \emph{cut.interval}. Deafult,
-\emph{cut.incr} = 0.01.}
+\item{cut.values}{Cut values of the information divergence (ID) specified  in
+\emp{div.col} where to check the classification performance
+(0 < \emph{cut.interval} < max ID). If provided, the search for a
+cutpoint will include these values.}
 
 \item{stat}{An integer number indicating the statistic to be used in the
- testing when \emph{find.cut} = TRUE. The mapping for statistic names are:
+ testing when \emph{simple} = FALSE The mapping for statistic names are:
  \itemize{
      \item 0 = "Accuracy"
      \item 1 = "Sensitivity"
@@ -120,7 +117,7 @@ Depending the parameter setting will return the following list with
         \item classifier: Name of the model classifier used in the
               performance evaluation.
         \item statistic: Name of the performance statistic used to find the
-              cutpoint when find.cut =  TRUE.
+              cutpoint when \emph{simple} =  FALSE
         \item optStatVal: Value of the performance statistic at the cutpoint.
     }
 }
@@ -145,14 +142,14 @@ The function performs an estimation of the optimal cutpoint for the
     estimated. More than one classifier model can be applied. For example,
     one classifier (logistic model) can be used to estimate the posterior
     classification probabilities of DMP into those from control and those
-    from treatment. These probabilities are then used to estimate the cutpoint
-    in range of values from, say, 0.5 to 0.8. Next, a different classifier
-    can be used to evaluate the classification performance. Different
-    classifier models would yield different performances. Models are returned
-    and can be used in futher prediction with new datasets from the same
-    batch experiment. This is a machine learnig approach to discriminate the
-    biological regulatory signal naturally generated in the control from that
-    one induced by the treatment.
+    from treatment. These probabilities are then used to estimate the
+    cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
+    classifier can be used to evaluate the classification performance.
+    Different classifier models would yield different performances. Models
+    are returned and can be used in futher prediction with new datasets from
+    the same batch experiment. This is a machine learnig approach to
+    discriminate the biological regulatory signal naturally generated in the
+    control from that one induced by the treatment.
 }
 \examples{
 set.seed(123) ## To set a seed for random number generation
@@ -206,7 +203,7 @@ nlms <- nonlinearFitDist(HD, column = 4, verbose = FALSE)
 ## Next, the potential signal can be estimated
 PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 4, alpha = 0.05)
 
-cutpoint <- estimateCutPoint(LR = PS, simple = TRUE, find.cut = FALSE,
+cutpoint <- estimateCutPoint(LR = PS, simple = TRUE,
                              column = c(hdiv = TRUE, TV = TRUE,
                                         wprob = TRUE, pos = TRUE),
                              interaction = "hdiv:TV", clas.perf = FALSE,

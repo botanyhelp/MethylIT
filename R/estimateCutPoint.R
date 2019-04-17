@@ -20,21 +20,25 @@
 #'     estimated. More than one classifier model can be applied. For example,
 #'     one classifier (logistic model) can be used to estimate the posterior
 #'     classification probabilities of DMP into those from control and those
-#'     from treatment. These probabilities are then used to estimate the cutpoint
-#'     in range of values from, say, 0.5 to 0.8. Next, a different classifier
-#'     can be used to evaluate the classification performance. Different
-#'     classifier models would yield different performances. Models are returned
-#'     and can be used in futher prediction with new datasets from the same
-#'     batch experiment. This is a machine learnig approach to discriminate the
-#'     biological regulatory signal naturally generated in the control from that
-#'     one induced by the treatment.
+#'     from treatment. These probabilities are then used to estimate the
+#'     cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
+#'     classifier can be used to evaluate the classification performance.
+#'     Different classifier models would yield different performances. Models
+#'     are returned and can be used in futher prediction with new datasets from
+#'     the same batch experiment. This is a machine learnig approach to
+#'     discriminate the biological regulatory signal naturally generated in the
+#'     control from that one induced by the treatment.
 #'
-#' @param LR An object from 'pDMP' class. This obejct is previously obtained
+#' @param LR An object from 'pDMP' class. This object is previously obtained
 #'     with function \code{\link{getPotentialDIMP}}.
 #' @param control.names,treatment.names Names/IDs of the control and
 #'     treatment samples, which must be include in the variable LR.
 #' @param simple Logic (default, TRUE). If TRUE, then Youden Index is used to
-#'     estimate the cutpoint.
+#'     estimate the cutpoint. If FALSE, the minimum information divergence value
+#'     with posterior classification probability greater than \emph{post.cut}
+#'     (usually \emph{post.cut} = 0.5) as estimated by \emph{classifier1} will
+#'     be the reported cutpoint, except if a better cutpoint is found in the set
+#'     of values provided by the user in the parameter \emp{cut.values}.
 #' @param column a logical vector for column names for the predictor variables
 #'     to be used: Hellinger divergence "hdiv", total variation "TV",
 #'     probability of potential DIMP "wprob", and the relative cytosine site
@@ -69,21 +73,17 @@
 #'     testing.
 #' @param n.pc Number of principal components (PCs) to use if the classifier is
 #'     not 'logistic'. In the current case, the maximun number of PCs is 4.
-#' @param find.cut Logic. Wether to search for an optimal cutoff value to
-#'     classify DMPs based on given specifications.
-#' @param cut.interval 0 < \emph{cut.interval} < 0.1. If \emph{find.cut} = TRUE, the
-#'     interval of treatment group posterior probabilities where to search for a
-#'     cutpoint. Deafult \emph{cut.interval} = c(0.5, 0.8).
-#' @param cut.incr 0 < \emph{cut.incr} < 0.1. If \emph{find.cut} = TRUE, the sucesive
-#'     increamental values runing on the interval \emph{cut.interval}. Deafult,
-#'     \emph{cut.incr} = 0.01.
+#' @param cut.values Cut values of the information divergence (ID) specified  in
+#'     \emp{div.col} where to check the classification performance
+#'     (0 < \emph{cut.interval} < max ID). If provided, the search for a
+#'     cutpoint will include these values.
 #' @param num.cores,tasks Paramaters for parallele computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
 #'     (only for Linux OS).
 #' @param stat An integer number indicating the statistic to be used in the
-#'     testing when \emph{find.cut} = TRUE. The mapping for statistic names are:
+#'     testing when \emph{simple} = FALSE The mapping for statistic names are:
 #'     \itemize{
 #'         \item 0 = "Accuracy"
 #'         \item 1 = "Sensitivity"
@@ -117,7 +117,7 @@
 #'         \item classifier: Name of the model classifier used in the
 #'               performance evaluation.
 #'         \item statistic: Name of the performance statistic used to find the
-#'               cutpoint when find.cut =  TRUE.
+#'               cutpoint when \emph{simple} =  FALSE
 #'         \item optStatVal: Value of the performance statistic at the cutpoint.
 #'     }
 #'
@@ -173,7 +173,7 @@
 #' ## Next, the potential signal can be estimated
 #' PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 4, alpha = 0.05)
 #'
-#' cutpoint <- estimateCutPoint(LR = PS, simple = TRUE, find.cut = FALSE,
+#' cutpoint <- estimateCutPoint(LR = PS, simple = TRUE,
 #'                              column = c(hdiv = TRUE, TV = TRUE,
 #'                                         wprob = TRUE, pos = TRUE),
 #'                              interaction = "hdiv:TV", clas.perf = FALSE,
@@ -188,9 +188,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        classifier1=c("logistic", "pca.logistic", "lda",
                                    "qda","pca.lda", "pca.qda"),
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
-                       clas.perf = FALSE, post.cut = 0.5, prop=0.6, n.pc=1,
-                       find.cut=FALSE, cut.interval = c(0.5, 0.8),
-                       cut.incr = 0.01, stat = 1, num.cores=1L, tasks=0L, ...) {
+                       clas.perf = FALSE, post.cut = 0.5, prop=0.6,
+                       n.pc=1, cut.values = NULL,
+                       stat = 1, num.cores=1L, tasks=0L, ...) {
    if (!simple && sum(column) == 0) {
        cat("\n")
        stop(paste("*** At least one of columns with the predictor \n",
@@ -278,6 +278,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                modelConfMatrix = NA,
                initModel = NA,
                postProbCut = NA,
+               postCut = NA,
                classifier = NA,
                statistic = NA,
                optStatVal = NA
@@ -333,7 +334,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            cf.mat <- confusionMatrix(data=predClasses, reference=classes,
                                        positive="TT")
 
-           if (clas.perf && !find.cut) {
+           if (clas.perf) {
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
                                    tv.col = tv.col, tv.cut = tv.cut)
 
@@ -370,111 +371,44 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                res$initModel <- "Youden Index"
            }
        } else {
-       # ====================== Fit classifier model 1 ========================
-       # ------------------------------------------------------------------- #
-       # Auxiliar function to find cutpoint/intersection point of the two
-       # gamma distributions
-           cutFun <- function(divs, post.cut, classifier) {
-               if (classifier[1] == "logistic") idx <- which(post > post.cut)
-               else idx <- which(post[, 2] > post.cut)
-               return(min(mcols(divs[idx, div.col])[, 1]))
-           }
-       # --------------------------------------------------------------------- #
-           if (!find.cut) {
-               if (is.null(classifier2[1])) classifier2 <- classifier1[1]
-               conf.mat <- evaluateDIMPclass(LR, column = column,
-                                           control.names = "ctrl",
-                                           treatment.names = "treat",
-                                           classifier = classifier1[1],
-                                           prop = prop, n.pc = n.pc,
-                                           output = "conf.mat",
-                                           num.cores=num.cores,
-                                           tasks=tasks, ...)
-
-               post <- predict(object = conf.mat$model, newdata = LR,
-                               type = "posterior")
-               cutpoint <- cutFun(divs = unlist(LR), post.cut = post.cut,
-                                  classifier = classifier1[1])
-               dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
-                                   tv.col = tv.col, tv.cut = tv.cut)
-               if (length(dmps$ctrl) == 0) {
-                   warning("For the estimated cutpoint = ", cutpoint,
-                       ", only treatment's DMPs are found. \n",
-                       "A classification model with posterior probability = \n",
-                       "0.5 will be applied", sep = "")
-
-                   predClasses <- predict(object = conf.mat$model,
-                                           newdata = dmps, type = "class" )
-                   predClasses <- factor(predClasses, levels = c("CT", "TT"))
-                   classes <- c(rep("CT", length(dmps$ctrl)),
-                                rep("TT", length(dmps$treat)))
-                   classes <- factor(classes, levels = c("CT", "TT"))
-                   conf.matrix <- confusionMatrix(data=predClasses,
-                                                  reference=classes,
-                                                  positive="TT")
-
-                   res$postProbCut <- 0.5
-                   res$cutpoint <- cutFun(divs = unlist(LR), post.cut = 0.5,
-                                          classifier = classifier1[1])
-                   res$testSetPerformance <- conf.mat$Performance
-                   res$testSetModel.FDR <- conf.mat$FDR
-                   res$model <- conf.mat$model
-                   res$modelConfMatrix <- conf.matrix
-                   res$initModel <- classifier1[1]
-                   res$classifier <- classifier1[1]
-               } else {
-                   conf.mat <- evaluateDIMPclass(dmps, column = column,
-                                               control.names = "ctrl",
-                                               treatment.names = "treat",
-                                               classifier = classifier2[1],
-                                               prop = prop, n.pc = n.pc,
-                                               output = "conf.mat",
-                                               num.cores=num.cores,
-                                               tasks=tasks, ...)
-
-                   predClasses <- predict(object = conf.mat$model,
-                                           newdata = dmps, type = "class")
-                   predClasses <- factor(predClasses, levels = c("CT", "TT"))
-                   classes <- c(rep("CT", length(dmps$ctrl)),
-                                rep("TT", length(dmps$treat)))
-                   classes <- factor(classes, levels = c("CT", "TT"))
-                   conf.matrix <- confusionMatrix(data=predClasses,
-                                                  reference=classes,
-                                                  positive="TT")
-
-                   res$cutpoint <- cutpoint
-                   res$postProbCut <- post.cut
-                   res$testSetPerformance <- conf.mat$Performance
-                   res$testSetModel.FDR <- conf.mat$FDR
-                   res$model <- conf.mat$model
-                   res$modelConfMatrix <- conf.matrix
-                   res$initModel <- classifier1[1]
-                   res$classifier <- classifier2[1]
-               }
-           }
-
        # -------------------- To search for a cutpoint --------------------- #
-           if (find.cut) {
-               if (is.null(classifier2[1])) classifier2 <- classifier1[1]
-               conf.mat <- evaluateDIMPclass(LR, column = column,
+
+           if (is.null(classifier2[1])) classifier2 <- classifier1[1]
+           conf.mat <- evaluateDIMPclass(LR, column = column,
                                          control.names = "ctrl",
                                          treatment.names = "treat",
                                          classifier=classifier1[1], prop=prop,
                                          output = "conf.mat", n.pc = n.pc,
                                          num.cores=num.cores, tasks=tasks, ...)
 
-               post <- predict(object = conf.mat$model, newdata = LR,
-                               type = "posterior")
-               cuts <- seq(cut.interval[1], cut.interval[2], cut.incr)
+           post <- predict(object = conf.mat$model, newdata = LR,
+                           type = "posterior")
+
+           if (classifier1[1] == "logistic") idx <- which(post > post.cut)
+           else idx <- which(post[, 2] > post.cut)
+           cutpoint <- min(mcols(unlist(LR)[idx, div.col])[, 1])
+           res$postCut <- cutpoint
+           cuts <- cutpoint
+
+           if (!is.null(cut.values)) {
+               if (is.numeric(cut.values)) {
+                   cuts <- sort(c(cut.values, cutpoint))
+                   if (max(cuts) > max(mcols(unlist(LR)[, div.col])[, 1])) {
+                       warning("Cut values supplied are > max Inf Div. Ignored")
+                       cuts <- cutpoint
+                   }
+               }
+               else warning("Parameter cut.values must be numeric. Ignored")
+           }
+           if (length(cuts) > 1) {
+               k = 1; opt <- FALSE; overcut <- FALSE;
                if (stat == 12) st = 1 else st = 0
-               k = 1; opt <- FALSE; overcut <- FALSE; cutprob <- cuts[1]
 
                while (k < length(cuts) && !opt && !overcut) {
-                   cutpoint <- cutFun(divs = unlist(LR), post.cut = cuts[k],
-                                       classifier = classifier1[1])
+
                    dmps <- selectDIMP(LR, div.col = div.col,
-                                   cutpoint = cutpoint,
-                                   tv.col=tv.col, tv.cut=tv.cut)
+                                       cutpoint = cuts[k],
+                                       tv.col=tv.col, tv.cut=tv.cut)
                    if (length(dmps$ctrl) > 0) {
                        conf.mat <- evaluateDIMPclass(LR = dmps, column = column,
                                                control.names = "ctrl",
@@ -485,69 +419,80 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                tasks=tasks, ...)
                        if (stat == 0) {
                            st0 <- conf.mat$Performance$overall[1]
-                           if (st < st0) {
-                               st <- st0
-                               cutprob <- cuts[k]
-                           }
-                           if (st == 1) opt <- TRUE
+                       if (st < st0) {
+                           st <- st0
+                           cutpoint <- cuts[k]
+                       }
+                       if (st == 1) opt <- TRUE
                            k <- k + 1
                        }
                        if (is.element(stat, 1:11)) {
                            st0 <- conf.mat$Performance$byClass[stat]
-                           if (st < st0) {
-                               st <- st0
-                               cutprob <- cuts[k]
-                           }
-                           if (st == 1) opt <- TRUE
+                       if (st < st0) {
+                           st <- st0
+                           cutpoint <- cuts[k]
+                       }
+                       if (st == 1) opt <- TRUE
                            k <- k + 1
                        }
                        if (stat == 12) {
                            st0 <- conf.mat$FDR
-                           if (st > st0) {
-                               st <- st0
-                               cutprob <- cuts[k]
-                           }
-                           if (st == 0) opt <- TRUE
+                       if (st > st0) {
+                           st <- st0
+                           cutpoint <- cuts[k]
+                       }
+                       if (st == 0) opt <- TRUE
                            k <- k + 1
                        }
                    } else {
-                       overcut <- TRUE
-                       if (k == 1) {
+                      overcut <- TRUE
+                      if (k == 1) {
                            st <- conf.mat$Performance$byClass[stat]
                            warning("Model classifier ", classifier1[1],
-                                   " is enough")
+                           " is enough")
                        }
                    }
                }
-               cutpoint <- cutFun(divs = unlist(LR), post.cut = cutprob,
-                                  classifier = classifier1[1])
+           }
+           else {
+               dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
+                                   tv.col=tv.col, tv.cut=tv.cut)
+               conf.mat <- evaluateDIMPclass(LR = dmps, column = column,
+                                               control.names = "ctrl",
+                                               treatment.names="treat",
+                                               classifier=classifier2[1],
+                                               prop=prop, output = "conf.mat",
+                                               n.pc = n.pc, num.cores=num.cores,
+                                               tasks=tasks, ...)
+               if (stat == 0) st <- conf.mat$Performance$overall[1]
+               if (is.element(stat, 1:11))
+                   st <- conf.mat$Performance$byClass[stat]
+           }
+           predClasses <- predict(object = conf.mat$model, newdata = dmps,
+                                   type = "class")
+           predClasses <- factor(predClasses, levels = c("CT", "TT"))
+           classes <- c(rep("CT", length(dmps$ctrl)),
+                           rep("TT", length(dmps$treat)))
+           classes <- factor(classes, levels = c("CT", "TT"))
+           conf.matrix <- confusionMatrix(data=predClasses,
+                                           reference=classes,
+                                           positive="TT")
 
-               predClasses <- predict(object = conf.mat$model, newdata = dmps,
-                                       type = "class")
-               predClasses <- factor(predClasses, levels = c("CT", "TT"))
-               classes <- c(rep("CT", length(dmps$ctrl)),
-                            rep("TT", length(dmps$treat)))
-               classes <- factor(classes, levels = c("CT", "TT"))
-               conf.matrix <- confusionMatrix(data=predClasses,
-                                              reference=classes,
-                                              positive="TT")
-
-               STAT <- c("Accuracy", "Sensitivity", "Specificity",
+           STAT <- c("Accuracy", "Sensitivity", "Specificity",
                        "Pos Pred Value", "Neg Pred Value","Precision", "Recall",
                        "F1", "Prevalence", "Detection Rate",
                        "Detection Prevalence", "Balanced Accuracy", "FDR")
 
-               res$cutpoint <- cutpoint
-               res$testSetPerformance <- conf.mat$Performance
-               res$testSetModel.FDR <- conf.mat$FDR
-               res$model <- conf.mat$model
-               res$modelConfMatrix <- conf.matrix
-               res$initModel <- classifier1[1]
-               res$postProbCut <- cutprob
-               res$classifier <- classifier2[1]
-               res$statistic <- STAT[stat + 1]
-               res$optStatVal <- st
-           }
+           res$cutpoint <- cutpoint
+           res$testSetPerformance <- conf.mat$Performance
+           res$testSetModel.FDR <- conf.mat$FDR
+           res$model <- conf.mat$model
+           res$modelConfMatrix <- conf.matrix
+           res$initModel <- classifier1[1]
+           res$classifier <- classifier2[1]
+           res$statistic <- STAT[stat + 1]
+           res$postProbCut <- post.cut
+           res$optStatVal <- st
        }
    }
    return(res)
