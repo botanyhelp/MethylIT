@@ -157,7 +157,7 @@ predict.pcaQDA <- function(object, newdata,
            newdata$pos <- position(newdata)
        }
        newnam <- colnames(mcols(newdata))
-       newdata$logP <- log10(newdata$wprob)
+       newdata$logP <- log10(newdata$wprob + 2.2e-308)
        newdata <- mcols(newdata)
        newdata <- newdata[vn]
        newdata <- as.matrix(newdata)

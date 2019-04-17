@@ -40,7 +40,7 @@ predict.ldaDMP <- function(object, newdata,
        }
        newdata$pos <- position(newdata)
      }
-     newdata$logP <- log10(newdata$wprob)
+     newdata$logP <- log10(newdata$wprob + 2.2e-308)
      newdata <- mcols(newdata)
      newdata <- newdata[vn]
    } else newdata <- newdata[vn]
