@@ -54,7 +54,7 @@ counts.}
 \item{...}{Additional parameters for 'uniqueGRanges' function.}
 }
 \value{
-A list of GRanges objects with the four columns of counts, the
+An object from "infDiv" class with the four columns of counts, the
     information divergence, and additional columns: 1) The original matrix
     of methylated (c_i) and unmathylated (t_i) read counts from control
     (i=1) and treatment (i=2) samples. 2) p1" and "p2": methylation levels
