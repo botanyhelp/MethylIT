@@ -376,7 +376,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        # gamma distributions
            cutFun <- function(divs, post.cut, classifier) {
                if (classifier[1] == "logistic") idx <- which(post > post.cut)
-               else idx <- which(post[, 2] > 0.1)
+               else idx <- which(post[, 2] > post.cut)
                return(min(mcols(divs[idx, div.col])[, 1]))
            }
        # --------------------------------------------------------------------- #
