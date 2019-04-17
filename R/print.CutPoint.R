@@ -26,13 +26,15 @@ print.CutPoint <- function(x, digits = getOption("digits")) {
        cat("\n")
        cat("Posterior probability used to get the cutpoint =",
            postProbCut, "\n")
+       cat("Cytosine sites with treatment PostProbCut >=",
+           postProbCut, "have a \n")
+       cat("divergence value >=", x$postCut, "\n")
+       cat("\n")
+
        cat("Optimized statistic:", x$statistic, "=", sta.val, "\n")
        cat("Cutpoint =", cutpoint, "\n")
        cat("\n")
-       cat("Cytosine sites with treatment PostProbCut >=",
-           postProbCut, "have a \n")
-       cat("divergence value >=", cutpoint, "\n")
-       cat("\n")
+
        cat("Model classifier '", x$classifier, "' \n", sep = "")
        cat("\n")
    } else {
