@@ -389,6 +389,10 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            cutpoint <- min(mcols(unlist(LR)[idx, div.col])[, 1])
            res$postCut <- cutpoint
            cuts <- cutpoint
+           if (is.element(stat, 1:11))
+               st <- conf.mat$Performance$byClass[stat]
+           if (stat == 0) st <- conf.mat$Performance$overall[1]
+           if (stat == 12) st <- conf.mat$FDR
 
            if (!is.null(cut.values)) {
                if (is.numeric(cut.values)) {
@@ -402,13 +406,12 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            }
            if (length(cuts) > 1) {
                k = 1; opt <- FALSE; overcut <- FALSE;
-               if (stat == 12) st = 1 else st = 0
 
                while (k < length(cuts) && !opt && !overcut) {
 
-                   dmps <- selectDIMP(LR, div.col = div.col,
-                                       cutpoint = cuts[k],
+                   dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cuts[k],
                                        tv.col=tv.col, tv.cut=tv.cut)
+                   min.div <- min(dmps$treat$hdiv, na.rm = TRUE)
                    if (length(dmps$ctrl) > 0) {
                        conf.mat <- evaluateDIMPclass(LR = dmps, column = column,
                                                control.names = "ctrl",
@@ -421,7 +424,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                            st0 <- conf.mat$Performance$overall[1]
                        if (st < st0) {
                            st <- st0
-                           cutpoint <- cuts[k]
+                           cutpoint <- max(cuts[k], min.div, na.rm = TRUE)
                        }
                        if (st == 1) opt <- TRUE
                            k <- k + 1
@@ -430,7 +433,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                            st0 <- conf.mat$Performance$byClass[stat]
                        if (st < st0) {
                            st <- st0
-                           cutpoint <- cuts[k]
+                           cutpoint <- max(cuts[k], min.div, na.rm = TRUE)
                        }
                        if (st == 1) opt <- TRUE
                            k <- k + 1
@@ -439,7 +442,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                            st0 <- conf.mat$FDR
                        if (st > st0) {
                            st <- st0
-                           cutpoint <- cuts[k]
+                           cutpoint <- max(cuts[k], min.div, na.rm = TRUE)
                        }
                        if (st == 0) opt <- TRUE
                            k <- k + 1
