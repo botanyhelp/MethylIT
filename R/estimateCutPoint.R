@@ -38,7 +38,7 @@
 #'     with posterior classification probability greater than \emph{post.cut}
 #'     (usually \emph{post.cut} = 0.5) as estimated by \emph{classifier1} will
 #'     be the reported cutpoint, except if a better cutpoint is found in the set
-#'     of values provided by the user in the parameter \emp{cut.values}.
+#'     of values provided by the user in the parameter \emph{cut.values}.
 #' @param column a logical vector for column names for the predictor variables
 #'     to be used: Hellinger divergence "hdiv", total variation "TV",
 #'     probability of potential DIMP "wprob", and the relative cytosine site
@@ -74,7 +74,7 @@
 #' @param n.pc Number of principal components (PCs) to use if the classifier is
 #'     not 'logistic'. In the current case, the maximun number of PCs is 4.
 #' @param cut.values Cut values of the information divergence (ID) specified  in
-#'     \emp{div.col} where to check the classification performance
+#'     \emph{div.col} where to check the classification performance
 #'     (0 < \emph{cut.interval} < max ID). If provided, the search for a
 #'     cutpoint will include these values.
 #' @param num.cores,tasks Paramaters for parallele computation using package
