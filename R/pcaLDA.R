@@ -94,7 +94,7 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
        m <- dim(data)
        if (floor(m[1] / 3) < n.pc) {
            ans <- "The number principal components: "
-           ans1 <- " must be lower than the number of individuals N/3"
+           ans1 <- " must be lower than the number of individuals N/3 \n"
            warning(paste0(ans, n.pc, ans1))
        }
    }

@@ -77,7 +77,8 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
        if (length(vn) < n.pc) {
            ans <- "The number of number predictor variables must be greater than "
            ans1 <- "or equal the number of principal components: "
-           ArgumentCheck::addError(msg=paste0(ans, ans1, n.pc), argcheck=Check)
+           ArgumentCheck::addError(msg=paste0(ans, ans1, n.pc, "\n"),
+                                   argcheck=Check)
        }
    }
    ArgumentCheck::finishArgCheck(Check)
@@ -85,7 +86,7 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
        m <- dim(data)
        if (floor(m[1] / 3) < n.pc) {
            ans <- "The number principal components: "
-           ans1 <- " must be lower than the number of individuals N/3"
+           ans1 <- " must be lower than the number of individuals N/3 \n"
            warning(paste0(ans, n.pc, ans1))
        }
    }
