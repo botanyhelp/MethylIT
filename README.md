@@ -68,6 +68,8 @@ Some simple examples
 
 [A guide for methylation analysis based on optimal cutpoint with_Methyl-IT](https://genomaths.github.io/Cutpoint_estimation_with_Methyl-IT.html).
 
+[Principal Components and Linear Discriminant Analyses with Methyl-IT](https://genomaths.github.io/pca_lda_with_methylit.html)
+
 --------
 
 MethylIT Package Manual:
