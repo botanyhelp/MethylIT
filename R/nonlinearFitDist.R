@@ -41,8 +41,6 @@
 #'     an information divergence that can be fitted to Weibull or to Generalized
 #'     Gamma distribution.
 #' @param npoints number of points used in the fit
-#' @param npoints0 subset of points where to estimate the ECDF (used only to
-#'     reduce computational time)
 #' @param summarized.data Logic value. If TRUE (default: FALSE), summarized
 #'     data based on 'npoints' are used to perform the nonlinear fit. Only for
 #'     GGamma distribution.
@@ -129,7 +127,7 @@
 #' @export
 nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                              sample.size=20, location.par=FALSE,
-                             absolute = FALSE, npoints=NULL, npoints0=NULL,
+                             absolute = FALSE, npoints=NULL,
                              summarized.data = FALSE, maxiter = 1024,
                              tol = 1e-12, ftol = 1e-12, ptol = 1e-12,
                              minFactor = 10^-6, num.cores = NULL, tasks = 0L,
@@ -153,8 +151,8 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                                        maxiter=maxiter, ftol=ftol, ptol=ptol,
                                        verbose=verbose),
                    Weibull=weibull3P(x, sample.size=sample.size,npoints=npoints,
-                                   npoints0=npoints0, maxiter=maxiter, tol=tol,
-                                   ftol=ftol, ptol=ptol, minFactor=minFactor,
+                                   maxiter=maxiter, tol=tol, ftol=ftol,
+                                   ptol=ptol, minFactor=minFactor,
                                    verbose=verbose),
                    Gamma2P=fitGammaDist(x, location.par=FALSE,
                                        summarized.data=summarized.data,

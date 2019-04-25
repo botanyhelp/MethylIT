@@ -4,9 +4,9 @@
 \alias{weibull3P}
 \title{Nonlinear fit of Weibull CDF}
 \usage{
-weibull3P(X, sample.size = 20, npoints = NULL, npoints0 = NULL,
-  maxiter = 1024, tol = 1e-12, ftol = 1e-12, ptol = 1e-12,
-  minFactor = 10^-6, verbose = TRUE, ...)
+weibull3P(X, sample.size = 20, npoints = NULL, maxiter = 1024,
+  tol = 1e-12, ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{X}{numerical vector}
@@ -14,9 +14,6 @@ weibull3P(X, sample.size = 20, npoints = NULL, npoints0 = NULL,
 \item{sample.size}{size of the sample}
 
 \item{npoints}{number of points used in the fit}
-
-\item{npoints0}{subset of points where to estimate the estimateECDF (used
-only to reduce computational time)}
 
 \item{maxiter}{positive integer. Termination occurs when the number of
 iterations reaches maxiter. Default value: 1024}

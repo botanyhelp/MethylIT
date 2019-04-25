@@ -15,8 +15,6 @@
 #' @param X numerical vector
 #' @param sample.size size of the sample
 #' @param npoints number of points used in the fit
-#' @param npoints0 subset of points where to estimate the estimateECDF (used
-#'     only to reduce computational time)
 #' @param maxiter positive integer. Termination occurs when the number of
 #'     iterations reaches maxiter. Default value: 1024
 #' @param tol A positive numeric value specifying the tolerance level for the
@@ -57,9 +55,9 @@
 #' @importFrom minpack.lm nlsLM
 #'
 #' @export
-weibull3P <- function(X, sample.size=20, npoints=NULL, npoints0=NULL,
-                       maxiter=1024, tol=1e-12, ftol=1e-12, ptol=1e-12,
-                       minFactor=10^-6, verbose=TRUE, ...) {
+weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
+                      ftol=1e-12, ptol=1e-12, minFactor=10^-6,
+                      verbose=TRUE, ...) {
 
    ind <- which(X > 0)
    if (length(ind) > sample.size) {
@@ -71,15 +69,7 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, npoints0=NULL,
        VAR <- var(X, na.rm=TRUE, use="na.or.complete")
 
        ## To reduce the number of points to be used in the fit
-       if (!is.null( npoints ) && npoints < N) {
-           if (!missing( npoints0 ) && npoints0 < N) {
-               F0 <- estimateECDF( X, npoints=npoints0 )
-               X0 <- knots(F0)
-               pX0 <- F0(X0)
-           }
-           Fy <- estimateECDF( X, npoints=npoints )
-           X <- knots( Fy )
-       } else Fy <- ecdf( X )
+       if (!is.null( npoints ) && npoints < N) X <- pretty(X, n = npoints)
 
        n <- length( X ) ## size of the sample used in the computation
        pX <- Fy( X )
