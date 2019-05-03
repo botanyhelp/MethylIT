@@ -25,7 +25,6 @@ Imports:
   BiocParallel,
   Biostrings,
   betareg,
-  biovizBase,
   caret,
   data.table,
   Epi,
@@ -47,7 +46,7 @@ Imports:
   stats,
   utils,
   XML
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: testthat, rmarkdown,
     knitr
 VignetteBuilder: rmarkdown,
