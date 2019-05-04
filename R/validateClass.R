@@ -10,7 +10,7 @@ validateClass <- function(LR, ...) UseMethod("validateClass", LR)
 #' @keywords internal
 #' @export
 validateClass.default <- function(LR, ...){
-  warning(paste("'validateClass' does not know how to handle object of class",
+   stop(paste("'validateClass' does not know how to handle object of class",
                class(LR),
                "and can only be used on classes 'pDMP', 'InfDiv'"))
 
