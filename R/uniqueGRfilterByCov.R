@@ -3,17 +3,21 @@
 #' @title  Unique GRanges of methylation read counts filtered by coverages
 #' @description Given two GRanges objects, this function will filter by coverage
 #'     each cytosine site from each GRanges object.
-#' @details Cytosine sites with 'coverage' > 'min.coverage' and 'coverage' <
-#'     'percentile' (e.g., 99.9 percentile) in at least one of the samples are
-#'     preserved. It is expected that the columns of methylated and unmethylated
-#'     counts are given.
-#'
-#' @param x A GRanges object with methylated and unmethylated counts in its
-#'     meta-column.
+#' @details Cytosine sites with 'coverage' > 'min.coverage' in at least one of
+#'     the samples are preserved. Positions with 'coverage' < 'min.coverage' in
+#'     both samples, 'x' and 'y', are removed. Positions with 'coverage' <
+#'     'percentile' (e.g., 99.9 percentile) are removed as well. It is expected
+#'     that the columns of methylated and unmethylated counts are given.
+#' @param x An object from the classes 'GRanges', 'InfDiv', or 'pDMP' with
+#'     methylated and unmethylated counts in its meta-column. If x is a GRanges
+#'     object, then argument 'y' must be a GRanges as well.
 #' @param y A GRanges object with methylated and unmethylated counts in its
-#'     meta-column.
-#' @param min.coverage Cytosine sites with coverage less than min.coverage are
-#'     discarded.
+#'     meta-column. Default is NULL. If x is a 'InfDiv', or 'pDMP' is not
+#'     needed.
+#' @param min.coverage Cytosine sites where the coverage in both samples, 'x'
+#'     and 'y', are less than 'min.coverage' are discarded. The cytosine site is
+#'     preserved, however, if  the coverage is greater than 'min.coverage'in at
+#'     least one sample.
 #' @param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
@@ -49,14 +53,22 @@
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
 #'
-uniqueGRfilterByCov <- function(x, y, min.coverage=4, percentile=.9999,
+uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, percentile=.9999,
                    high.coverage=NULL, columns=c(mC=1, uC=2), num.cores=1L,
                    tasks=0L, verbose=TRUE, ...) {
 
-   x <- x[, columns]
-   y <- y[, columns]
-   x <- uniqueGRanges(list(x, y), num.cores=num.cores, tasks=tasks,
-                   verbose=verbose, ...)
+   if (!is.null(y)) {
+       x <- x[, columns]
+       y <- y[, columns]
+       x <- uniqueGRanges(list(x, y), num.cores=num.cores, tasks=tasks,
+                           verbose=verbose, ...)
+       x <- as.matrix(mcols(x))
+   } else {
+       # ---------------------valid "pDMP" or "InfDiv" object ------------------
+       validateClass(x)
+       # --------------------------------------------------------------------- #
+   }
+
    cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
    cov2 <- rowSums(as.matrix(mcols(x[,3:4])))
    q1 <- quantile(cov1, probs=percentile)
