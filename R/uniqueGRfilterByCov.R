@@ -1,19 +1,22 @@
 #' @rdname uniqueGRfilterByCov
 #'
 #' @title  Unique GRanges of methylation read counts filtered by coverages
-#' @description Given two GRanges objects, this function will filter by coverage
-#'     each cytosine site from each GRanges object.
+#' @description Given two GRanges objects, samples '1' and '2', this function
+#'     will filter by coverage each cytosine site from each GRanges object.
 #' @details Cytosine sites with 'coverage' > 'min.coverage' in at least one of
 #'     the samples are preserved. Positions with 'coverage' < 'min.coverage' in
-#'     both samples, 'x' and 'y', are removed. Positions with 'coverage' <
+#'     both samples, 'x' and 'y', are removed. Positions with 'coverage' >
 #'     'percentile' (e.g., 99.9 percentile) are removed as well. It is expected
 #'     that the columns of methylated and unmethylated counts are given.
 #' @param x An object from the classes 'GRanges', 'InfDiv', or 'pDMP' with
-#'     methylated and unmethylated counts in its meta-column. If x is a GRanges
-#'     object, then argument 'y' must be a GRanges as well.
+#'     methylated and unmethylated counts in its meta-column. If the argument
+#'     'y' is not given, then it is assumed that the first four columns of the
+#'     GRanges metadata 'x' are counts: methylated and unmethylated counts for
+#'     samples '1' and '2'.
 #' @param y A GRanges object with methylated and unmethylated counts in its
-#'     meta-column. Default is NULL. If x is a 'InfDiv', or 'pDMP' is not
-#'     needed.
+#'     meta-column. Default is NULL. If x is a 'InfDiv', or 'pDMP', then 'y' is
+#'     not needed, since samples '1' and '2' are the first four columns of these
+#'     objects.
 #' @param min.coverage Cytosine sites where the coverage in both samples, 'x'
 #'     and 'y', are less than 'min.coverage' are discarded. The cytosine site is
 #'     preserved, however, if  the coverage is greater than 'min.coverage'in at
@@ -64,9 +67,12 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, percentile=.9999,
                            verbose=verbose, ...)
        x <- as.matrix(mcols(x))
    } else {
-       # ---------------------valid "pDMP" or "InfDiv" object ------------------
-       validateClass(x)
-       # --------------------------------------------------------------------- #
+       if (class(x) != "GRanges") {
+           # --------------------valid "pDMP" or "InfDiv" object ---------------
+           validateClass(x)
+           # ----------------------------------------------------------------- #
+       }
+
    }
 
    cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
