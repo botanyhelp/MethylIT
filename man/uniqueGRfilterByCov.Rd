@@ -4,7 +4,7 @@
 \alias{uniqueGRfilterByCov}
 \title{Unique GRanges of methylation read counts filtered by coverages}
 \usage{
-uniqueGRfilterByCov(x, y = NULL, min.coverage = 4, min.meth = 1,
+uniqueGRfilterByCov(x, y = NULL, min.coverage = 4, min.meth = 0,
   percentile = 0.9999, high.coverage = NULL, columns = c(mC = 1, uC =
   2), num.cores = 1L, tasks = 0L, verbose = TRUE, ...)
 }

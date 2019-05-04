@@ -59,7 +59,7 @@
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
 #'
-uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
+uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
                                percentile=.9999, high.coverage=NULL,
                                columns=c(mC=1, uC=2), num.cores=1L,
                                tasks=0L, verbose=TRUE, ...) {
@@ -69,7 +69,6 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
        y <- y[, columns]
        x <- uniqueGRanges(list(x, y), num.cores=num.cores, tasks=tasks,
                            verbose=verbose, ...)
-       x <- as.matrix(mcols(x))
    } else {
        if (class(x) != "GRanges") {
            # --------------------valid "pDMP" or "InfDiv" object ---------------
@@ -79,8 +78,6 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
 
    }
 
-   c1 <- mcols(x[, 1])[, 1]
-   c2 <- mcols(x[, 3])[, 1]
    cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
    cov2 <- rowSums(as.matrix(mcols(x[,3:4])))
    q1 <- quantile(cov1, probs=percentile)
@@ -88,7 +85,13 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
    q <- max(q1, q2, high.coverage)
    idx1 <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
    idx2 <- which((cov1 <= q) & (cov2 <= q))
-   idx3 <- which((c1 >= min.meth) | (c2 >= min.meth))
-   idx <- Reduce(intersect, list(idx1, idx2, idx3))
+   idx <- intersect(idx1, idx2)
+
+   if (min.meth > 0) {
+       c1 <- mcols(x[, 1])[, 1]
+       c2 <- mcols(x[, 3])[, 1]
+       idx1 <- which((c1 >= min.meth) | (c2 >= min.meth))
+       idx <- intersect(idx, idx1)
+   }
    return(x[ idx ])
 }
