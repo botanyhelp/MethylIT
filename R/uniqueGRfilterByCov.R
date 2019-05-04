@@ -49,9 +49,9 @@
 #'
 #' @examples
 #' dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,
-#' strand <- c("+","-","+","*","."), mC = 1:5, uC = 1:5)
+#'                     mC = 1:5, uC = 1:5)
 #' dfChr2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
-#' strand <- '*', mC = 1:7, uC = 1:7)
+#'                     mC = 1:7, uC = 1:7)
 #' gr1 <- makeGRangesFromDataFrame(dfChr1, keep.extra.columns = TRUE)
 #' gr2 <- makeGRangesFromDataFrame(dfChr2, keep.extra.columns = TRUE)
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
