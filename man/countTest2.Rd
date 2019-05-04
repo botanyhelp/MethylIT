@@ -64,13 +64,13 @@ independent variable (\emph{treatment group}) will be reported.
 If test = "LRT", then the p-value from a likelihood ratio test given by
 \code{\link[stats]{anova}} function from \emph{stats} packages will be
 the reported p-value for the group comparison when the best fitted model
-is the negative binomial. As suggested for \code{link[stats]{glm}}, if
+is the negative binomial. As suggested for \code{\link[stats]{glm}}, if
 best fitted model is Poisson or quasi-Poisson, then the best test is
 'Chi-squared' or 'F-test', respectively. So, for the sake of simplicity,
 the corresponding suitable test will be applied when test = "LRT".}
 
 \item{scaling}{integer (default 1). Scaling factor estimate the
-signal density as: scaling * "DIMP-Count-Per-Bp". For example,
+signal density as: scaling x "DIMP-Count-Per-Bp". For example,
 if scaling = 1000, then signal density denotes the number of DIMPs in
  1000 bp.}
 
