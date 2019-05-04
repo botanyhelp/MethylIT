@@ -89,6 +89,6 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
    idx1 <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
    idx2 <- which((cov1 <= q) & (cov2 <= q))
    idx3 <- which((c1 >= min.meth) | (c2 >= min.meth))
-   idx <- intersect(idx1, idx2, idx3)
+   idx <- Reduce(intersect, list(idx1, idx2, idx3))
    return(x[ idx ])
 }
