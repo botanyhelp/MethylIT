@@ -21,6 +21,9 @@
 #'     and 'y', are less than 'min.coverage' are discarded. The cytosine site is
 #'     preserved, however, if  the coverage is greater than 'min.coverage'in at
 #'     least one sample.
+#' @param min.meth Cytosine sites where the numbers of read counts of methylated
+#'     cytosine in both samples, '1' and '2', are less than 'min.meth' are
+#'     discarded.
 #' @param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
@@ -56,9 +59,10 @@
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
 #'
-uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, percentile=.9999,
-                   high.coverage=NULL, columns=c(mC=1, uC=2), num.cores=1L,
-                   tasks=0L, verbose=TRUE, ...) {
+uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=1,
+                               percentile=.9999, high.coverage=NULL,
+                               columns=c(mC=1, uC=2), num.cores=1L,
+                               tasks=0L, verbose=TRUE, ...) {
 
    if (!is.null(y)) {
        x <- x[, columns]
@@ -75,6 +79,8 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, percentile=.9999,
 
    }
 
+   c1 <- mcols(x[, 1])[, 1]
+   c2 <- mcols(x[, 3])[, 1]
    cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
    cov2 <- rowSums(as.matrix(mcols(x[,3:4])))
    q1 <- quantile(cov1, probs=percentile)
@@ -82,6 +88,7 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, percentile=.9999,
    q <- max(q1, q2, high.coverage)
    idx1 <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
    idx2 <- which((cov1 <= q) & (cov2 <= q))
-   idx <- intersect(idx1, idx2)
+   idx3 <- which((c1 >= min.meth) | (c2 >= min.meth))
+   idx <- intersect(idx1, idx2, idx3)
    return(x[ idx ])
 }
