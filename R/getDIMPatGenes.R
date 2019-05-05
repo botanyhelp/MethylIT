@@ -99,6 +99,10 @@ getDIMPatGenes <- function(GR, ...) UseMethod("getDIMPatGenes", GR)
 #' @export
 getDIMPatGenes.default <- function(GR, GENES, ignore.strand=TRUE) {
    gene_id <- GENES$gene_id
+   if(any(is.na(gene_id))) {
+      warnings("At least one gene ID is NA. Using gene coordinates as IDs")
+      gene_id <- NULL
+   }
    if (is.null(gene_id)) {
        chr = seqnames(GENES)
        starts = start(GENES)
@@ -114,7 +118,7 @@ getDIMPatGenes.default <- function(GR, GENES, ignore.strand=TRUE) {
                        DIMPs=length(start)), by=gene_id]
    DIMP <- data.frame(DIMP)
    DIMP <- makeGRangesFromDataFrame(DIMP, keep.extra.columns=TRUE )
-   Hits <- findOverlaps(DIMP, GENES, type="within")
+   Hits <- findOverlaps(DIMP, GENES, type="within", ignore.strand=ignore.strand)
    GENES <- GENES[subjectHits(Hits), ]
    DIMP <- as.data.frame(DIMP[queryHits(Hits), ])
    mcols(GENES) <- data.frame(GeneID=GENES$gene_id, DIMPs=DIMP$DIMPs)
