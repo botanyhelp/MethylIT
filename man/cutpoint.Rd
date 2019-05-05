@@ -11,6 +11,6 @@
 cutpoint
 }
 \description{
-Each sample individual in the 'PS' included 5000 cytosine positions
+Each sample individual in the 'PS' included 10000 cytosine positions
 }
 \keyword{datasets}

@@ -23,6 +23,6 @@
 PS
 }
 \description{
-Each individuals sample includes 5000 cytosine positions
+Each individuals sample includes 10000 cytosine positions
 }
 \keyword{datasets}

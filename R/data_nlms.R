@@ -1,6 +1,6 @@
 #' Simulated dataset of nonlinear fits used in the examples
 #'
-#' Each individuals sample includes 5000 cytosine positions
+#' Each individuals sample includes 10000 cytosine positions
 #'
 #' @format nlms is a list of best fitted nonlinear probability distribution
 #'     model estimated for the datset 'HD' (available in MethylIT pacakga)

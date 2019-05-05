@@ -1,6 +1,6 @@
 #' Simulated dataset of Hellinger divergences used in the examples
 #'
-#' Each individuals sample includes 5000 cytosine positions
+#' Each individuals sample includes 10000 cytosine positions
 #'
 #' @format HD is an object from class "InfDiv" carrying in the meta-columns the
 #'     following variables:

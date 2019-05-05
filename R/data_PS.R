@@ -1,6 +1,6 @@
 #' Simulated dataset of potential DMPs used in examples
 #'
-#' Each individuals sample includes 5000 cytosine positions
+#' Each individuals sample includes 10000 cytosine positions
 #'
 #' @format PS is an object from class "pDMP" carrying in the meta-columns the
 #'     following variables:

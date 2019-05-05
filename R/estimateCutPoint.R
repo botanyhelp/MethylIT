@@ -123,12 +123,14 @@
 #'
 #' @examples
 #' data(PS, package = "MethylIT")
-#' cutpoint <- estimateCutPoint(LR = PS, simple = TRUE,
-#'                              column = c(hdiv = TRUE, TV = TRUE,
+#' cutpoint = estimateCutPoint(LR = PS, simple = TRUE,
+#'                             column = c(hdiv = TRUE, TV = TRUE,
 #'                                         wprob = TRUE, pos = TRUE),
-#'                              interaction = "hdiv:TV", clas.perf = FALSE,
-#'                              control.names = c("sample11", "sample12"),
-#'                              treatment.names = c("sample21", "sample22"))
+#'                             classifier1 = "qda",
+#'                             control.names = c("C1", "C2", "C3"),
+#'                             treatment.names = c("T1", "T2", "T3"),
+#'                             tv.cut = 0.92, clas.perf = TRUE, prop = 0.6,
+#'                             div.col = 9L)
 #' @importFrom S4Vectors mcols
 #' @importFrom caret confusionMatrix
 #' @seealso \code{\link[MethylIT]{evaluateDIMPclass}}
