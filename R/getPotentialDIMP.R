@@ -9,7 +9,7 @@
 #'     divergence (DIV_k) values greater than the DIV(alpha = 0.05). The value
 #'     of alpha can be specified. For example, potential signals with
 #'     DIV_k > DIV(alpha = 0.01) can be selected. For each sample, cytosine
-#'     sites are selected based on the corresponding fitted Weilbull
+#'     sites are selected based on the corresponding nonlinear fitted
 #'     distribution model that has been supplied.
 #' @param LR An object from 'InfDiv' or "testDMP" class. These objects are
 #'     previously obtained with function \code{\link{estimateDivergence}} or
