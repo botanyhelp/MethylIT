@@ -5,7 +5,7 @@
 \title{Predict function for logistic regression model from 'LogisticR' class}
 \usage{
 \method{predict}{LogisticR}(object, newdata = NULL, type = c("class",
-  "posterior", "all"), ...)
+  "posterior", "all"), num.cores = 1, tasks = 0L, ...)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from 'LogisticR'
@@ -13,19 +13,27 @@ class. A logistic model given by function
 \code{\link{evaluateDIMPclass}}.}
 
 \item{newdata}{To use with function 'predict'. New data for classification
-prediction. Optionally, a data frame in which to look for variables with
-which to predict. If omitted, the fitted linear predictors are used.}
+prediction. Optionally, an object from class "GRanges", a list of
+GRanges, "pDMP" or "InfDIv", in which to look for variables with which to
+predict. If omitted, the fitted linear predictors are used.}
 
 \item{type}{To use with function 'predict'. . The type of prediction
 required. The default is "class". Possible outputs are:
 'class', 'posterior', and 'scores' (see ?predict.lda).}
 
+\item{num.cores, tasks}{Paramaters for parallele computation using package
+\code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+use, i.e. at most how many child processes will be run simultaneously
+(see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+(only for Linux OS).}
+
 \item{...}{Not in use.}
 }
 \value{
 A character vector of prediction classes or a numeric vector of
-  probabilities or a list containing the two vectors: prediction classes
-  and 'posterior' probabilities.
+    probabilities or a list containing the original 'newdata' with two
+    columns added in the meta-columns: prediction classes and 'posterior'
+    probabilities.
 }
 \description{
 Predict using a logistic model obtained from the output of

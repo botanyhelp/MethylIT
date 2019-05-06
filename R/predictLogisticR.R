@@ -12,21 +12,30 @@
 #'     class. A logistic model given by function
 #'     \code{\link{evaluateDIMPclass}}.
 #' @param newdata To use with function 'predict'. New data for classification
-#'     prediction. Optionally, a data frame in which to look for variables with
-#'     which to predict. If omitted, the fitted linear predictors are used.
+#'     prediction. Optionally, an object from class "GRanges", a list of
+#'     GRanges, "pDMP" or "InfDIv", in which to look for variables with which to
+#'     predict. If omitted, the fitted linear predictors are used.
 #' @param type To use with function 'predict'. . The type of prediction
 #'     required. The default is "class". Possible outputs are:
 #'     'class', 'posterior', and 'scores' (see ?predict.lda).
+#' @param num.cores,tasks Paramaters for parallele computation using package
+#'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
+#'     use, i.e. at most how many child processes will be run simultaneously
+#'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
+#'     (only for Linux OS).
 #' @param ... Not in use.
 #'
 #' @return A character vector of prediction classes or a numeric vector of
-#'   probabilities or a list containing the two vectors: prediction classes
-#'   and 'posterior' probabilities.
-#'
+#'     probabilities or a list containing the original 'newdata' with two
+#'     columns added in the meta-columns: prediction classes and 'posterior'
+#'     probabilities.
+#' @importFrom GenomeInfoDb seqnames
+#' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @export
 predict.LogisticR <- function(object, ...) UseMethod("predict")
 predict.LogisticR <- function(object, newdata = NULL,
-                              type=c("class", "posterior", "all"), ...) {
+                              type=c("class", "posterior", "all"),
+                              num.cores = 1, tasks = 0L, ...) {
    if (!is.element(type[1], c("class", "posterior", "all")))
        stop("The type setting '", type[1], "' does not exist")
    if (!inherits(object, "LogisticR")) {
@@ -57,24 +66,67 @@ predict.LogisticR <- function(object, newdata = NULL,
                            function(k) strsplit(vn[k], split = ":")[[1]]))
        vn <- union(v, inter)
 
-       dt <- data.frame()
-       for (k in 1:length(newdata)) {
-           dc <- c()
-           x <- newdata[[k]]
-           dc <- cbind(hdiv=x$hdiv, TV=x$TV, logP=log10(x$wprob + 2.2e-308),
-                       pos = position(x))
-           dt <- rbind(dt, data.frame(dc))
+       if (is.list(newdata)) {
+           dt <- lapply(newdata, function(x) {
+                           df <- data.frame(hdiv=x$hdiv, TV=x$TV,
+                                           logP=log10(x$wprob + 2.2e-308))
+                           if (is.element("pos", vn)) df$pos = position(x)
+                           df <- df[, vn]
+                           return(df)
+           })
        }
-       dt <- dt[, vn]
+       else {
+           dt <- cbind(hdiv=newdata$hdiv, TV=newdata$TV,
+                       logP=log10(newdata$wprob + 2.2e-308))
+           if (is.element("pos", vn)) dt$pos = position(newdata)
+           dt <- dt[, vn]
+       }
    }
    # ---------------------------------------------------------------------#
-
    object <- structure(object, class=c("glm", "lm"))
-   if (!is.null(newdata)) newdata = dt
-   pred <- predict.glm(object, newdata=newdata, type="response")
-   PredClass <- rep( "CT", length(pred))
-   PredClass[pred > 0.5] <- "TT"
-   pred <- switch(type[1], class=PredClass, posterior=pred,
-               all=list(class=PredClass, posterior=pred))
+   if (is.null(newdata)) dt <- NULL
+
+   if (num.cores > 1 && is.list(dt)) {
+       if (Sys.info()['sysname'] == "Linux") {
+           bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+       } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+       newdata <- bplapply(1:length(dt),
+                       function(k) {
+                           p <- predict.glm(object, newdata = d[[k]],
+                                           type="response")
+                           PredClass <- rep( "CT", length(p))
+                           PredClass[p > 0.5] <- "TT"
+                           newdata$PredClass <- PredClass
+                           newdata$posterior <- p
+                           return(newdata)
+                       },
+               BPPARAM=bpparam)
+   }
+   else {
+       # === To not depend on BiocParallel package
+       if (num.cores == 1 && is.list(dt)) {
+           newdata <- lapply(1:length(dt),
+                               function(k) {
+                                   p <- predict.glm(object, newdata = d[[k]],
+                                                   type="response")
+                                   PredClass <- rep( "CT", length(p))
+                                   PredClass[p > 0.5] <- "TT"
+                                   newdata$PredClass <- PredClass
+                                   newdata$posterior <- p
+                                   return(newdata)
+                               }
+                       )
+       }
+   }
+   if (!is.list(dt)) {
+       pred <- predict.glm(object, newdata = dt, type="response")
+       newdata$PredClass <- rep( "CT", length(pred))
+       newdata$PredClass[pred > 0.5] <- "TT"
+       newdata$posterior <- pred
+   }
+   pred <- switch(type[1],
+                   class = newdata$PredClass,
+                   posterior = newdata$pred,
+                   all = newdata)
    return(pred)
 }
