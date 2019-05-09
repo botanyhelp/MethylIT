@@ -5,7 +5,7 @@
 \title{Evaluate DIMPs Classification}
 \usage{
 evaluateDIMPclass(LR, control.names, treatment.names, column = c(hdiv =
-  FALSE, TV = FALSE, wprob = FALSE, pos = FALSE),
+  FALSE, TV = FALSE, bay.TV = FALSE, wprob = FALSE, pos = FALSE),
   classifier = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
   "pca.qda"), pval.col = NULL, n.pc = 1, center = FALSE,
   scale = FALSE, interaction = NULL, output = "conf.mat",
@@ -26,13 +26,14 @@ in thr variable LR.}
 included in the variable LR.}
 
 \item{column}{a logical vector for column names for the predictor variables
-to be used: Hellinger divergence "hdiv", total variation "TV",
+to be used: Hellinger divergence "hdiv", total variation "TV", TV
+estimated with Bayesian correction of methylation levels "bay.TV",
 probability of potential DIMP "wprob", and the relative cytosine site
 position "pos" in respect to the chromosome where it is located. The
 relative position is estimated as (x - x.min)/(x.max - x), where x.min
 and x.max are the maximum and minimum for the corresponding chromosome,
-repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
-be used as predictor in place of "wprob".}
+repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will be
+used as predictor in place of "wprob".}
 
 \item{classifier}{Classification model to use. Option "logistic" applies a
 logistic regression model; option "lda" applies a Linear Discriminant
