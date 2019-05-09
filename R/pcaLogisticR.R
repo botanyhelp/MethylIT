@@ -138,6 +138,8 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
 #'     Each element of this list can be requested independently using parameter
 #'     'type'.
 #' @param ... Not in use.
+#' @importFrom BiocGenerics start
+#' @importFrom GenomeInfoDb seqnames
 #' @export
 predict.pcaLogisticR <- function(object, ...) UseMethod("predict")
 predict.pcaLogisticR <- function(object, newdata,
@@ -150,27 +152,31 @@ predict.pcaLogisticR <- function(object, newdata,
    ## predictor names
    vn <- rownames(object$pca$rotation)
 
-   if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv"))) {
-     newdata <- unlist(newdata)
-     if (is.element("pos", vn)) {
-       position <- function(gr) {
-         chrs <- split(gr, seqnames(gr))
-         gr <- lapply(chrs, function(grc) {
-           x <- start(grc)
-           x.min <- min(x)
-           x.max <- max(x)
-           delta <-  max(c(x.max - x, 1))
-           return((x - x.min) / (delta))})
-         return(unlist(gr))
+   if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv")))
+       newdata <- unlist(newdata)
+   if (inherits(newdata, "GRanges")) {
+       if (is.element("pos", vn)) {
+           position <- function(gr) {
+               chrs <- split(gr, seqnames(gr))
+               gr <- lapply(chrs, function(grc) {
+                                               x <- start(grc)
+                                               x.min <- min(x)
+                                               x.max <- max(x)
+                                               if (x.min == Inf) x.min = 0
+                                               if (x.max == -Inf) x.max = 1
+                                               delta <-  max(c(x.max - x, 1))
+                                               return((x - x.min) / (delta))
+                                   }
+               )
+               return(unlist(gr))
+           }
+           newdata$pos <- position(newdata)
        }
-       newdata$pos <- position(newdata)
-     }
-     newnam <- colnames(mcols(newdata))
-     newdata$logP <- log10(newdata$wprob + 2.2e-308)
-     newdata <- mcols(newdata)
-     newdata <- newdata[vn]
-     newdata <- as.matrix(newdata)
-   } else newdata <- newdata[vn]
+      newdata$logP <- log10(newdata$wprob + 2.2e-308)
+      newdata <- mcols(newdata)
+   }
+   newdata <- newdata[vn]
+   newdata <- as.matrix(newdata)
 
    ## Centering and scaling new individuals
    dt.scaled <- scale(newdata, center=object$pca$center, scale=object$pca$scale)
