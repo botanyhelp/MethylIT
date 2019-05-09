@@ -143,6 +143,7 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #'     required. The default is "all" given by function 'predict.lda' from MASS
 #'     package: 'class', 'posterior', and 'scores' (see ?predict.lda).
 #' @param ... Not in use.
+#' @importFrom S4Vectors mcols
 #' @export
 predict.pcaLDA <- function(object, ...) UseMethod("predict")
 predict.pcaLDA <- function(object, newdata,
@@ -157,14 +158,14 @@ predict.pcaLDA <- function(object, newdata,
      if (inherits(newdata, c("pDMP", "InfDiv"))) newdata <- unlist(newdata)
      if (is.element("pos", vn)) {
        position <- function(gr) {
-         chrs <- split(gr, seqnames(gr))
-         gr <- lapply(chrs, function(grc) {
-           x <- start(grc)
-           x.min <- min(x)
-           x.max <- max(x)
-           delta <-  max(c(x.max - x, 1))
-           return((x - x.min) / (delta))})
-         return(unlist(gr))
+           chrs <- split(gr, seqnames(gr))
+           gr <- lapply(chrs, function(grc) {
+               x <- start(grc)
+               x.min <- min(x)
+               x.max <- max(x)
+               delta <-  max(c(x.max - x, 1))
+               return((x - x.min) / (delta))})
+           return(unlist(gr))
        }
        newdata$pos <- position(newdata)
      }
