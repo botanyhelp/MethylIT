@@ -69,8 +69,10 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
        VAR <- var(X, na.rm=TRUE, use="na.or.complete")
 
        ## To reduce the number of points to be used in the fit
-       if (!is.null( npoints ) && npoints < N) X <- pretty(X, n = npoints)
-
+       if (!is.null( npoints ) && npoints < N) {
+          X <- pretty(X, n = npoints)
+          X <- X[X > 0]
+       }
        n <- length( X ) ## size of the sample used in the computation
        pX <- Fy( X )
 
@@ -86,18 +88,6 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
        FIT1 <- suppressWarnings(try(nlsLM(formula, data=data.frame(X=X, Y=pX),
              start=starts, control=list(maxiter=maxiter, ftol=ftol, ptol=ptol)),
              silent=TRUE))
-
-       if (inherits( FIT1, "try-error" ) && !missing( npoints0 )) {
-           FIT0 <- try(nlsLM(formula, data=data.frame(X=X0, Y=pX0),
-                           start=starts, control=list(maxiter=maxiter,
-                           ftol=ftol, ptol=ptol)), silent=TRUE)
-           if (!inherits( FIT0, "try-error")) {
-               starts <- as.list(coef( FIT0))
-               FIT1 <- try( nlsLM(formula, data=data.frame(X=X, Y=pX),
-                           start=starts, control=list(maxiter=maxiter,
-                           ftol=ftol, ptol=ptol)), silent=TRUE )
-           }
-       }
 
        ## ------------------ Weibull 3P ----------------------
        if (!inherits( FIT1, "try-error" )) {
@@ -124,27 +114,6 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
                        data=data.frame(X=X, Y=pX), start=starts,
                        control=list(maxiter=maxiter, ftol=ftol, ptol=ptol)),
                        silent=TRUE))
-       }
-
-       if (inherits( FIT2, "try-error" ) && !missing( npoints0 )) {
-           FIT0 <- try(nlsLM(formula, data=data.frame(X=X0, Y=pX0),
-                       start=starts, control=list(maxiter=maxiter, ftol=ftol,
-                       ptol=ptol)), silent=TRUE)
-           if (!inherits( FIT0, "try-error")) {
-               starts <- as.list(coef(FIT0))
-               FIT2 <- try(nlsLM(formula, data=data.frame(X=X, Y=pX),
-                       start=starts, control=list(maxiter=maxiter, ftol=ftol,
-                       ptol=ptol)), silent=TRUE)
-           }
-       }
-
-       if (inherits( FIT2, "try-error" ) && !missing( npoints0 )) {
-           if (!inherits( FIT0, "try-error")) {
-               FIT2 <- FIT0
-               n <- length(X0)
-               X <- X0
-               pX <- pX0
-           }
        }
 
        if (!inherits( FIT1, "try-error" )) {
