@@ -102,24 +102,28 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
          cov1 <- d$c1 + d$t1
          cov2 <- d$c2 + d$t2
          idx <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
-         d <- d[idx]
+         d <- d[ idx ]
        }
        q <- mcols(d[, div.col])[, 1]
 
        if (dist.name == "ECDF") ECDF <- ecdf(q)
 
        if (!is.null(tv.col) && !is.null(tv.cut)) {
-           d <- d[ which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)]
+          idx <- which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)
+           d <- d[ idx ]
+           q <- q[ idx ]
        }
 
        if (absolute) q = abs(q)
        if (!is.null(nlms)) {
            m <- nlms[[k]]
            m <- m[, 1]
-       } else  if (!cl) {
+       } else  {
+           if (!cl) {
                        dist.name <- "ECDF"
                        ECDF <- ecdf(q)
-               }
+           }
+       }
 
        if (dist.name != "ECDF" && !cl) {
            p <- switch(dist.name,
@@ -144,8 +148,8 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
        if (dist.name == "None" && !cl) p <- (1 - ECDF(q))
 
        idx <- which(p < alpha)
-       p <- p[idx]
-       d <- d[idx]
+       p <- p[ idx ]
+       d <- d[ idx ]
        if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
            idx <- which(mcols(d[, hdiv.col])[, 1] > hdiv.cut)
            d <- d[ idx ]
