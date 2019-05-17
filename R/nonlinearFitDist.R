@@ -138,7 +138,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
    # ------------------------------------------------------------------------- #
 
    sn <- names(LR)
-   toFit <- function(k, sample.size, npoints, npoints0, maxiter, tol, ftol,
+   toFit <- function(k, sample.size, npoints, maxiter, tol, ftol,
                    ptol, minFactor, verbose) {
        if (verbose) message("* Processing sample #", k, " ", sn[k])
        x <- LR[[k]]
@@ -183,7 +183,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
    }
    if (is.null(num.cores)) {
        x <- lapply(1:length(LR), toFit, sample.size=sample.size,
-               npoints=npoints, npoints0=npoints0, maxiter=maxiter,
+               npoints=npoints, maxiter=maxiter,
                tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,
                verbose=verbose)
    } else {
@@ -193,7 +193,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
          bpparam <- SnowParam(workers = num.cores, type = "SOCK")
        }
        x <- bplapply(1:length(LR), toFit, sample.size=sample.size,
-                 npoints=npoints, npoints0=npoints0, maxiter=maxiter,
+                 npoints=npoints, maxiter=maxiter,
                  tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,
                  verbose=verbose, BPPARAM=bpparam)
    }

@@ -234,7 +234,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
 
    cn <- column; names(cn) <- c("hdiv", "TV", "bay.TV", "logP", "pos")
    form <- as.character(outer(vn, vn, FUN=paste, sep = ":"))
-   form <- form[c(2:5, 7:10, 12:15)]
+   form <- form[c(2:6, 8:12, 14:18, 20:24)]
    inter <- c("hdiv:TV" = FALSE, "hdiv:logP" = FALSE, "hdiv:pos" = FALSE,
                "hdiv:bay.TV" = FALSE,
                "TV:hdiv" = FALSE, "TV:logP" = FALSE, "TV:pos" = FALSE,
@@ -292,7 +292,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        trainingSet <- DIV(trainingSet)
        testSet <- DIV(testSet)
        model <- switch(classifier[1],
-                       logistic=LogistR(trainingSet, formula=formula,
+                       logistic=LogistR(dt = trainingSet, formula=formula,
                                        center = center, scale = scale),
                        pca.logistic=pcaLogisticR(formula=formula,
                                                data=trainingSet, n.pc=n.pc,

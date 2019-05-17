@@ -175,7 +175,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        lapply(LR, function(GR) min(mcols(GR[, div.col])[, 1],
                                    na.rm = TRUE))) < 0)) {
         LR <- lapply(LR, function(GR) {
-           mcols(GR[, div.col])[, 1] <- abs(mcols(GR[, div.col])[, 1])
+           GR@elementMetadata[,div.col] <- abs(mcols(GR[, div.col])[, 1])
            return(GR)
        }, keep.attr = TRUE)
    }
