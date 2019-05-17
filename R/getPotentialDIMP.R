@@ -104,7 +104,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
          idx <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
          d <- d[idx]
        }
-       # q <- mcols(d[, div.col])[, 1]
+       q <- mcols(d[, div.col])[, 1]
 
        if (dist.name == "ECDF") ECDF <- ecdf(q)
 
@@ -112,7 +112,6 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            d <- d[ which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)]
        }
 
-       q <- mcols(d[, div.col])[, 1]
        if (absolute) q = abs(q)
        if (!is.null(nlms)) {
            m <- nlms[[k]]
