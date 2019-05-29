@@ -101,7 +101,7 @@
 #'                 makeGRangesFromDataFrame(x, keep.extra.columns = TRUE))
 #'
 #' FisherTest(LR = data, control.names = c("C1", "C2"),
-#'         treatment.names = c("T1", "T2"), tv.cut = 0.25,
+#'         treatment.names = c("T1", "T2"), tv.cut = NULL,
 #'         pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
 #'         verbose=TRUE)
 #'
