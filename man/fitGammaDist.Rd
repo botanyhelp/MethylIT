@@ -75,7 +75,7 @@ The algorithm tries to fit the two-parameter Gamma CDF
 }
 \examples{
 set.seed(126)
-x <- rgamma(1000, alpha = 1.03, scale = 2.1)
+x <- rgamma(1000, shape = 1.03, scale = 2.1)
 fitGammaDist(x)
 
 }
