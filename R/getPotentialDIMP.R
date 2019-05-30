@@ -50,11 +50,18 @@
 #'
 #' @examples
 #' num.points <- 1000
-#' HD <- GRangesList( sample1 = makeGRangesFromDataFrame(
-#'         data.frame(chr = "chr1", start = 1:num.points, end = 1:num.points,
-#'             strand = '*',
-#'             hdiv = rweibull(1:num.points, shape = 0.75, scale = 1)),
-#'         keep.extra.columns = TRUE))
+#' num.samples <- 250
+#' x <- data.frame(chr = "chr1", start = 1:num.samples,
+#'                 end = 1:num.samples,strand = '*',
+#'                 mC = rnbinom(size = num.samples, mu = 4, n = 500),
+#'                 uC = rnbinom(size = num.samples, mu = 4, n = 500))
+#' y <- data.frame(chr = "chr1", start = 1:num.samples,
+#'                 end = 1:num.samples, strand = '*',
+#'                 mC = rnbinom(size = num.samples, mu = 4, n = 500),
+#'                 uC = rnbinom(size = num.samples, mu = 4, n = 500))
+#' x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
+#' y <- makeGRangesFromDataFrame(y, keep.extra.columns = TRUE)
+#' HD <- estimateDivergence(ref = x, indiv = list(y))
 #' nlms <- nonlinearFitDist(HD, column = 1, verbose = FALSE)
 #' getPotentialDIMP(LR = HD, nlms = nlms, div.col = 1, alpha = 0.05)
 #'
