@@ -77,8 +77,8 @@ The algorithm tries to fit the two-parameter LogNorm CDF
 }
 \examples{
 set.seed(126)
-x <- rgamma(1000, shape = 1.03, scale = 2.1)
-fitGammaDist(x)
+x <- rlnorm(1000, meanlog = 1.03, sdlog = 2.1)
+fitLogNormDist(x)
 
 }
 \references{
