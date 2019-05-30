@@ -5,9 +5,8 @@
 \title{Nonlinear fit of Gamma CDF (Gamma)}
 \usage{
 fitGammaDist(x, probability.x, parameter.values, location.par = FALSE,
-  summarized.data = FALSE, sample.size = 20, npoints = NULL,
-  maxiter = 1024, ftol = 1e-12, ptol = 1e-12, maxfev = 1e+05,
-  verbose = TRUE)
+  sample.size = 20, npoints = NULL, maxiter = 1024, ftol = 1e-12,
+  ptol = 1e-12, maxfev = 1e+05, verbose = TRUE)
 }
 \arguments{
 \item{x}{numerical vector}
@@ -25,9 +24,6 @@ scale = 'value'). If not provided, then an initial guess is provided.}
 \item{location.par}{whether to consider the fitting to generalized gamma
 distribution (Gamma) including the location parameter, i.e., a Gamma
 with four parameters (GGamam3P).}
-
-\item{summarized.data}{Logic value. If TRUE (default: FALSE), summarized
-data based on 'npoints' are used to perform the nonlinear fit.}
 
 \item{sample.size}{size of the sample.}
 
@@ -74,11 +70,8 @@ The algorithm tries to fit the two-parameter Gamma CDF
 
     If the number of values to fit is >10^6, the fitting to a GGamma CDF
     would be a time consuming task. To reduce the computational time, the
-    option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
-    the original variable values are summarized into 'npoint' bins and their
-    midpoints are used as the new predictors. In this case, only the
-    goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-    the original variable x values.
+    data can be 'summarized' into 'npoints' (bins) and used as the new
+    predictors.
 }
 \examples{
 set.seed(126)

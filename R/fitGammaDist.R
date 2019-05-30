@@ -14,12 +14,8 @@
 #'
 #'     If the number of values to fit is >10^6, the fitting to a GGamma CDF
 #'     would be a time consuming task. To reduce the computational time, the
-#'     option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
-#'     the original variable values are summarized into 'npoint' bins and their
-#'     midpoints are used as the new predictors. In this case, only the
-#'     goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-#'     the original variable x values.
-#'
+#'     data can be 'summarized' into 'npoints' (bins) and used as the new
+#'     predictors.
 #' @param x numerical vector
 #' @param probability.x probability vector of x. If not provided, the values
 #'     are estimated using the empirical cumulative distribution function
@@ -32,8 +28,6 @@
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (Gamma) including the location parameter, i.e., a Gamma
 #'     with four parameters (GGamam3P).
-#' @param summarized.data Logic value. If TRUE (default: FALSE), summarized
-#'     data based on 'npoints' are used to perform the nonlinear fit.
 #' @param sample.size size of the sample.
 #' @param npoints number of points used in the fit.
 #' @param maxiter positive integer. Termination occurs when the number of
@@ -74,10 +68,9 @@
 #' @export
 
 fitGammaDist <- function(x, probability.x, parameter.values,
-                           location.par=FALSE, summarized.data=FALSE,
-                           sample.size=20, npoints=NULL, maxiter=1024,
-                           ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
-                           verbose=TRUE) {
+                       location.par=FALSE, sample.size=20, npoints=NULL,
+                       maxiter=1024, ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
+                       verbose=TRUE) {
    ind <- which(x > 0)
    if (length(ind) > sample.size) {
        x <- x[ind]
@@ -107,47 +100,42 @@ fitGammaDist <- function(x, probability.x, parameter.values,
        } else return(RSS)
    }
 
-  N <- length(x)
-  if (summarized.data && is.null(npoints)) {
-    npoints = min(10 ^ 6, N)
-  }
+   N <- length(x)
 
-  if (!is.null(npoints) && npoints < N) {
-    F0 <- estimateECDF(x, npoints = npoints)
-    X0 <- knots(F0)
-    pX0 <- F0(X0)
-    N <- length(X0)
+   ## To reduce the number of points to be used in the fit
+   if (!is.null( npoints ) && npoints < N) {
+       x <- pretty(x, n = npoints)
+       x <- x[x > 0]
+   }
 
-    if (verbose && !location.par && !is.null(npoints)) {
-      message(paste0("*** Trying nonlinear fit to a generalized 2P Gamma ",
-                     "distribution model (summarized data: ", npoints,
-                     " values)..."))
-    }
-  } else {
-    if (verbose && location.par && !is.null(npoints)) {
-      message(paste0("*** Trying nonlinear fit to a 3P Gamma ",
-                     "distribution model ", npoints," values..."))
-    }
-  }
+   n <- length( x ) ## size of the sample used in the computation
+   pX <- Fy( x )
 
-  if (summarized.data) {X = X0; pX = pX0} else {X = x; pX = Fy(x)}
+   if (verbose && !location.par && !is.null(npoints)) {
+       message(paste0("*** Trying nonlinear fit to a generalized 2P Gamma ",
+                       "distribution model (summarized data: ", npoints,
+                       " values)..."))
+   }
+   else {
+       if (verbose && location.par && !is.null(npoints)) {
+               message(paste0("*** Trying nonlinear fit to a 3P Gamma ",
+                               "distribution model ", npoints," values..."))
+       }
+   }
 
-  ## =============== starting parameter values =========== #
-  if (missing(parameter.values)) {
-    MEAN <- mean(X, na.rm = TRUE)
-    VAR <- var(X, na.rm = TRUE)
-    MIN <- min( X, na.rm = TRUE)
+   ## =============== starting parameter values =========== #
+   if (missing(parameter.values)) {
+       MEAN <- mean(x, na.rm = TRUE)
+       VAR <- var(x, na.rm = TRUE, use = "everything")
+       MIN <- min( x, na.rm = TRUE)
 
-    alpha = MEAN^2/VAR
-    mu = MIN
-    scale = VAR/MEAN
+       alpha = MEAN^2/VAR
+       mu = MIN
+       scale = VAR/MEAN
 
-    if (location.par) {
-      starts <- c(shape = alpha, scale = scale, mu = mu[1])
-    } else {
-      starts <- c(shape = alpha, scale = scale)
-    }
-  } else starts = parameter.values
+       if (location.par) starts <- c(shape = alpha, scale = scale, mu = mu[1])
+       else starts <- c(shape = alpha, scale = scale)
+   } else starts = parameter.values
 
   ## ============ END starting parameter values ========== #
 
@@ -158,7 +146,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
            message(paste0("*** Trying nonlinear fit to a 3P Gamma ",
                    "distribution model ..."))
        FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma3p,
-                       quantiles = X, prob = pX,
+                       quantiles = x, prob = pX,
                        control = nls.lm.control(maxiter = maxiter, ftol = ftol,
                                                maxfev = maxfev, ptol = 1e-12)),
                silent = TRUE)
@@ -168,7 +156,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
            message(messg)
            starts <- list(shape = starts[1], scale = starts[2])
            FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma,
-                           quantiles = X, prob = pX,
+                           quantiles = x, prob = pX,
                            control = nls.lm.control(maxiter = maxiter,
                                                ftol = ftol, maxfev = maxfev,
                                                ptol = ptol)),
@@ -182,7 +170,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
            message(paste0("*** Trying nonlinear fit to a 2P Gamma ",
                    "distribution model ..."))
        FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma,
-                       quantiles = X, prob = pX,
+                       quantiles = x, prob = pX,
                        control = nls.lm.control(maxiter = maxiter,
                                                ftol = ftol, maxfev = maxfev,
                                                ptol = ptol)),
@@ -192,7 +180,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
    if (inherits( FIT, "try-error") && !location.par) {
        starts <- list(shape = 1, scale = scale)
        FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma,
-                       quantiles = X, prob = pX,
+                       quantiles = x, prob = pX,
                        control = nls.lm.control(maxiter = maxiter,
                                                ftol = ftol, maxfev = maxfev,
                                                ptol = ptol)),
@@ -224,26 +212,26 @@ fitGammaDist <- function(x, probability.x, parameter.values,
 
    if (length(starts1) > 2) {
        FIT1 <- try(nls.lm(par=starts1, fn=optFun, probfun=pgamma3p,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+                           quantiles=x[ cros.ind.1 ], prob=pX[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT1, "try-error")) {
            FIT1 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma3p,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+                           quantiles=x[ cros.ind.1 ], prob=pX[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                        silent = TRUE)
        }
     } else {
        FIT1 <- try(nls.lm(par=starts1, fn=optFun, probfun=pgamma,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+                           quantiles=x[ cros.ind.1 ], prob=pX[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT1, "try-error")) {
            FIT1 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma,
-                           quantiles=X[ cros.ind.1 ], prob=pX[cros.ind.1],
+                           quantiles=x[ cros.ind.1 ], prob=pX[cros.ind.1],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                        silent = TRUE)
@@ -252,28 +240,28 @@ fitGammaDist <- function(x, probability.x, parameter.values,
 
    if (length(starts1) > 2) {
        FIT2 <- try(nls.lm(par=starts1, fn=optFun, probfun=pgamma3p,
-                           quantiles=X[ cros.ind.2 ], prob=pX[cros.ind.2],
+                           quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT2, "try-error")) {
            starts <- c(shape = alpha, scale = scale, mu = mu[1])
            FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma3p,
-                           quantiles=X[ cros.ind.2 ], prob=pX[cros.ind.2],
+                           quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
       }
     } else {
        FIT2 <- try(nls.lm(par=starts1, fn=optFun, probfun=pgamma,
-                           quantiles=X[ cros.ind.2 ], prob=pX[cros.ind.2],
+                           quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT2, "try-error")) {
            starts <- c(shape = alpha, scale = scale)
            FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma,
-                           quantiles=X[ cros.ind.2 ], prob=pX[cros.ind.2],
+                           quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
                                                maxfev = maxfev, ptol = ptol)),
                        silent = TRUE)
@@ -282,14 +270,6 @@ fitGammaDist <- function(x, probability.x, parameter.values,
 
    if (inherits(FIT1, "try-error") && inherits(FIT2, "try-error"))
        R.cross.FIT <- 0 else {
-       if (summarized.data) {
-           n <- length(x)
-           pX <- Fy(x)
-           cros.ind.1 <- sample.int(n, size = round(n / 2))
-           cros.ind.2 <- setdiff(1:n, cros.ind.1)
-       }
-       n <- length(x)
-
         ## prediction using model 1
         p.FIT1 <- getPreds(coef(FIT1), x[cros.ind.2])
         R.FIT1 <- cor(p.FIT1, pX[cros.ind.2], use="complete.obs")
