@@ -50,6 +50,10 @@
 #'     not overlap any intervals in subject.
 #' @param ignore.strand When set to TRUE, the strand information is ignored in
 #'     the overlap calculations. Default value: TRUE
+#' @param keep.strand When set to TRUE, the strand information is preserved on 
+#'     the objects even if ignore.strand is set to TRUE.  This makes it possible 
+#'     to ignore the strand during overlap calculations but to preserve the 
+#'     strand information and not overwrite with *. Default value: TRUE
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bplapply function from
 #'     BiocParallel package).
@@ -92,8 +96,8 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
                        chromosomes=NULL, maxgap=-1L, minoverlap=1L, missing=0,
                        type=c("any", "start", "end", "within", "equal"),
                        select=c("all", "first", "last", "arbitrary"),
-                       ignore.strand=FALSE, num.cores=1, tasks=0L,
-                       verbose=TRUE) {
+                       ignore.strand=FALSE, keep.strand=TRUE, num.cores=1, 
+                       tasks=0L, verbose=TRUE) {
 
    if (class(ListOfGranges) == "list" && class(ListOfGranges) != "GRangesList")
    {
@@ -142,72 +146,27 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
        chromosomes <- unique(as.character(unlist(chromosomes)))
    }
 
+   cond1 <- all(unlist(lapply(ListOfGranges, function(x) !is.null(mcols(x)))))
+   cond2 <- all(unlist(lapply(ListOfGranges, function(x) ncol(mcols(x)) > 0)))
+   
    ## It assigns the data to the GRanges metacolumns
-   if (length(chromosomes) > 1) {
-       if (verbose)
-           message(" *** Building coordinates for the new GRanges object ..." )
-       granges <- bplapply(chromosomes, function(chr, ListOfGranges) {
-           n <- length(ListOfGranges)
-           strands = c()
-           for (k in 1:n) {
-               seq <- ListOfGranges[[k]]
-               chrs <- as.character(seqnames(seq))
-               ind <- which(chrs == chr)
-               if (length(ind) > 0) { # If the chromsome is given
-                   seq <- seq[ind,]
-                   starts <- as.character(start(seq))
-                   if (ignore.strand) {
-                       strnd <- "*"
-                   } else strnd <- as.character(strand(seq))
-                   ends <- as.character(end(seq))
-                   strands <- c(strands, paste(starts, ends, strnd, sep = "_"))
-               }
-           }
-           ## To remove duplications
-           if (!is.null(strands)) {
-               strands <- sort(unique(strands))
-               strands <- unlistfn(strsplit(strands, "_"))
-               starts <- as.numeric(strands[, 1])
-               ends <- as.numeric(strands[, 2])
-               granges <- GRanges(seqnames=chr,
-                                   ranges=IRanges(start=starts, end=ends),
-                               strand=strands[, 3])
-           } else granges <- GRanges()
-           return(granges)
-       }, ListOfGranges, BPPARAM=bpparam)
+   if (verbose)
+       message(" *** Building coordinates for the new GRanges object ..." )
+   
+   granges <- unique(unname(unlist(ListOfGranges)))
 
-       granges <- GRangesList(granges)
-       granges <- unlist(granges) ## GRangesList to GRanges
-  } else {
-       if (verbose) message(" *** Processing only chromosome ", chromosomes)
-       n <- length(ListOfGranges)
-       strands <- c()
-       for (k in 1:n) {
-           seq <- ListOfGranges[[k]]
-           chrs <- as.character(seqnames(seq))
-           ind <- which(chrs == chromosomes)
-           if (length(ind) > 0) {
-               seq <- seq[ind,]
-               starts <- as.character(start(seq))
-               if (ignore.strand) {
-                   strnd <- "*"
-               } else strnd <- as.character(strand(seq))
-               ends <- as.character(end(seq))
-               strands <- c(strands, paste(starts, ends, strnd, sep = "_"))
-           }
+   if (ignore.strand && !keep.strand) {
+       if (verbose) {
+           message(" *** Setting strand information to * ..." )
        }
-    ## To remove duplications
-       strands <- sort(unique(strands))
-       strands <- unlistfn(strsplit(strands, "_"))
-       starts <- as.numeric(strands[, 1])
-       ends <- as.numeric(strands[, 2])
-       granges <- GRanges(seqnames=chromosomes,
-                       ranges=IRanges(start=starts, end=ends),
-                       strand=strands[, 3])
-  }
-  cond1 <- all(unlist(lapply(ListOfGranges, function(x) !is.null(mcols(x)))))
-  cond2 <- all(unlist(lapply(ListOfGranges, function(x) ncol(mcols(x)) > 0)))
-  if (cond1 && cond2) {
+       strand(granges) <- "*"
+   } else {
+       if (verbose) {
+           message(" *** Strand information is preserved ..." )
+       }
+   }
+   
+   if (cond1 && cond2) {
        ## This assigns the data values to the GRanges metacolumns
        l <- length(granges)
        n <- length(ListOfGranges)
@@ -266,9 +225,10 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
        mcols(granges) <- methl
        rm(methl); gc()
        colnames(mcols(granges)) <- make.unique(colnames(mcols(granges)))
-   }
+   } else warnings("At least one GRanges has zero metacolumns")
 
    if (verbose) message(" *** Sorting by chromosomes and start positions...")
    granges <- sortBySeqnameAndStart(granges)
    return(granges)
 }
+
