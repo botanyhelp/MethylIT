@@ -64,7 +64,7 @@ predict.LogisticR <- function(object, newdata = NULL,
                return((x - x.min) / (delta))})
            return(unlist(gr))
        }
-       v <- c("hdiv", "TV", "logP", "pos")
+       v <- c("hdiv", "TV", "bay.TV", "logP", "pos")
        vn <- setdiff(names(coef(object$modeling)),"(Intercept)")
        v <- v[na.omit(match(vn, v))]
        inter <- unlist(lapply(grep("[:]", vn),
@@ -74,6 +74,7 @@ predict.LogisticR <- function(object, newdata = NULL,
        if (is.list(newdata)) {
            dt <- lapply(newdata, function(x) {
                            df <- data.frame(hdiv=x$hdiv, TV=x$TV,
+                                            bay.TV=x$bay.TV,
                                            logP=log10(x$wprob + 2.2e-308))
                            if (is.element("pos", vn)) df$pos = position(x)
                            df <- as.matrix(df[, vn])
