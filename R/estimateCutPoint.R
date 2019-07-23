@@ -136,7 +136,8 @@
 #' @seealso \code{\link[MethylIT]{evaluateDIMPclass}}
 #' @export
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
-                       column=c(hdiv=TRUE, TV=TRUE, wprob=TRUE, pos=TRUE),
+                       column=c(hdiv=TRUE, TV=TRUE,  bay.TV=FALSE,
+                               wprob=TRUE, pos=TRUE),
                        classifier1=c("logistic", "pca.logistic", "lda",
                                    "qda","pca.lda", "pca.qda"),
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
