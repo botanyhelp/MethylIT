@@ -73,6 +73,10 @@
 #'     testing.
 #' @param n.pc Number of principal components (PCs) to use if the classifier is
 #'     not 'logistic'. In the current case, the maximun number of PCs is 4.
+#' @param interaction If a logistic classifier is used. Variable interactions to
+#'     consider in a logistic regression model. Any pairwise combination of the
+#'     variable "hdiv", "TV", "wprob", and "pos" can be provided. For example:
+#'     "hdiv:TV", "wprob:pos", "wprob:TV", etc.
 #' @param cut.values Cut values of the information divergence (ID) specified  in
 #'     \emph{div.col} where to check the classification performance
 #'     (0 < \emph{cut.interval} < max ID). If provided, the search for a
@@ -142,7 +146,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                    "qda","pca.lda", "pca.qda"),
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
                        clas.perf = FALSE, post.cut = 0.5, prop=0.6,
-                       n.pc=1, cut.values = NULL,
+                       n.pc=1, interaction = NULL, cut.values = NULL,
                        stat = 1, num.cores=1L, tasks=0L, ...) {
    if (!simple && sum(column) == 0) {
        cat("\n")
@@ -330,9 +334,12 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            conf.mat <- evaluateDIMPclass(LR, column = column,
                                          control.names = "ctrl",
                                          treatment.names = "treat",
-                                         classifier=classifier1[1], prop=prop,
+                                         classifier = classifier1[1],
+                                         prop = prop,
                                          output = "conf.mat", n.pc = n.pc,
-                                         num.cores=num.cores, tasks=tasks, ...)
+                                         interaction = interaction,
+                                         num.cores = num.cores,
+                                         tasks = tasks, ...)
 
            post <- predict(object = conf.mat$model, newdata = LR,
                            type = "posterior")
@@ -418,7 +425,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                treatment.names="treat",
                                                classifier=classifier2[1],
                                                prop=prop, output = "conf.mat",
-                                               n.pc = n.pc, num.cores=num.cores,
+                                               n.pc = n.pc,
+                                               interaction = interaction,
+                                               num.cores=num.cores,
                                                tasks=tasks, ...)
                if (stat == 0) st <- conf.mat$Performance$overall[1]
                if (is.element(stat, 1:11))

@@ -10,8 +10,8 @@ estimateCutPoint(LR, control.names, treatment.names, simple = TRUE,
   TRUE), classifier1 = c("logistic", "pca.logistic", "lda", "qda",
   "pca.lda", "pca.qda"), classifier2 = NULL, tv.cut = 0.25,
   div.col = NULL, clas.perf = FALSE, post.cut = 0.5, prop = 0.6,
-  n.pc = 1, cut.values = NULL, stat = 1, num.cores = 1L,
-  tasks = 0L, ...)
+  n.pc = 1, interaction = NULL, cut.values = NULL, stat = 1,
+  num.cores = 1L, tasks = 0L, ...)
 }
 \arguments{
 \item{LR}{An object from 'pDMP' class. This object is previously obtained
@@ -68,6 +68,11 @@ testing.}
 
 \item{n.pc}{Number of principal components (PCs) to use if the classifier is
 not 'logistic'. In the current case, the maximun number of PCs is 4.}
+
+\item{interaction}{If a logistic classifier is used. Variable interactions to
+consider in a logistic regression model. Any pairwise combination of the
+variable "hdiv", "TV", "wprob", and "pos" can be provided. For example:
+"hdiv:TV", "wprob:pos", "wprob:TV", etc.}
 
 \item{cut.values}{Cut values of the information divergence (ID) specified  in
 \emph{div.col} where to check the classification performance
