@@ -35,6 +35,8 @@
 #'     with a Gauss-Newton algorithm and successively halved until the residual
 #'     sum of squares has been decreased or until the step-size factor has been
 #'     reduced below this limit. Default value: 10^-6
+#' @param nlms Logical. Whether to return the nonlinear model object
+#'     \code{\link[minpack.lm]{nls.lm}}. Default is FALSE.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... other parameters
 #'
@@ -60,7 +62,8 @@
 #' @export
 weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                        npoints=NULL, maxiter = 1024, tol = 1e-12, ftol = 1e-12,
-                       ptol=1e-12, minFactor=10^-6, verbose=TRUE, ...) {
+                       ptol=1e-12, minFactor=10^-6, nlms = FALSE,
+                       verbose=TRUE, ...) {
    model <- match.arg(model)
    ind <- which(X > 0)
    if (length(ind) > sample.size) {
@@ -274,5 +277,6 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
    colnames(stats) <- c( "Estimate", "Std. Error", "t value", "Pr(>|t|))",
                           "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
                           "BIC", "COV.shape", "COV.scale", "COV.mu", "n")
+   if (nlms) stats <- list(stats, nlms = FIT)
    return(stats)
 }
