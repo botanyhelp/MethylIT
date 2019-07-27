@@ -14,16 +14,13 @@
 #'
 #'     If the number of values to fit is >10^6, the fitting to a GGamma CDF
 #'     would be a time consuming task. To reduce the computational time, the
-#'     option summarized.data' can be set 'TRUE'. If summarized.data = TRUE, the
+#'     option summarized.data' can be set 'TRUE'. If npoint != NULL, the
 #'     original variable values are summarized into 'npoint' bins and their
 #'     midpoints are used as the new predictors. In this case, only the
 #'     goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
 #'     the original variable x values.
 #'
 #' @param x numerical vector
-#' @param probability.x probability vector of x. If not provided, the values
-#'     are estimated using the empirical cumulative distribution function
-#'     ('ecdf') from 'stats' R package.
 #' @param parameter.values initial parameter values for the nonlinear fit. If
 #'     the locator paramter is included (mu != 0), this must be given as
 #'     parameter.values = list(alpha = 'value', scale = 'value', mu = 'value',
@@ -33,8 +30,6 @@
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (GGamma) including the location parameter, i.e., a GGamma
 #'     with four parameters (GGamam4P).
-#' @param summarized.data Logic value. If TRUE (default: FALSE), summarized
-#'     data based on 'npoints' are used to perform the nonlinear fit.
 #' @param sample.size size of the sample.
 #' @param npoints number of points used in the fit. If the number of points if
 #'     greater than 10^6, then the fit is automatically set to npoints = 999999.
@@ -54,12 +49,15 @@
 #'     reached maxfev. Note that nls.lm sets the value of maxfev to
 #'     100*(length(par) + 1) if maxfev = integer(), where par is the list or
 #'     vector of parameters to be optimized.
+#' @param nlms Logical. Whether to return the nonlinear model object
+#'     \code{\link[minpack.lm]{nls.lm}}. Default is FALSE.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... arguments passed to or from other methods.
 #'
 #' @return Model table with coefficients and goodness-of-fit results:
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-#'     coefficient covariance matrix.
+#'     coefficient covariance matrix. If \strong{nlms = TRUE}, then a list with
+#'     nonlinear model object \code{\link[minpack.lm]{nls.lm}} is returned.
 #'
 #' @references 1. Stevens JP. Applied Multivariate Statistics for the Social
 #'     Sciences. Fifth Edit. Routledge Academic; 2009.
@@ -74,19 +72,18 @@
 #'   deviance BIC cor quantile
 #' @importFrom nls2 nls2
 #' @importFrom utils head
-#' @importFrom stats ecdf nls.control
+#' @importFrom stats ecdf nls.control coef
 #' @importFrom minpack.lm nlsLM nls.lm nls.lm.control
 #' @export
 
-fitGGammaDist <- function(x, probability.x, parameter.values,
-                          location.par=FALSE, summarized.data=FALSE,
+fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
                           sample.size=20, npoints=NULL, maxiter=1024,
                           ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
-                          verbose=TRUE, ...) {
+                          nlms = FALSE, verbose=TRUE, ...) {
   ind <- which(x > 0)
   if (length(ind) > sample.size) {
        x <- x[ind]
-       if (missing(probability.x)) Fy <- ecdf(x)
+       Fy <- ecdf(x)
   } else stop("*** Sample size is lower than the set minimun size: ",
               sample.size)
 
@@ -114,13 +111,14 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
 
    N <- length(x)
    if (N > 10 ^ 6) npoints = 999999
-   if (summarized.data && is.null(npoints))  npoints = min(10 ^ 6, N)
 
    if (!is.null(npoints) && npoints < N) {
-       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
-       x0 <- DENS$mids
-       y0 <- DENS$density
-       N <- length(x0)
+       DENS <- hist(x, breaks = npoints, plot = FALSE)
+       X <- DENS$mids
+       Y <- Fy(X)
+       probFun <- pggamma
+       N <- length(X)
+
        if (verbose && location.par) {
            message(paste0("*** Trying nonlinear fit to a generalized 4P Gamma ",
                        "distribution model (summarized data: ",
@@ -142,17 +140,11 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        }
    }
 
-   if (summarized.data || !is.null(npoints)) {
-       F0 <- estimateECDF(x, npoints = npoints)
-       X <- knots(F0)
-       Y <- F0(X)
-       N <- length(X)
-   }
-   else {
+   if (is.null(npoints)) {
        X = x
-       Y = Fy(x)
+       Y = Fy(X)
+       probFun <- pggamma
    }
-   probFun <- pggamma
 
    ## =============== starting parameter values =========== #
    if (missing(parameter.values)) {
@@ -187,7 +179,7 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
                    silent = TRUE)
    }
    if (inherits( FIT, "try-error") && location.par && probFun != dggamma) {
-       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
+       DENS <- hist(x, breaks = npoints, plot = FALSE, ...)
        X <- DENS$mids
        Y <- DENS$density
        probFun <- dggamma
@@ -199,7 +191,7 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
    }
    if (inherits( FIT, "try-error") && !location.par && probFun != dggamma) {
        starts <- c(alpha = alpha, scale = scale, psi = 1)
-       DENS <- hist(x, freq = FALSE, breaks = npoints, plot = FALSE, ...)
+       DENS <- hist(x, breaks = npoints, plot = FALSE, ...)
        X <- DENS$mids
        Y <- DENS$density
        probFun <- dggamma
@@ -263,38 +255,38 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
        if (inherits(FIT1, "try-error") || inherits(FIT2, "try-error"))
                        R.cross.FIT <- 0
        else {
-           if (summarized.data || !is.null(npoints)) {
-               n <- length(x)
-               Y <- ecdf(x)(x)
-               cros.ind.1 <- sample.int(n, size = round(n / 2))
-               cros.ind.2 <- setdiff(1:n, cros.ind.1)
-           }
+           ## ---- prediction using model 1 & 2 ----
            n <- length(x)
+           Y <- Fy(x)
+           cros.ind.1 <- sample.int(n, size = round(n / 2))
+           cros.ind.2 <- setdiff(1:n, cros.ind.1)
 
-           ## prediction using model 1
            p.FIT1 <- getPreds(coef(FIT1), x[cros.ind.2])
-           R.FIT1 <- cor(p.FIT1, Y[cros.ind.2], use="complete.obs")
-           ## prediction using model 2
            p.FIT2 <- getPreds(coef(FIT2), x[cros.ind.1])
-           R.FIT2 <- cor(p.FIT2, Y[cros.ind.1], use="complete.obs")
 
-           R.cross.FIT <- (length(p.FIT1) * R.FIT1 + length(p.FIT2) * R.FIT2) /
-             (length(p.FIT1) + length(p.FIT2))
+           if (!is.na(p.FIT1) && !is.na(p.FIT1)) {
+               R.FIT1 <- cor(p.FIT1, Y[cros.ind.2], use="complete.obs")
+               R.FIT2 <- cor(p.FIT2, Y[cros.ind.1], use="complete.obs")
+               R.cross.FIT <- (length(p.FIT1) * R.FIT1 + length(p.FIT2)* R.FIT2)
+               R.cross.FIT <- R.cross.FIT/(length(p.FIT1) + length(p.FIT2))
+           } else R.cross.FIT <- 0
        }
        res <- Y - getPreds(coef(FIT), x)
+       options(stringsAsFactors = FALSE)
 
        if (length( coef(FIT)) > 3) {
            COV = try(vcov(FIT), silent = TRUE)
            if (inherits(COV, "try-error")) COV = matrix(NA, nrow = 4, ncol = 4)
 
-           stats <- data.frame( summary(FIT)$coefficients,
+           stats <- data.frame(summary(FIT)$coefficients,
                            Adj.R.Square=c( Adj.R.Square, "", "", ""),
                            rho=c(rho, "", "", ""),
                            R.Cross.val=c(R.cross.FIT, "", "", ""),
                            DEV=c(deviance(FIT), "", "", "" ),
                            AIC=c(AICmodel(FIT, residuals=res, np=4), "", "",""),
                            BIC=c(BICmodel(FIT, residuals=res, np=4), "","", ""),
-                           COV=COV, n=c(N, n, n, n))
+                           COV=COV, n=c(N, n, n, n),
+                           stringsAsFactors = FALSE)
        }
        else {
            COV = try(vcov(FIT), silent = TRUE)
@@ -308,7 +300,8 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
                            BIC=c(BICmodel(FIT, residuals=res, np=3), "", ""),
                            COV=COV,
                            COV.mu=c(NA, NA, NA),
-                           n=c(N, n, n))
+                           n=c(N, n, n),
+                           stringsAsFactors = FALSE)
        }
    } else {
        warning(paste("Data did not fit to the model.",
@@ -321,6 +314,7 @@ fitGGammaDist <- function(x, probability.x, parameter.values,
                         "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
                         "BIC", "COV.alpha", "COV.scale", "COV.psi",
                         "COV.mu", "N")
+   if (nlms) stats <- list(stats, nlms = FIT)
    return(stats)
 }
 

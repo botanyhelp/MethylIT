@@ -4,17 +4,12 @@
 \alias{fitGGammaDist}
 \title{Nonlinear fit of Generalized Gamma CDF (GGamma)}
 \usage{
-fitGGammaDist(x, probability.x, parameter.values, location.par = FALSE,
-  summarized.data = FALSE, sample.size = 20, npoints = NULL,
-  maxiter = 1024, ftol = 1e-12, ptol = 1e-12, maxfev = 1e+05,
-  verbose = TRUE, ...)
+fitGGammaDist(x, parameter.values, location.par = FALSE,
+  sample.size = 20, npoints = NULL, maxiter = 1024, ftol = 1e-12,
+  ptol = 1e-12, maxfev = 1e+05, nlms = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{numerical vector}
-
-\item{probability.x}{probability vector of x. If not provided, the values
-are estimated using the empirical cumulative distribution function
-('ecdf') from 'stats' R package.}
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
 the locator paramter is included (mu != 0), this must be given as
@@ -26,9 +21,6 @@ is provided.}
 \item{location.par}{whether to consider the fitting to generalized gamma
 distribution (GGamma) including the location parameter, i.e., a GGamma
 with four parameters (GGamam4P).}
-
-\item{summarized.data}{Logic value. If TRUE (default: FALSE), summarized
-data based on 'npoints' are used to perform the nonlinear fit.}
 
 \item{sample.size}{size of the sample.}
 
@@ -55,6 +47,9 @@ reached maxfev. Note that nls.lm sets the value of maxfev to
 100*(length(par) + 1) if maxfev = integer(), where par is the list or
 vector of parameters to be optimized.}
 
+\item{nlms}{Logical. Whether to return the nonlinear model object
+\code{\link[minpack.lm]{nls.lm}}. Default is FALSE.}
+
 \item{verbose}{if TRUE, prints the function log to stdout}
 
 \item{...}{arguments passed to or from other methods.}
@@ -62,7 +57,8 @@ vector of parameters to be optimized.}
 \value{
 Model table with coefficients and goodness-of-fit results:
     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covariance matrix.
+    coefficient covariance matrix. If \strong{nlms = TRUE}, then a list with
+    nonlinear model object \code{\link[minpack.lm]{nls.lm}} is returned.
 }
 \description{
 This function performs the nonlinear fit of GGamma CDF of a
@@ -80,7 +76,7 @@ The script algorithm tries to fit the three-parameter GGamma CDF
 
     If the number of values to fit is >10^6, the fitting to a GGamma CDF
     would be a time consuming task. To reduce the computational time, the
-    option summarized.data' can be set 'TRUE'. If summarized.data = TRUE, the
+    option summarized.data' can be set 'TRUE'. If npoint != NULL, the
     original variable values are summarized into 'npoint' bins and their
     midpoints are used as the new predictors. In this case, only the
     goodness-of-fit indicators AIC and R.Cross.val are estimated based on all

@@ -6,9 +6,9 @@
 \usage{
 nonlinearFitDist(LR, column = 9, dist.name = "Weibull",
   sample.size = 20, location.par = FALSE, absolute = FALSE,
-  npoints = NULL, summarized.data = FALSE, maxiter = 1024,
-  tol = 1e-12, ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6,
-  num.cores = NULL, tasks = 0L, maxfev = 1e+05, verbose = TRUE)
+  npoints = NULL, model = "all", maxiter = 1024, tol = 1e-12,
+  ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6, num.cores = NULL,
+  tasks = 0L, maxfev = 1e+05, verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{A list of GRanges objects with information divergence values in
@@ -36,9 +36,9 @@ Gamma distribution.}
 
 \item{npoints}{number of points used in the fit}
 
-\item{summarized.data}{Logic value. If TRUE (default: FALSE), summarized
-data based on 'npoints' are used to perform the nonlinear fit. Only for
-GGamma distribution.}
+\item{model}{Distribution model to fit, two-parameters and three-parameters
+Weibull model ("2P" and "3P). Default is "all" and the model with the
+best AIC criterion is reported.}
 
 \item{maxiter}{positive integer. Termination occurs when the number of
 iterations reaches maxiter. Default value: 1024}
@@ -113,37 +113,29 @@ The algorithm prepares the information divergence variable
     time consuming (see ?fitGGammaDist for additional information).
 }
 \examples{
-## The Weilbull distribution is a particular case of GGamma.
-## The goodness-of-fit indicators AIC, BIC and R.Cross.val suggest that the
-## best fit randomly generated values with Weibull distribution is obtained
-## using the Weibull model (in this example).
-set.seed(123)
-num.points <- 1000
-HD <- GRangesList(
-    sample1 <- makeGRangesFromDataFrame(
-        data.frame(chr = "chr1", start = 1:num.points, end = 1:num.points,
-            strand = '*',
-            hdiv = rweibull(1:num.points, shape = 0.75, scale = 1)),
-        keep.extra.columns = TRUE))
-nlms <- nonlinearFitDist(HD, column = 1, verbose = FALSE)
-nlms2 <- nonlinearFitDist(HD, column = 1, dist.name = "GGamma3P",
-        verbose = FALSE)
+## Load a dataset with Hellinger Divergence of methylation levels on it.
+data(HD)
+## The nonlinear fit based on three-parameter GGamma distribution
+nlms2 <- nonlinearFitDist(HD, npoints = 100, dist.name = "GGamma3P",
+                          verbose = FALSE)
+## Weilbull distribution is a particular case of GGamma.
+nlms <- nonlinearFitDist(HD, npoints = 100, verbose = FALSE)
 
-## We used the parameter values estimated for "GGamma3P" in the last
-## example (nlms2) to generate random values with GGamma disitribution. The
-## goodness-of-fit indicators AIC, BIC and R.Cross.val suggest that the
-## best fit is obtained for GGamma model.
-num.points <- 1000
-HD <- GRangesList(
-    sample1 <- makeGRangesFromDataFrame(
-        data.frame(chr = "chr1", start = 1:num.points, end = 1:num.points,
-            strand = '*',
-            hdiv = rggamma(num.points, alpha = 0.75, psi = 1.02,
-                scale = 0.97)),
-        keep.extra.columns = TRUE))
-nlms3 <- nonlinearFitDist(HD, column = 1, verbose = FALSE)
-nlms4 <- nonlinearFitDist(HD, column = 1, dist.name = "GGamma3P",
-        verbose = FALSE)
+## The goodness-of-fit indicators AIC suggests that the best fitted model is
+## obtained with GGamma distribution (in this example).
+res <- mapply(function(m1,m2) {
+  as.numeric(c(Weibull = m1$AIC[1], GGamma = m2$AIC[1]))
+}, nlms, nlms2)
+rownames(res) <-c("Weibull", "GGamma")
+res
+
+## However, the Cross-validations correlation coefficient is saying that
+## the Weibull distribution would be a little better probability predictor.
+res <- mapply(function(m1,m2) {
+  as.numeric(c(Weibull = m1$R.Cross.val[1], GGamma = m2$R.Cross.val[1]))
+}, nlms, nlms2)
+rownames(res) <-c("Weibull", "GGamma")
+res
 
 }
 \references{
