@@ -41,9 +41,11 @@
 #'     measures the relative error desired in the approximate solution.
 #'     Default value: 1e-12.
 #' @param maxfev integer; termination occurs when the number of calls to fn has
-#'   reached maxfev. Note that nls.lm sets the value of maxfev to
-#'   100*(length(par) + 1) if maxfev = integer(), where par is the list or
-#'   vector of parameters to be optimized.
+#'     reached maxfev. Note that nls.lm sets the value of maxfev to
+#'     100*(length(par) + 1) if maxfev = integer(), where par is the list or
+#'     vector of parameters to be optimized.
+#' @param nlms Logical. Whether to return the nonlinear model object
+#'     \code{\link[minpack.lm]{nls.lm}}. Default is FALSE.
 #' @param verbose if TRUE, prints the function log to stdout
 #'
 #' @return Model table with coefficients and goodness-of-fit results:
@@ -70,7 +72,7 @@
 fitGammaDist <- function(x, probability.x, parameter.values,
                        location.par=FALSE, sample.size=20, npoints=NULL,
                        maxiter=1024, ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
-                       verbose=TRUE) {
+                       nlms = FALSE, verbose=TRUE) {
    ind <- which(x > 0)
    if (length(ind) > sample.size) {
        x <- x[ind]
@@ -318,6 +320,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
   colnames(stats) <- c( "Estimate", "Std. Error", "t value", "Pr(>|t|))",
                         "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
                         "BIC", "COV.alpha", "COV.scale", "COV.mu", "df")
+  if (nlms) stats <- list(stats, nlms = FIT)
   return(stats)
 }
 

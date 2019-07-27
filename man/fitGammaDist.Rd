@@ -6,7 +6,7 @@
 \usage{
 fitGammaDist(x, probability.x, parameter.values, location.par = FALSE,
   sample.size = 20, npoints = NULL, maxiter = 1024, ftol = 1e-12,
-  ptol = 1e-12, maxfev = 1e+05, verbose = TRUE)
+  ptol = 1e-12, maxfev = 1e+05, nlms = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{numerical vector}
@@ -46,6 +46,9 @@ Default value: 1e-12.}
 reached maxfev. Note that nls.lm sets the value of maxfev to
 100*(length(par) + 1) if maxfev = integer(), where par is the list or
 vector of parameters to be optimized.}
+
+\item{nlms}{Logical. Whether to return the nonlinear model object
+\code{\link[minpack.lm]{nls.lm}}. Default is FALSE.}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 }
