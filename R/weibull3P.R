@@ -14,6 +14,9 @@
 #'
 #' @param X numerical vector
 #' @param sample.size size of the sample
+#' @param model Distribution model to fit, two-parameters and three-parameters
+#'     Weibull model ("2P" and "3P). Default is "all" and the model with the
+#'     best AIC criterion is reported.
 #' @param npoints number of points used in the fit
 #' @param maxiter positive integer. Termination occurs when the number of
 #'     iterations reaches maxiter. Default value: 1024
@@ -55,10 +58,10 @@
 #' @importFrom minpack.lm nlsLM
 #'
 #' @export
-weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
-                      ftol=1e-12, ptol=1e-12, minFactor=10^-6,
-                      verbose=TRUE, ...) {
-
+weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
+                       npoints=NULL, maxiter = 1024, tol = 1e-12, ftol = 1e-12,
+                       ptol=1e-12, minFactor=10^-6, verbose=TRUE, ...) {
+   model <- match.arg(model)
    ind <- which(X > 0)
    if (length(ind) > sample.size) {
        X <- X[ind]
@@ -79,54 +82,74 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
        if (verbose) cat("*** Non-linear regression \n" )
 
        ## ------------------ Weibull 2P ----------------------
-       if (verbose) message("*** Trying nonlinear fit a Weibull 2P model...")
+       if (model == "all" || model == "2P") {
+          if (verbose) message("*** Trying nonlinear fit a Weibull 2P model...")
 
-       shape <- log(-log(1 - 0.31)) / log(quantile(X, 0.31) / quantile(X, 0.63))
-       starts <- list(shape=unname(shape), scale=unname(quantile(X, 0.63)))
-       formula <- as.formula("Y ~ pweibull( X, shape, scale )")
+          shape <- log(-log(1 - 0.31))/log(quantile(X, 0.31)/quantile(X, 0.63))
+          starts <- list(shape=unname(shape), scale=unname(quantile(X, 0.63)))
+          formula <- as.formula("Y ~ pweibull( X, shape, scale )")
 
-       FIT1 <- suppressWarnings(try(nlsLM(formula, data=data.frame(X=X, Y=pX),
-             start=starts, control=list(maxiter=maxiter, ftol=ftol, ptol=ptol)),
-             silent=TRUE))
+          FIT1 <- suppressWarnings(try(nlsLM(formula,
+                                             data = data.frame(X = X, Y = pX),
+                                             start = starts,
+                                             control=list(maxiter=maxiter,
+                                                          ftol=ftol,
+                                                          ptol=ptol)),
+                                       silent=TRUE))
+       }
 
        ## ------------------ Weibull 3P ----------------------
-       if (!inherits( FIT1, "try-error" )) {
-           starts <- list(shape=unname(coef(FIT1)[1]),
-                           scale=unname(coef(FIT1)[2]), mu=MIN)
-       } else starts <- list(shape=log(2), scale=(2 / log(2)), mu=0)
-       if (verbose) message("*** Trying nonlinear fit a Weibull 3P model ...")
+       if (model == "all" || model == "3P") {
+           starts <- list(shape = log(2), scale=(2 / log(2)), mu = 0)
+           if (model == "all" ) {
+               if(!inherits(FIT1, "try-error"))
+                   starts <- list(shape = unname(coef(FIT1)[1]),
+                                   scale = unname(coef(FIT1)[2]), mu = MIN)
+           }
+           if (verbose)
+               message("*** Trying nonlinear fit a Weibull 3P model ...")
+           formula <- as.formula("Y ~ pweibull( X - mu, shape, scale )")
+           FIT2 <- suppressWarnings(
+                   try(nlsLM(formula, data=data.frame(X = X, Y = pX),
+                               start=starts,
+                               control=list(maxiter=maxiter, ftol=ftol,
+                                               ptol=ptol)), silent=TRUE))
+           if (inherits( FIT2, "try-error")) {
+               starts <- list(shape=1, scale=1, mu=0)
+               FIT2 <- suppressWarnings(
+                        try(nlsLM(formula, data = data.frame(X = X, Y = pX),
+                                   start=starts,
+                                   control=list(maxiter = maxiter,
+                                                ftol = ftol, ptol = ptol)),
+                           silent = TRUE))
+           }
 
-       formula <- as.formula("Y ~ pweibull( X - mu, shape, scale )")
-       FIT2 <- suppressWarnings(try(nlsLM(formula, data=data.frame(X=X, Y=pX),
-                       start=starts, control=list(maxiter=maxiter, ftol=ftol,
-                       ptol=ptol)), silent=TRUE))
-       if (inherits( FIT2, "try-error")) {
-           starts <- list(shape=1, scale=1, mu=0)
-           FIT2 <- suppressWarnings(try(nlsLM(formula,
-                       data=data.frame(X=X, Y=pX), start=starts,
-                       control=list(maxiter=maxiter, ftol=ftol, ptol=ptol)),
-                       silent=TRUE))
+           if (inherits( FIT2, "try-error") ) {
+              starts <- list(shape = (MEAN ^ 2/VAR), scale = (VAR/MEAN), mu=MIN)
+              FIT2 <- suppressWarnings(
+                       try(nlsLM(formula, data = data.frame(X = X, Y = pX),
+                                   start = starts,
+                                   control = list(maxiter=maxiter, ftol=ftol,
+                                               ptol=ptol)),
+                                           silent=TRUE))
+           }
        }
 
-       if (inherits( FIT2, "try-error") ) {
-           starts <- list(shape=(MEAN ^ 2 / VAR), scale=(VAR/MEAN), mu=MIN)
-           FIT2 <- suppressWarnings(try(nlsLM(formula,
-                       data=data.frame(X=X, Y=pX), start=starts,
-                       control=list(maxiter=maxiter, ftol=ftol, ptol=ptol)),
-                       silent=TRUE))
-       }
-
-       if (!inherits( FIT1, "try-error" )) {
-           if (sum(summary(FIT1)$parameters[1:2, 4] > 0.05) == 2 ||
-                       coef(FIT1)[2] < 1e-07 ) {
-               PASS1 <- FALSE
-           } else PASS1 <- TRUE
+       if (model == "all" || model == "2P") {
+           if (!inherits( FIT1, "try-error")) {
+               if (sum(summary(FIT1)$parameters[1:2, 4] > 0.05) == 2 ||
+                   coef(FIT1)[2] < 1e-07 ) {
+                   PASS1 <- FALSE
+               } else PASS1 <- TRUE
+           }
        } else PASS1 <- FALSE
-       if (!inherits( FIT2, "try-error" )) {
-           suma <- sum(summary(FIT2)$parameters[1:3, 4] > 0.05)
-           if (suma == 3 || coef(FIT2)[2] < 1e-07 || coef(FIT2)[3] < 0) {
-               PASS2 <- FALSE
-           } else PASS2 <- TRUE
+       if (model == "all" || model == "3P")  {
+           if (!inherits( FIT2, "try-error" )) {
+               suma <- sum(summary(FIT2)$parameters[1:3, 4] > 0.05)
+               if (suma == 3 || coef(FIT2)[2] < 1e-07 || coef(FIT2)[3] < 0) {
+                   PASS2 <- FALSE
+               } else PASS2 <- TRUE
+           }
        } else PASS2 <- FALSE
 
        if (PASS1 && PASS2) {
@@ -147,7 +170,10 @@ weibull3P <- function(X, sample.size=20, npoints=NULL, maxiter=1024, tol=1e-12,
            if (verbose) message("*** Weibull-3P is the best fitted model")
        }
 
-       rm(FIT1,FIT2)
+       if (model == "all") rm(FIT1, FIT2)
+       if (model == "2P") rm(FIT1)
+       if (model == "3P") rm(FIT2)
+
        if (PASS1 || PASS2) {
            ## **** R squares ****
            Adj.R.Square <- 1 - (deviance(FIT) / ((n - length(coef(FIT))) *

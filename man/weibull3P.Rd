@@ -4,14 +4,17 @@
 \alias{weibull3P}
 \title{Nonlinear fit of Weibull CDF}
 \usage{
-weibull3P(X, sample.size = 20, npoints = NULL, maxiter = 1024,
-  tol = 1e-12, ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6,
-  verbose = TRUE, ...)
+weibull3P(X, sample.size = 20, model = c("all", "2P", "3P"),
+  npoints = NULL, maxiter = 1024, tol = 1e-12, ftol = 1e-12,
+  ptol = 1e-12, minFactor = 10^-6, verbose = TRUE, ...)
 }
 \arguments{
 \item{X}{numerical vector}
 
 \item{sample.size}{size of the sample}
+
+\item{model}{Distribution model to fit, two parameters and three parameters
+Weibull model ("2P" and "3P). Default is "all".}
 
 \item{npoints}{number of points used in the fit}
 
