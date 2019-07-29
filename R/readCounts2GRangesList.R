@@ -34,11 +34,17 @@
 #'     (see ?seqlevels).
 #' @param chromosomes If provided, it must be a character vector with the names
 #'     of the chromosomes that you want to include in the final GRanges objects.
+#' @param contexts If provided, it must be a character vector with the names
+#'     of the contexts that you want to include in the final GRanges objects, 
+#'     for example, "CG", "CHG"
+#' @param seqs If provided, it must be a character vector with the names
+#'     of the trinucleotide sequences that you want to include in the final 
+#'     GRanges objects, for example, "CGA", "CAA"
 #' @param verbose If TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'fread' function from 'data.table'
 #'     package
 #'
-#' @return A list of GRanges objects
+#' @return A list of GRanges objects 
 #'
 #' @examples
 #' ## Create a cov file with it's file name including "gz" (tarball extension)
@@ -92,20 +98,63 @@
 #'                                         mC = 4, uC = 3),
 #'                             pattern = "^Chr1", verbose = TRUE)
 #' file.remove(filenames) # Remove the downloaded file
+#' 
+#' #' filename <- "./file.cov"
+#' gr1 <- data.frame(chr = c("chr1", "chr1"), post = c(1,2),
+#'                 strand = c("+", "-"), ratio = c(0.9, 0.5),
+#'                 context = c("CG", "CG"), CT = c(20, 30))
+#' filename <- "./file.cov"
+#' write.table(as.data.frame(gr1), file = filename,
+#'             col.names = TRUE, row.names = FALSE, quote = FALSE)
+#'
+#' ## Read the file. It does not work. Typing mistake: "fractions"
+#' LR <- try(readCounts2GRangesList(filenames = filename, remove = FALSE,
+#'                             sample.id = "test",
+#'                             columns = c(seqnames = 1, start = 2,
+#'                                     strand = 3, fractions = 4,
+#'                                     context = 5, coverage = 6)),
+#'                                     silent = TRUE)
+#' file.remove(filename) # Remove the file
+#' 
+#' c("seqnames", "start", "strand", "mC", "uC", "context", "seq")
+#' filename <- "./file.cov"
+#' gr1 <- data.frame(seqnames = rep(1:20,each=5), start = seq(10, 1000, by=10),
+#'                 strand = rep(c("+", "-"),times=25,each=2), 
+#'                 mC=sample(0:10,size=100,replace=T),
+#'                 uC=sample(0:10,size=100,replace=T),
+#'                 context = rep(c("CG","CHG","CHH"),length.out=100),
+#'                 seq = rep(c("CGC", "CAG", "CTT"),length.out=100))
+#' filename <- "./file.cov"
+#' write.table(as.data.frame(gr1), file = filename,
+#'             col.names = TRUE, row.names = FALSE, quote = FALSE)
+#'
+#' ## Read the file. It does not work. Typing mistake: "fractions"
+#' LR <- try(readCounts2GRangesList(filenames = filename, remove = FALSE,
+#'                             sample.id = "test",
+#'                             columns = c(seqnames = 1, start = 2,
+#'                                     strand = 3, mC = 4, uC = 5,
+#'                                     context = 6, seq = 7)),
+#'                                     silent = TRUE)
+#' file.remove(filename) # Remove the file
+#' 
 #'
 #' @importFrom data.table fread
 #' @importFrom GenomeInfoDb seqlevels
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
 #'
 #' @export
-readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
-                   remove=FALSE, columns=c(seqnames=NULL, start=NULL, end=NULL,
-                   strand=NULL,fraction=NULL, percent=NULL, mC=NULL, uC=NULL,
-                   coverage=NULL, context=NULL), chromosome.names=NULL,
-                   chromosomes=NULL, verbose=TRUE, ...) {
+readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, 
+                   pattern=NULL, remove=FALSE, columns=c(seqnames=NULL, 
+                   start=NULL, end=NULL, strand=NULL,fraction=NULL, 
+                   percent=NULL, mC=NULL, uC=NULL, coverage=NULL, context=NULL, 
+                   seq=NULL), chromosome.names=NULL, chromosomes=NULL, 
+                   contexts=NULL, seqs=NULL, verbose=TRUE, ...) {
+
+   cn <- names(columns)
 
    colns <- c("seqnames", "start", "end", "strand", "fraction",
-            "percent", "mC", "uC", "coverage", "context")
+            "percent", "mC", "uC", "coverage", "context", "seq")
+   
    Check <- ArgumentCheck::newArgCheck()
    if (is.null(filenames)) {
        ArgumentCheck::addError(msg="No file names provided",
@@ -117,7 +166,9 @@ readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
                                            file), argcheck=Check)
        }
    }
+
    cn <- names(columns)
+
    if (!is.element("seqnames", cn) || !is.element("start", cn)) {
        ArgumentCheck::addError(msg=paste0("You must provide the numbers for ",
                    "'seqnames' (chromosomes names), ", "  'start' columns"),
@@ -141,39 +192,21 @@ readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
    }
 
    ArgumentCheck::finishArgCheck(Check)
-
-   meth <- lapply(filenames, function(file) {
-       if (verbose) message("*** Processing file: ", file)
-       gunzippedfile <- sub(gz.ext, "", file)
-       if (grepl(pattern=gz.ext, file)) {
-           if (file.exists(gunzippedfile)) {
-               warning(paste("A file with the name: \n", gunzippedfile,
-                   "\n already exists. So, the corresponding file '.gz' was",
-                   "not decompressed"), call. = FALSE)
-           } else .gunzip(file, remove=FALSE)
-       }
-       if (.Platform$OS.type == "unix") {
-           if (!is.null(pattern)) {
-               x <- fread(paste0("grep ", pattern, " ", gunzippedfile),
+   
+   x_gr_list <- vector(mode = "list", length = length(filenames))
+   
+   for (k in 1:length(filenames)) {
+       if (.Platform$OS.type == "unix" && (!is.null(pattern))) {
+               x <- fread(paste0("egrep ", pattern, " ", filenames[k]),
                   select=columns, ...)
-           } else {
-               if (!is.null(chromosomes)) {
-                   if (length(chromosomes) > 1) {
-                       chrom <- paste0("'", paste0(chromosomes, collapse = "|"), "'")
-                   } else chrom <- chromosomes
-                   x <- fread(paste0("egrep ", chrom, " ", gunzippedfile),
-                    select=columns, ...)
-               } else x <- fread(gunzippedfile, select=columns, ...)
-           }
-       } else x <- fread(gunzippedfile, select=columns, ...)
-
-       colns <- colnames(x)
-       idx <- is.element(colns, cn)
-       if (sum(idx) != length(colns)) {
-           colns[!idx] <- cn[!idx]
-           colnames(x) <- colns
+       } else {
+           x <- fread (file = filenames[k], select=columns, ...)
        }
 
+       # colnames(x) <-
+       #     c("seqnames", "start", "strand", "mC", "uC", "context", "seq")
+       colnames(x) <- cn
+       
        if (!is.element("end", cn)) x$end <- x$start
        if (is.element("coverage", cn) && is.element("mC", cn)) {
            x$uC <- x$coverage - x$mC
@@ -186,23 +219,90 @@ readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
            x$mC <- round(x$coverage * x$percent / 100)
            x$uC <- round(x$coverage) - x$mC
        }
+
+       x_gr <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
+       
        if (!is.null(chromosomes)) {
-           idx <- is.element(x$seqnames, chromosomes)
-           x <- x[idx]
-       }
-       if (remove) file.remove(gunzippedfile)
-       x <- makeGRangesFromDataFrame(x, keep.extra.columns=TRUE)
-       ## if requested change chromosomes names
-       if (!is.null(chromosome.names)) {
-           seqlevels(x) <- chromosome.names
+           message("*** chromosomes is NOT NULL, changing seqlevels..")
+           seqlevels(x_gr, pruning.mode = "coarse") <- chromosomes
        }
 
-       x <- sortBySeqnameAndStart(x)
-       return(x)
-       })
+       x_gr <- sortBySeqnameAndStart(x_gr)
+       x_gr_list[[k]] <- x_gr
+   }
+   
+   if (!is.null(chromosome.names)) {
+       if (verbose) message("*** chromosome.names is NOT NULL..")
+       if (length(unique(unlist(lapply(
+           lapply(x_gr_list, seqlevels), length
+       )))) == 1) {
+           if (verbose) {
+               message("*** seqlevels of all objects in list are equal")
+           }
+           if (unique(unlist(lapply(lapply(
+               x_gr_list, seqlevels
+           ), length))) == length(chromosome.names)) {
+               if (verbose) { message(paste0("*** length of seqlevels of all ",
+                            "objects in list are equal ",
+                            "to length(chromosome.names), calling seqlevels.."))
+               }
+               for(i in 1:length(x_gr_list)){
+                   if(verbose) { message(paste0("*** setting seqlevels of ",
+                               " list item ",i," to new seqlevels"))
+                   }
+                   seqlevels(x_gr_list[[i]]) <- chromosome.names
+               }
+           }
+       } else {
+           message(paste0("*** seqlevels of all objects in list must be ",
+                  "equal. They are not.  Therefore, skipping setting ",
+                  "seqlevels to chromosome.names"))
+       }
+   } else {
+       if (verbose) { message(paste0("*** chromosome.names is NULL, therefore ",
+                    "not calling seqlevels.."))
+       }
+   }
+   
+   if (!is.null(chromosomes)) {
+       if (verbose){
+           message("*** chromosomes is NOT NULL, will subset..")
+       }
+       for(i in 1:length(x_gr_list)){
+           if (verbose){
+               message("*** subset ",i," to only contain: ", chromosomes)
+           }
+           x_gr_list[[i]] <- subset(x_gr_list[[i]], seqnames %in% chromosomes)
+       }
+   }
+   
+   if (!is.null(contexts)){
+       if (verbose){
+           message("*** contexts is NOT NULL, will subset..")
+       }
+       for(i in 1:length(x_gr_list)){
+           if (verbose){
+               message(paste0("*** subset ",i," to only contain: ", contexts))
+           }
+           x_gr_list[[i]] <- subset(x_gr_list[[i]], context %in% contexts)
+       }
+   }
+
+   if (!is.null(seqs)){
+       if (verbose){
+           message("*** seqs is NOT NULL, will subset..")
+       }
+       for(i in 1:length(x_gr_list)){
+           if (verbose){
+               message(paste0("*** subset ",i," to only contain: ", seqs))
+           }
+           x_gr_list[[i]] <- subset(x_gr_list[[i]], seq %in% seqs)
+       }
+   }
+
    if (!is.null(sample.id)) {
-       names(meth) <- sample.id
+       names(x_gr_list) <- sample.id
    }
-   return(meth)
-   }
-
+   
+   return(x_gr_list)
+}
