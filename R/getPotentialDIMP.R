@@ -24,7 +24,9 @@
 #'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 #'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
 #'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-#'     "None". If LR is from "testDMP" class, the dist.name must be set "None".
+#'     "None". If dist.name != "None", and nlms != NULL, then a column named
+#'     "wprob" with a probability vector derived from the application of model
+#'     "nlms" will be returned.
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -77,6 +79,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
    # ------------------------------------------------------------------------- #
 
    cl <- inherits(LR, "testDMP")
+   model <- (!is.null(nlms) && dist.name != "None")
 
    if (!is.null(hdiv.cut) && is.null(hdiv.col)) {
        cat("\n")
@@ -126,13 +129,13 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            m <- nlms[[k]]
            m <- m[, 1]
        } else  {
-           if (!cl) {
+           if (!cl || !model) {
                        dist.name <- "ECDF"
                        ECDF <- ecdf(q)
            }
        }
 
-       if (dist.name != "ECDF" && !cl) {
+       if (dist.name != "ECDF" && model) {
            p <- switch(dist.name,
                        LogNorm=plnorm(q, meanlog=m[1], sdlog=m[2],
                                        lower.tail=FALSE),
@@ -151,8 +154,8 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            )
        }
        if (dist.name == "ECDF") p <- (1 - ECDF(q))
-       if (dist.name == "None" && cl) p <- d$adj.pval
-       if (dist.name == "None" && !cl) p <- (1 - ECDF(q))
+       if (!model && cl) p <- d$adj.pval
+       if (!model && !cl) p <- (1 - ECDF(q))
 
        idx <- which(p < alpha)
        p <- p[ idx ]
