@@ -107,65 +107,66 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
 
    P <- function(k) {
        d <- LR[[k]]
-
-       if (!is.null(min.coverage)) {
-         cov1 <- d$c1 + d$t1
-         cov2 <- d$c2 + d$t2
-         idx <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
-         d <- d[ idx ]
-       }
-       q <- mcols(d[, div.col])[, 1]
-
-       if (dist.name == "ECDF") ECDF <- ecdf(q)
-
-       if (!is.null(tv.col) && !is.null(tv.cut)) {
-          idx <- which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)
-           d <- d[ idx ]
-           q <- q[ idx ]
-       }
-
-       if (absolute) q = abs(q)
-       if (!is.null(nlms)) {
-           m <- nlms[[k]]
-           m <- m[, 1]
-       } else  {
-           if (!cl || !model) {
-                       dist.name <- "ECDF"
-                       ECDF <- ecdf(q)
+       if (length(d) > 0) {
+           if (!is.null(min.coverage)) {
+               cov1 <- d$c1 + d$t1
+               cov2 <- d$c2 + d$t2
+               idx <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
+               d <- d[ idx ]
            }
-       }
+           q <- mcols(d[, div.col])[, 1]
 
-       if (dist.name != "ECDF" && model) {
-           p <- switch(dist.name,
-                       LogNorm=plnorm(q, meanlog=m[1], sdlog=m[2],
-                                       lower.tail=FALSE),
-                       Weibull2P=pweibull(q, shape=m[1], scale=m[2],
-                                       lower.tail=FALSE),
-                       Weibull3P=pweibull(q - m[3], shape=m[1], scale=m[2],
-                                       lower.tail = FALSE),
-                       Gamma2P=pgamma(q, shape=m[1], scale=m[2],
-                                       lower.tail = FALSE),
-                       Gamma3P=pgamma(q - m[3], shape=m[1], scale=m[2],
-                                       lower.tail = FALSE),
-                       GGamma3P=pggamma(q, alpha=m[1], scale=m[2], psi=m[3],
-                                       lower.tail = FALSE),
-                       GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
-                                       psi=m[4], lower.tail = FALSE)
-           )
-       }
-       if (dist.name == "ECDF") p <- (1 - ECDF(q))
-       if (!model && cl) p <- d$adj.pval
-       if (!model && !cl) p <- (1 - ECDF(q))
+           if (dist.name == "ECDF") ECDF <- ecdf(q)
 
-       idx <- which(p < alpha)
-       p <- p[ idx ]
-       d <- d[ idx ]
-       if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
-           idx <- which(mcols(d[, hdiv.col])[, 1] > hdiv.cut)
-           d <- d[ idx ]
+           if (!is.null(tv.col) && !is.null(tv.cut)) {
+               idx <- which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)
+               d <- d[ idx ]
+               q <- q[ idx ]
+           }
+
+           if (absolute) q = abs(q)
+           if (!is.null(nlms)) {
+               m <- nlms[[k]]
+               m <- m[, 1]
+           } else  {
+               if (!cl || !model) {
+                   dist.name <- "ECDF"
+                   ECDF <- ecdf(q)
+               }
+           }
+
+           if (dist.name != "ECDF" && model) {
+               p <- switch(dist.name,
+                           LogNorm=plnorm(q, meanlog=m[1], sdlog=m[2],
+                                           lower.tail=FALSE),
+                           Weibull2P=pweibull(q, shape=m[1], scale=m[2],
+                                               lower.tail=FALSE),
+                           Weibull3P=pweibull(q - m[3], shape=m[1], scale=m[2],
+                                               lower.tail = FALSE),
+                           Gamma2P=pgamma(q, shape=m[1], scale=m[2],
+                                           lower.tail = FALSE),
+                           Gamma3P=pgamma(q - m[3], shape=m[1], scale=m[2],
+                                           lower.tail = FALSE),
+                           GGamma3P=pggamma(q, alpha=m[1], scale=m[2], psi=m[3],
+                                           lower.tail = FALSE),
+                           GGamma4P=pggamma(q, alpha=m[1], scale=m[2], mu=m[3],
+                                           psi=m[4], lower.tail = FALSE)
+               )
+           }
+           if (dist.name == "ECDF") p <- (1 - ECDF(q))
+           if (!model && cl) p <- d$adj.pval
+           if (!model && !cl) p <- (1 - ECDF(q))
+
+           idx <- which(p < alpha)
            p <- p[ idx ]
-       }
-       mcols(d) <- data.frame(mcols(d), wprob = p)
+           d <- d[ idx ]
+           if (!is.null(hdiv.cut) && !is.null(hdiv.col)) {
+               idx <- which(mcols(d[, hdiv.col])[, 1] > hdiv.cut)
+               d <- d[ idx ]
+               p <- p[ idx ]
+           }
+           mcols(d) <- data.frame(mcols(d), wprob = p)
+       } else mcols(d) <- data.frame(mcols(d), wprob = numeric(0))
        return(d)
    }
    sn <- names(LR)
