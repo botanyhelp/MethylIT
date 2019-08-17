@@ -202,6 +202,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
        return(GR)
    }
 
+   # This tests each sample against the reference
    if (is.null(control.names) || is.null(treatment.names)) {
        res <- lapply(LR, function(GR) ftest(GR) )
    }
