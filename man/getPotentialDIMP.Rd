@@ -5,8 +5,9 @@
 \title{Potential methylation signal}
 \usage{
 getPotentialDIMP(LR, nlms = NULL, div.col, dist.name = "Weibull2P",
-  absolute = FALSE, alpha = 0.05, tv.col = NULL, tv.cut = NULL,
-  min.coverage = NULL, hdiv.col = NULL, hdiv.cut = NULL)
+  absolute = FALSE, alpha = 0.05, pval.col = NULL, tv.col = NULL,
+  tv.cut = NULL, min.coverage = NULL, hdiv.col = NULL,
+  hdiv.cut = NULL)
 }
 \arguments{
 \item{LR}{An object from 'InfDiv' or "testDMP" class. These objects are
@@ -25,9 +26,9 @@ meta-column.}
 three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 generalized gamma with three-parameter ("GGamma3P") or four-parameter
 ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-"None". If dist.name != "None", and nlms != NULL, then a column named
-"wprob" with a probability vector derived from the application of model
-"nlms" will be returned.}
+"None". If \strong{dist.name != "None"}, and \strong{nlms != NULL}, then
+a column named "wprob" with a probability vector derived from the
+application of model "nlms" will be returned.}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
@@ -39,6 +40,12 @@ for |TV|, then absolute must be set to TRUE.}
 \item{alpha}{A numerical value (usually alpha < 0.05) used to select
 cytosine sites k with information divergence (DIV_k) for which Weibull
 probability P[DIV_k > DIV(alpha)].}
+
+\item{pval.col}{An integer denoting a column from each GRanges object from
+LR where p-values are provided when \strong{dist.name == "None"} and
+\strong{nlms == NULL}. Default is NULL. If NUll and
+\strong{dist.name == "None"} and \strong{nlms == NULL}, then a column
+named \strong{adj.pval} will used to select the potential DMPs.}
 
 \item{tv.col}{Column number for the total variation to be used for filtering
 cytosine positions (if provided).}

@@ -24,9 +24,9 @@
 #'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
 #'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
 #'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-#'     "None". If dist.name != "None", and nlms != NULL, then a column named
-#'     "wprob" with a probability vector derived from the application of model
-#'     "nlms" will be returned.
+#'     "None". If \strong{dist.name != "None"}, and \strong{nlms != NULL}, then
+#'     a column named "wprob" with a probability vector derived from the
+#'     application of model "nlms" will be returned.
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -36,6 +36,11 @@
 #' @param alpha A numerical value (usually alpha < 0.05) used to select
 #'     cytosine sites k with information divergence (DIV_k) for which Weibull
 #'     probability P[DIV_k > DIV(alpha)].
+#' @param pval.col An integer denoting a column from each GRanges object from
+#'     LR where p-values are provided when \strong{dist.name == "None"} and
+#'     \strong{nlms == NULL}. Default is NULL. If NUll and
+#'     \strong{dist.name == "None"} and \strong{nlms == NULL}, then a column
+#'     named \strong{adj.pval} will used to select the potential DMPs.
 #' @param tv.col Column number for the total variation to be used for filtering
 #'     cytosine positions (if provided).
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
@@ -70,9 +75,9 @@
 #' @export
 #'
 getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
-                             absolute=FALSE, alpha=0.05, tv.col=NULL,
-                             tv.cut=NULL, min.coverage=NULL, hdiv.col = NULL,
-                             hdiv.cut = NULL) {
+                           absolute=FALSE, alpha=0.05, pval.col = NULL,
+                           tv.col=NULL, tv.cut=NULL, min.coverage=NULL,
+                           hdiv.col = NULL, hdiv.cut = NULL) {
 
    # -------------------------- valid "InfDiv" object ------------------------ #
    validateClass(LR)
@@ -154,7 +159,8 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                )
            }
            if (dist.name == "ECDF") p <- (1 - ECDF(q))
-           if (!model && cl) p <- d$adj.pval
+           if (!model && cl && is.null(pval.col)) p <- d$adj.pval
+           else if (!model && is.numeric(pval.col)) p <- mcols(d)[, pval.col]
            if (!model && !cl) p <- (1 - ECDF(q))
 
            idx <- which(p < alpha)
