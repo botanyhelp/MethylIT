@@ -51,7 +51,10 @@
 #'     with hdiv < hdiv.cut are removed.
 #' @param min.coverage Cytosine sites with coverage less than min.coverage are
 #'     discarded. Default: 0
-#'
+#' @param pAdjustMethod method used to adjust the p-values from other
+#'     approaches like Fisher's exact test, which involve multiple comparisons
+#'     Default is NULL. Do not apply it when a probability distribution model
+#'     is used (\strong{when nlms is given}), since it makes not sense.
 #' @return A list of GRanges objects, each GRanges object carrying the selected
 #'     cytosine sites and and the Weibull probability P[DIV_k > DIV(alpha)].
 #'
@@ -77,7 +80,8 @@
 getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                            absolute=FALSE, alpha=0.05, pval.col = NULL,
                            tv.col=NULL, tv.cut=NULL, min.coverage=NULL,
-                           hdiv.col = NULL, hdiv.cut = NULL) {
+                           hdiv.col = NULL, hdiv.cut = NULL,
+                           pAdjustMethod = NULL) {
 
    # -------------------------- valid "InfDiv" object ------------------------ #
    validateClass(LR)
@@ -162,6 +166,11 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            if (!model && cl && is.null(pval.col)) p <- d$adj.pval
            else if (!model && is.numeric(pval.col)) p <- mcols(d)[, pval.col]
            if (!model && !cl) p <- (1 - ECDF(q))
+
+           if (!is.null(pAdjustMethod)) {
+               pAdjustMethod <- match.arg(pAdjustMethod, p.adjust.methods)
+               p <- p.adjust(p, method = pAdjustMethod)
+           }
 
            idx <- which(p < alpha)
            p <- p[ idx ]

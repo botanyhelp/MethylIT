@@ -7,7 +7,7 @@
 getPotentialDIMP(LR, nlms = NULL, div.col, dist.name = "Weibull2P",
   absolute = FALSE, alpha = 0.05, pval.col = NULL, tv.col = NULL,
   tv.cut = NULL, min.coverage = NULL, hdiv.col = NULL,
-  hdiv.cut = NULL)
+  hdiv.cut = NULL, pAdjustMethod = NULL)
 }
 \arguments{
 \item{LR}{An object from 'InfDiv' or "testDMP" class. These objects are
@@ -61,6 +61,11 @@ used for filtering cytosine positions. Default is NULL.}
 
 \item{hdiv.cut}{If hdiv.cut and hdiv.col are provided, then cytosine sites k
 with hdiv < hdiv.cut are removed.}
+
+\item{pAdjustMethod}{method used to adjust the p-values from other
+approaches like Fisher's exact test, which involve multiple comparisons
+Default is NULL. Do not apply it when a probability distribution model
+is used (\strong{when nlms is given}), since it makes not sense.}
 }
 \value{
 A list of GRanges objects, each GRanges object carrying the selected
