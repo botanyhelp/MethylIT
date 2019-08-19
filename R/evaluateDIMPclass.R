@@ -333,10 +333,10 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                    "dataset or to vary the number of predictor variables \n"))
        }
        testSet$treat <- factor(testSet$treat, levels = c("CT", "TT"))
-       conf.mat=confusionMatrix(data=PredTestClass, reference=testSet$treat,
-                                positive="TT")
-       m=conf.mat$table
-       FDR=m[2,1]/sum(m[2,])
+       conf.mat <- confusionMatrix(data=PredTestClass, reference=testSet$treat,
+                                   positive="TT")
+       m <- conf.mat$table
+       FDR <- m[2,1]/sum(m[2,])
        if (inherits(model, "lda")) model <- structure(model, class = "ldaDMP")
        if (inherits(model, "qda")) model <- structure(model, class = "qdaDMP")
        return(list(Performance=conf.mat, FDR=FDR, model=model))

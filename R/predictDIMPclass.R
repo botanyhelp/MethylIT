@@ -111,7 +111,8 @@ predictDIMPclass <- function(LR, model, conf.matrix = FALSE,
 
        conf.mat <- confusionMatrix(data=PRED_class, reference=TRUE_class,
                                positive="TT")
-
+       m <- conf.mat$table
+       conf.mat$FDR <- m[2,1]/sum(m[2,])
        return(conf.mat = conf.mat)
    }
 }
