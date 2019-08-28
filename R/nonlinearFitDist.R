@@ -42,7 +42,7 @@
 #'     Gamma distribution.
 #' @param npoints number of points used in the fit
 #' @param model Distribution model to fit, two-parameters and three-parameters
-#'     Weibull model ("2P" and "3P). Default is "all" and the model with the
+#'     Weibull model ("2P" and "3P"). Default is "all" and the model with the
 #'     best AIC criterion is reported.
 #' @param maxiter positive integer. Termination occurs when the number of
 #'     iterations reaches maxiter. Default value: 1024

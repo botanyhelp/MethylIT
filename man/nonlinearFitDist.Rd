@@ -37,7 +37,7 @@ Gamma distribution.}
 \item{npoints}{number of points used in the fit}
 
 \item{model}{Distribution model to fit, two-parameters and three-parameters
-Weibull model ("2P" and "3P). Default is "all" and the model with the
+Weibull model ("2P" and "3P"). Default is "all" and the model with the
 best AIC criterion is reported.}
 
 \item{maxiter}{positive integer. Termination occurs when the number of
