@@ -3,8 +3,8 @@
 #' @title Selection of DIMPs
 #' @description For a given cutpoint (previously estimated with the function
 #'     estimateCutPoint), 'selectDIMP' will return the differentially
-#'     informative methyated positions (DIMPs). DIMPs are cytosine positions for
-#'     which the divergence is greater than the cutpoint.
+#'     informative methylated positions (DIMPs). DIMPs are cytosine positions 
+#'     for which the divergence is greater than the cutpoint.
 #' @details Theoretically a DIMP denotes a cytosine position with high
 #'     probability to be differentially methylated. That is, in the statistical
 #'     molecular-biophysics context, a DIMP must be considered only in a

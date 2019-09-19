@@ -5,7 +5,7 @@
 #' @description Given a list of two GRanges objects, control and treatment,
 #'     carrying the potential signals (prior classification) from controls and
 #'     treatments in terms of an information divergence
-#'     (given the meta-columns), the function estimates the cutpoints of the
+#'     (given the metacolumns), the function estimates the cutpoints of the
 #'     control group versus treatment group.
 #' @details The function performs an estimation of the optimal cutpoint for the
 #'     classification of the differentially methylated (cytosines) positions

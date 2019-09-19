@@ -120,8 +120,8 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
 }
 #' @rdname pcaLogisticR
 #' @name predict.pcaLogisticR
-#' @title Logistic regresion using Principal Component Analysis (PCA)
-#' @description Logistic regresion using Principal Components from PCA as
+#' @title Logistic regression using Principal Component Analysis (PCA)
+#' @description Logistic regression using Principal Components from PCA as
 #'     predictor variables
 #' @details NULL
 #' @param object To use with function 'predict'. A 'pcaLogisticR' object
