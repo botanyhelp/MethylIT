@@ -1,8 +1,8 @@
 #' @rdname getDIMPatGenes
 #' @name getDIMPatGene
-#' @title Count DIMPs at gene-body
-#' @description The function counts DIMPs overlapping with gene-body. In fact,
-#'     this function also can be used to count DIMPs overlapping with any set of
+#' @title Count DMPs at gene-body
+#' @description The function counts DMPs overlapping with gene-body. In fact,
+#'     this function also can be used to count DMPs overlapping with any set of
 #'     regions given in a GRanges object.
 #'
 #' @param GR An obects object from the any of the classes: 'pDMP', 'InfDiv',

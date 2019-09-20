@@ -1,11 +1,11 @@
 #' @name predictDIMPclass
 #' @rdname predictDIMPclass
 #' @title Predict DIMP class
-#' @description This function classify each DIMP as a control or a treatment
-#'     DIMP
-#' @details Predictions only makes sense if the query DIMPs belong to same
+#' @description This function classify each DMP as a control or a treatment
+#'     DMP
+#' @details Predictions only makes sense if the query DMPs belong to same
 #'     methylation context and derive from an experiment accomplished under the
-#'     same condition set for the DIMPs used to build the model.
+#'     same condition set for the DMPs used to build the model.
 #' @param LR A list of GRanges objects obtained through the through MethylIT
 #'     downstream analysis. Basically, this object is a list of GRanges containing
 #'     only differentially methylated position (DMPs). The metacolumn of each
@@ -21,7 +21,7 @@
 #' @param treatment.names Optional. Names/IDs of the treatment samples, which
 #'     must be include in the variable LR (default, NULL).
 #' @return The same LR object with a column named "class" added to a GRanges
-#'     object from LR (default). Based on the model prediction each DIMP is
+#'     object from LR (default). Based on the model prediction each DMP is
 #'     labeled as control "CT" or as treatment "TT". If "conf.matrix" is TRUE and
 #'     the arguments control.names and treatment.names are provided, then the
 #'     overall confusion matrix is returned
@@ -32,11 +32,11 @@
 #'
 #' data(cutpoint, PS, package = "MethylIT")
 #'
-#' ## DIMPs are selected using the cupoints
+#' ## DMPs are selected using the cupoints
 #' DMPs <- selectDIMP(PS, div.col = 9L, cutpoint = cutpoint$cutpoint,
 #'                    tv.cut = 0.92)
 #'
-#' ## Classification of DIMPs into two clases: DIMPS from control and DIMPs from
+#' ## Classification of DMPs into two clases: DMPS from control and DMPs from
 #' ## treatment samples and evaluation of the classifier performance (for more
 #' ## details see ?evaluateDIMPclass).
 #' perf <- evaluateDIMPclass(LR = DMPs,
@@ -48,7 +48,7 @@
 #'                           center = TRUE, scale = TRUE,
 #'                           prop = 0.6)
 #'
-#' #' Now predictions of DIMP for control and treament can be obtained
+#' #' Now predictions of DMP for control and treament can be obtained
 #' pred = predictDIMPclass(LR = DMPs, model = perf$model,
 #'                         conf.matrix = TRUE,
 #'                         control.names = c("C1", "C2", "C3"),
