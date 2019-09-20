@@ -75,35 +75,16 @@
 #'     p-value adjusment.
 #'
 #' @examples
-#' #' A list of GRanges
-#' set.seed(123)
-#' sites = 15
-#' data <- list(
-#'   C1 = data.frame(chr = "chr1", start = 1:sites,
-#'                   end = 1:sites,strand = '*',
-#'                   mC = rnbinom(size = 8, mu = 3, n = sites),
-#'                   uC = rnbinom(size = 50, mu = 10, n = sites)),
-#'   C2 = data.frame(chr = "chr1", start = 1:sites,
-#'                   end = 1:sites, strand = '*',
-#'                   mC = rnbinom(size = 8, mu = 3, n = sites),
-#'                   uC = rnbinom(size = 50, mu = 10, n = sites)),
-#'   T1 = data.frame(chr = "chr1", start = 1:sites,
-#'                   end = 1:sites,strand = '*',
-#'                   mC = rnbinom(size = 50, mu = 10, n = sites),
-#'                   uC = rnbinom(size = 10, mu = 10, n = sites)),
-#'   T2 = data.frame(chr = "chr1", start = 1:sites,
-#'                   end = 1:sites, strand = '*',
-#'                   mC = rnbinom(size = 50, mu = 10, n = sites),
-#'                   uC = rnbinom(size = 5, mu = 10, n = sites)))
-#' #' Transforming the list of data frames into a list of GRanges objects
-#' data = lapply(data,
-#'               function(x)
-#'                 makeGRangesFromDataFrame(x, keep.extra.columns = TRUE))
+#' ## Get a dataset of Hellinger divergency of methylation levels
+#' ## from the package
+#' data(HD)
+#' ## Only the first four cytosine sites from each sample are tested
+#' hd <- lapply(HD, function(hd) hd[1:4])
 #'
-#' FisherTest(LR = data, control.names = c("C1", "C2"),
+#' FisherTest(LR = hd, pooling.stat = "sum",
 #'         treatment.names = c("T1", "T2"), tv.cut = NULL,
 #'         pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
-#'         verbose=TRUE)
+#'         verbose=FALSE)
 #'
 #' @seealso \code{\link[MethylIT.utils]{rmstGR}}
 #' @export
@@ -249,6 +230,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
        }
    }
    cl <- class(LR)
+   if (!is.list(res)) res <- list(groupComparison = res)
    res <- structure(res, class = c(cl, "testDMP"))
    return(res)
 }
