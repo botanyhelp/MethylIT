@@ -16,7 +16,7 @@
 #'     \code{\link{FisherTest}}.
 #' @param nlms A list of distribution fitted models (output of
 #'     'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical
-#'     cumulative distribution function is used to get the potential DIMPs.
+#'     cumulative distribution function is used to get the potential DMPs.
 #' @param div.col Column number for divergence variable is located in the
 #'     meta-column.
 #' @param dist.name name of the distribution to fit: Weibull2P (default:

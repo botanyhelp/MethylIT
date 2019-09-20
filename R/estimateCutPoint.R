@@ -41,7 +41,7 @@
 #'     of values provided by the user in the parameter \emph{cut.values}.
 #' @param column a logical vector for column names for the predictor variables
 #'     to be used: Hellinger divergence "hdiv", total variation "TV",
-#'     probability of potential DIMP "wprob", and the relative cytosine site
+#'     probability of potential DMP "wprob", and the relative cytosine site
 #'     position "pos" in respect to the chromosome where it is located. The
 #'     relative position is estimated as (x - x.min)/(x.max - x), where x.min
 #'     and x.max are the maximum and minimum for the corresponding chromosome,
@@ -69,7 +69,7 @@
 #' @param post.cut If 'simple=FALSE', this is posterior probability to dicide
 #'     whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.
 #' @param prop Proportion to split the dataset used in the logistic regression:
-#'     group versus divergence (at DIMPs) into two subsets, training and
+#'     group versus divergence (at DMPs) into two subsets, training and
 #'     testing.
 #' @param n.pc Number of principal components (PCs) to use if the classifier is
 #'     not 'logistic'. In the current case, the maximun number of PCs is 4.
@@ -205,7 +205,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
    roc <- function(dt) {
        ## This function build the ROC and estimate the
        ## Hellinger divergence cutoff point starting from
-       ## which TRUE DIMPs are found.
+       ## which TRUE DMPs are found.
        ## dt0 & dt1: data frames built with HD function
        ## dt0: control
        ## dt1: treatment

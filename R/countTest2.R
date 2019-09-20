@@ -52,8 +52,8 @@
 #'     the corresponding suitable test will be applied when test = "LRT".
 #'
 #' @param scaling integer (default 1). Scaling factor estimate the
-#'     signal density as: scaling x "DIMP-Count-Per-Bp". For example,
-#'     if scaling = 1000, then signal density denotes the number of DIMPs in
+#'     signal density as: scaling x "DMP-Count-Per-Bp". For example,
+#'     if scaling = 1000, then signal density denotes the number of DMPs in
 #'      1000 bp.
 #' @param num.cores,tasks Paramaters for parallele computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
