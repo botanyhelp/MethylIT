@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectDIMP.R
 \name{selectDIMP}
 \alias{selectDIMP}
-\title{Selection of DIMPs}
+\title{Selection of DMPs}
 \usage{
 selectDIMP(LR, div.col = NULL, pval.col = NULL, absolute = FALSE,
   cutpoint, tv.col = NULL, tv.cut = NULL)
@@ -25,8 +25,8 @@ an information divergence that can be fitted to Weibull or to Generalized
 Gamma distribution. So, if the nonlinear fit was performed for |TV|, then
 here absolute must be set to TRUE.}
 
-\item{cutpoint}{Cutpoint to select DIMPs. Cytosine positions with divergence
-greater than 'cutpoint' will selected as DIMPs. Cutpoints are estimated
+\item{cutpoint}{Cutpoint to select DMPs. Cytosine positions with divergence
+greater than 'cutpoint' will selected as DMPs. Cutpoints are estimated
 with the function 'estimateCutPoint'.}
 
 \item{tv.col}{Column number for the total variation to be used for filtering
@@ -37,18 +37,18 @@ abs(TV_k) < tv.cut are removed.}
 }
 \value{
 An object from "pDMP" class containing only differentially
-    informative position (DIMPs).
+    informative position (DMPs).
 }
 \description{
 For a given cutpoint (previously estimated with the function
     estimateCutPoint), 'selectDIMP' will return the differentially
-    informative methyated positions (DIMPs). DIMPs are cytosine positions for
-    which the divergence is greater than the cutpoint.
+    informative methylated positions (DMPs). DMPs are cytosine positions 
+    for which the divergence is greater than the cutpoint.
 }
 \details{
-Theoretically a DIMP denotes a cytosine position with high
+Theoretically a DMP denotes a cytosine position with high
     probability to be differentially methylated. That is, in the statistical
-    molecular-biophysics context, a DIMP must be considered only in a
+    molecular-biophysics context, a DMP must be considered only in a
     probabilistic term and not as an absolute deterministic experimental
     output.
 
@@ -56,7 +56,7 @@ Theoretically a DIMP denotes a cytosine position with high
     continuous action of the omnipresent thermal fluctuations, as well as,
     the inherent stochasticity of the biochemical reactions make it
     impossible to ensure whether a specific cytosine position is methylated
-    in an absolutely deterministic sense. Notice that the concept of DIMP is
+    in an absolutely deterministic sense. Notice that the concept of DMP is
     not applicable to a single cell (if we use an instrumentation/protocol
     to directly measure methylation at the molecular level, and not via PCR),
     since a concrete, single DNA cytosine position in a single cell is
@@ -65,7 +65,7 @@ Theoretically a DIMP denotes a cytosine position with high
     However, when pooling DNA extracted from a tissue, the previous
     reasonings about uncertainty hold plus an additional uncertainty factor:
     cells from the same tissue are not synchronized but are found in
-    different stages of their ontogenetic developments. Hence, the DIMP
+    different stages of their ontogenetic developments. Hence, the DMP
     concept holds in the mentioned circumstances where the uncertainty of
     methylation is present.
 }

@@ -8,7 +8,7 @@
 \alias{getDIMPatGenes.pDMP}
 \alias{getDIMPatGenes.InfDiv}
 \alias{getDIMPatGenes.list}
-\title{Count DIMPs at gene-body}
+\title{Count DMPs at gene-body}
 \usage{
 getDIMPatGenes(GR, GENES, ignore.strand = TRUE)
 
@@ -40,8 +40,8 @@ the calculations. Default value: TRUE}
 A GRanges object
 }
 \description{
-The function counts DIMPs overlapping with gene-body. In fact,
-    this function also can be used to count DIMPs overlapping with any set of
+The function counts DMPs overlapping with gene-body. In fact,
+    this function also can be used to count DMPs overlapping with any set of
     regions given in a GRanges object.
 }
 \examples{

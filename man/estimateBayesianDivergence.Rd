@@ -52,7 +52,7 @@ The input matrix or GRanges object with the four columns of counts
 }
 \description{
 The Information divergence of methylation levels is estimated
-    using the direct estimation or a Bayessian approach of the methylation
+    using the direct estimation or a Bayesian approach of the methylation
     levels. Hellinger divergence is computed as given in reference 1.
 }
 \details{

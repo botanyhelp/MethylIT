@@ -40,7 +40,7 @@ The function is used to discard the cytosine positions with
 }
 \details{
 The input must be a GRanges object with a coverage column in the
-    meta-olumn table or the columns with methylated (mC) and unmethylated
+    metacolumn table or the columns with methylated (mC) and unmethylated
     counts (uC).
 }
 \examples{

@@ -65,7 +65,7 @@ The principal components (PCs) for predictor variables provided
     as input data are estimated and then the individual coordinates in the
     selected PCs are used as predictors in the logistic
 
-Logistic regresion using Principal Components from PCA as
+Logistic regression using Principal Components from PCA as
     predictor variables
 }
 \details{

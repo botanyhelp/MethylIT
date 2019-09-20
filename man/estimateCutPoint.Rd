@@ -29,7 +29,7 @@ of values provided by the user in the parameter \emph{cut.values}.}
 
 \item{column}{a logical vector for column names for the predictor variables
 to be used: Hellinger divergence "hdiv", total variation "TV",
-probability of potential DIMP "wprob", and the relative cytosine site
+probability of potential DMP "wprob", and the relative cytosine site
 position "pos" in respect to the chromosome where it is located. The
 relative position is estimated as (x - x.min)/(x.max - x), where x.min
 and x.max are the maximum and minimum for the corresponding chromosome,
@@ -63,7 +63,7 @@ Default, FALSE.}
 whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.}
 
 \item{prop}{Proportion to split the dataset used in the logistic regression:
-group versus divergence (at DIMPs) into two subsets, training and
+group versus divergence (at DMPs) into two subsets, training and
 testing.}
 
 \item{n.pc}{Number of principal components (PCs) to use if the classifier is
@@ -131,7 +131,7 @@ Depending the parameter setting will return the following list with
 Given a list of two GRanges objects, control and treatment,
     carrying the potential signals (prior classification) from controls and
     treatments in terms of an information divergence
-    (given the meta-columns), the function estimates the cutpoints of the
+    (given the metacolumns), the function estimates the cutpoints of the
     control group versus treatment group.
 }
 \details{
@@ -142,7 +142,7 @@ The function performs an estimation of the optimal cutpoint for the
     Index. More complexes approach based in several machine learning model
     are provided as well.
 
-    Results of the classification perfomance resulting from the estimated
+    Results of the classification performance resulting from the estimated
     cutpoint are normally given, with the exception of those extreme
     situations where the statistics to evaluate performance cannot be
     estimated. More than one classifier model can be applied. For example,
@@ -152,8 +152,8 @@ The function performs an estimation of the optimal cutpoint for the
     cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
     classifier can be used to evaluate the classification performance.
     Different classifier models would yield different performances. Models
-    are returned and can be used in futher prediction with new datasets from
-    the same batch experiment. This is a machine learnig approach to
+    are returned and can be used in further prediction with new datasets from
+    the same batch experiment. This is a machine learning approach to
     discriminate the biological regulatory signal naturally generated in the
     control from that one induced by the treatment.
 }

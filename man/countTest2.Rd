@@ -70,8 +70,8 @@ best fitted model is Poisson or quasi-Poisson, then the best test is
 the corresponding suitable test will be applied when test = "LRT".}
 
 \item{scaling}{integer (default 1). Scaling factor estimate the
-signal density as: scaling x "DIMP-Count-Per-Bp". For example,
-if scaling = 1000, then signal density denotes the number of DIMPs in
+signal density as: scaling x "DMP-Count-Per-Bp". For example,
+if scaling = 1000, then signal density denotes the number of DMPs in
  1000 bp.}
 
 \item{saveAll}{if TRUE all the temporal results are returned}
@@ -92,7 +92,7 @@ Perform Poisson and Negative Binomial regression analysis to
 }
 \details{
 A pairwise group comparison, control versus treatment, is performed.
-    The experimental desing settings must be introduced using function
+    The experimental design settings must be introduced using function
     \code{link{glmDataSet}} to provide dataset (DS) object.
 }
 \examples{

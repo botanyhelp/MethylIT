@@ -22,7 +22,7 @@
 #' class(lapply(x, mean, keep.attr = TRUE))
 #'
 #' @export
-lapply <- function(x, FUN,...) UseMethod("lapply", x)
+lapply <- function(x, FUN, ...) UseMethod("lapply", x)
 
 #' @name lapply.default
 #' @rdname lapply
