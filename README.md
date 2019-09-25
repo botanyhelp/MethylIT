@@ -89,13 +89,6 @@ https://git.psu.edu/genomath/MethylIT_examples
 
 ------------
 
-Data generated or used by MethylIT at:
-------------
-
-https://git.psu.edu/genomath/MethylIT_data
-
-------------
-
 
 References
 ----------
