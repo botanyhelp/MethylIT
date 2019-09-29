@@ -48,7 +48,7 @@ getDIMPatGenes <- function(GR, GENES, ignore.strand=TRUE)
 
 #' @rdname getDIMPatGenes
 #' @importFrom S4Vectors mcols
-#' @exportMethod getDIMPatGenes.default
+#' @export
 getDIMPatGenes.default <- function(GR, GENES, ignore.strand=TRUE) {
    gene_id <- GENES$gene_id
    if(any(is.na(gene_id))) {
@@ -104,21 +104,21 @@ getDIMPatGenes.GRanges <- function(GR, GENES, ignore.strand=TRUE) {
 }
 
 #' @rdname getDIMPatGenes
-#' @exportMethod getDIMPatGenes.pDMP
+#' @export
 getDIMPatGenes.pDMP <- function(GR, GENES, ignore.strand=TRUE) {
    return(lapply(GR, getDIMPatGenes.default, GENES = GENES,
                ignore.strand = ignore.strand, keep.attr = TRUE))
 }
 
 #' @rdname getDIMPatGenes
-#' @exportMethod getDIMPatGenes.InfDiv
+#' @export
 getDIMPatGenes.InfDiv <- function(GR, GENES, ignore.strand=TRUE) {
    return(lapply(GR, getDIMPatGenes.default, GENES = GENES,
                ignore.strand = ignore.strand, keep.attr = TRUE))
 }
 
 #' @rdname getDIMPatGenes
-#' @exportMethod getDIMPatGenes.list
+#' @export
 getDIMPatGenes.list <- function(GR, GENES, ignore.strand=TRUE) {
    return(lapply(GR, getDIMPatGenes.default, GENES = GENES,
                ignore.strand = ignore.strand, keep.attr = TRUE))
