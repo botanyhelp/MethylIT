@@ -171,8 +171,9 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
                g2 <- which(lev[2] ==  group)
                m1 <- rowMeans(dc[ ,g1])
                m2 <- rowMeans(dc[ ,g2])
-               m1 <- sapply(m1, function(x) max(x,1)) # mean = 0 undefine the CV
-               m2 <- sapply(m2, function(x) max(x,1))
+               # mean = 0 undefine the CV:
+               m1 <- vapply(m1, function(x) max(x,1), numeric(1)) 
+               m2 <- vapply(m2, function(x) max(x,1), numeric(1))
                cv1 <- apply(dc[ ,g1], 1, sd)/m1
                cv2 <- apply(dc[ ,g2], 1, sd)/m2
            } else {
