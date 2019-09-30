@@ -47,5 +47,4 @@ Imports:
 RoxygenNote: 6.1.1
 Suggests: testthat, rmarkdown,
     knitr
-VignetteBuilder: rmarkdown,
-    knitr
+VignetteBuilder: knitr
