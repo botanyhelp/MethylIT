@@ -11,10 +11,11 @@ FisherTest(LR, count.col = 1:2, control.names = NULL,
   verbose = FALSE, ...)
 }
 \arguments{
-\item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object.
-Each GRanges object from the list must have two columns: methylated
-(mC) and unmethylated (uC) counts. The name of each element from the
-list must coincide with a control or a treatment name.}
+\item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object,
+or an object from Methyl-IT downstream analyses: 'InfDiv' or "pDMP"
+object. Each GRanges object from the list must have two columns:
+methylated (mC) and unmethylated (uC) counts. The name of each element
+from the list must coincide with a control or a treatment name.}
 
 \item{count.col}{2d-vector of integers with the indexes of the read count
 columns. If not given, then it is asssumed that the methylated and

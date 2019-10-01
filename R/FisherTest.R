@@ -8,10 +8,11 @@
 #'     created with the methylated and unmethylated read counts for each group
 #'     (control and treatment) in the metacolumn. So, a contingency table can be
 #'     built for range from GRanges object.
-#' @param LR A list of GRanges, a GRangesList, a CompressedGRangesList object.
-#'     Each GRanges object from the list must have two columns: methylated
-#'     (mC) and unmethylated (uC) counts. The name of each element from the
-#'     list must coincide with a control or a treatment name.
+#' @param LR A list of GRanges, a GRangesList, a CompressedGRangesList object,
+#'     or an object from Methyl-IT downstream analyses: 'InfDiv' or "pDMP"
+#'     object. Each GRanges object from the list must have two columns:
+#'     methylated (mC) and unmethylated (uC) counts. The name of each element
+#'     from the list must coincide with a control or a treatment name.
 #' @param count.col 2d-vector of integers with the indexes of the read count
 #'     columns. If not given, then it is asssumed that the methylated and
 #'     unmethylated read counts are located in columns 1 and 2 of each GRanges
@@ -97,7 +98,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
    if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges"))))
        stop("At least one element from 'LR' is not a 'GRanges' object")
 
-   if (!is.null(hdiv.cut) || !is.null(tv.cut)) {
+   if (inherits(LR, c('InfDiv', "pDMP"))) {
        validateClass(LR)
    }
 
@@ -192,14 +193,14 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
        ctrl <- LR[control.names]
        ctrl <- lapply(ctrl, function(GR) {
            GR <- GR[, count.col]
-           colnames(mcols(GR)) <- c("mC", "uC") # Control counts
+           colnames(mcols(GR)) <- c("c1", "t1") # Control counts
            return(GR)
        })
 
        treat <- LR[treatment.names]
        treat <- lapply(treat, function(GR) {
            GR <- GR[, count.col]
-           colnames(mcols(GR)) <- c("mC", "uC") # Control counts
+           colnames(mcols(GR)) <- c("c2", "t2") # Control counts
            return(GR)
        })
        if (!is.null(pooling.stat)) {
