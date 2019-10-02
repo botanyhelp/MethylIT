@@ -58,6 +58,17 @@
 #'     divergence; 3) "bay.TV". "TV": total variation TV = p2 - p1 is based
 #'     on simple counts
 #'
+#' @author Robersy Sanchez
+#' @examples
+#'     x <- data.frame(chr = "chr1", start = 1:num.samples,
+#'                     end = 1:num.samples,strand = '*',
+#'                     mC1 = rnbinom(size = num.samples, mu = 4, n = 500),
+#'                     uC1 = rnbinom(size = num.samples, mu = 4, n = 500),
+#'                     mC2 = rnbinom(size = num.samples, mu = 4, n = 500),
+#'                     uC2 = rnbinom(size = num.samples, mu = 4, n = 500))
+#'     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
+#'     HD <- estimateBayesianDivergence(x)
+#'
 #' @references 1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
 #'     two discrete populations based on the Hellinger distance. Stat Probab
 #'     Lett 80: 206-214.
