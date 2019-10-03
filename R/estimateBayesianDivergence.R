@@ -60,12 +60,12 @@
 #'
 #' @author Robersy Sanchez
 #' @examples
-#'     x <- data.frame(chr = "chr1", start = 1:num.samples,
-#'                     end = 1:num.samples,strand = '*',
-#'                     mC1 = rnbinom(size = num.samples, mu = 4, n = 500),
-#'                     uC1 = rnbinom(size = num.samples, mu = 4, n = 500),
-#'                     mC2 = rnbinom(size = num.samples, mu = 4, n = 500),
-#'                     uC2 = rnbinom(size = num.samples, mu = 4, n = 500))
+#'     x <- data.frame(chr = "chr1", start = 1:10,
+#'                     end = 1:10,strand = '*',
+#'                     mC1 = rnbinom(size = 10, mu = 4, n = 500),
+#'                     uC1 = rnbinom(size = 10, mu = 4, n = 500),
+#'                     mC2 = rnbinom(size = 10, mu = 4, n = 500),
+#'                     uC2 = rnbinom(size = 10, mu = 4, n = 500))
 #'     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
 #'     HD <- estimateBayesianDivergence(x)
 #'

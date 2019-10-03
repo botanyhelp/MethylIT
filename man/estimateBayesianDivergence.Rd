@@ -77,9 +77,23 @@ For the current version, the Information divergence of methylation
     methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
     'estimateHellingerDiv') are an unbiased estimation of the expected one.
 }
+\examples{
+    x <- data.frame(chr = "chr1", start = 1:10,
+                    end = 1:10,strand = '*',
+                    mC1 = rnbinom(size = 10, mu = 4, n = 500),
+                    uC1 = rnbinom(size = 10, mu = 4, n = 500),
+                    mC2 = rnbinom(size = 10, mu = 4, n = 500),
+                    uC2 = rnbinom(size = 10, mu = 4, n = 500))
+    x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
+    HD <- estimateBayesianDivergence(x)
+
+}
 \references{
 1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
     two discrete populations based on the Hellinger distance. Stat Probab
     Lett 80: 206-214.
+}
+\author{
+Robersy Sanchez
 }
 \keyword{internal}
