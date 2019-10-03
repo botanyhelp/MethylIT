@@ -69,7 +69,7 @@
 #'
 #' @examples
 #' set.seed(133) # Set a seed
-#' ## A GRanges ogbject with the count matrix in the metacolumns is created
+#' ## A GRanges object with the count matrix in the metacolumns is created
 #' countData <- matrix(sample.int(200, 500, replace = TRUE), ncol = 4)
 #' colnames(countData) <- c("A1","A2","B1","B2")
 #' start <- seq(1, 25e4, 2000)
@@ -172,7 +172,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
                m1 <- rowMeans(dc[ ,g1])
                m2 <- rowMeans(dc[ ,g2])
                # mean = 0 undefine the CV:
-               m1 <- vapply(m1, function(x) max(x,1), numeric(1)) 
+               m1 <- vapply(m1, function(x) max(x,1), numeric(1))
                m2 <- vapply(m2, function(x) max(x,1), numeric(1))
                cv1 <- apply(dc[ ,g1], 1, sd)/m1
                cv2 <- apply(dc[ ,g2], 1, sd)/m2

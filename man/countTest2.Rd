@@ -97,7 +97,7 @@ A pairwise group comparison, control versus treatment, is performed.
 }
 \examples{
 set.seed(133) # Set a seed
-## A GRanges ogbject with the count matrix in the metacolumns is created
+## A GRanges object with the count matrix in the metacolumns is created
 countData <- matrix(sample.int(200, 500, replace = TRUE), ncol = 4)
 colnames(countData) <- c("A1","A2","B1","B2")
 start <- seq(1, 25e4, 2000)
