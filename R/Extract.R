@@ -42,7 +42,7 @@
 "[.glmDataSet" <- function(x, i, j, ...) {
    if (is.null(nrow(x$counts))) X <- t(x$counts)
    else X <- x$counts
-   if (missing(j)) j <- 1:ncol(X)
+   if (missing(j)) j <- seq_len(ncol(X))
    x$counts <- .subset(X, i, j)
    rn <- rownames(x$colData)
    if (isS4(x$colData)) {
@@ -66,7 +66,7 @@
 "[.RangedGlmDataSet" <- function(x, i, j, ...) {
    if (is.null(nrow(x$counts))) X <- t(x$counts)
    else X <- x$counts
-   if (missing(j)) j <- 1:ncol(X)
+   if (missing(j)) j <- seq_len(ncol(X))
    x$GR <- x$GR[i]
    x$counts <- .subset(X, i, j)
    rn <- rownames(x$colData)

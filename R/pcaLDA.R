@@ -96,11 +96,11 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 
        cn <- colnames(pc$x)
        if (ncol(pc$x) > n.pc) {
-           ind.coord <- as.data.frame(pc$x[, 1:n.pc])
-           colnames(ind.coord) <- cn[1:n.pc]
+           ind.coord <- as.data.frame(pc$x[, seq_len(n.pc)])
+           colnames(ind.coord) <- cn[seq_len(n.pc)]
        } else {
            ind.coord <- as.data.frame(pc$x)
-           colnames(ind.coord) <- cn[1:ncol(pc$x)]
+           colnames(ind.coord) <- cn[seq_len(ncol(pc$x))]
        }
 
        lda.model <- lda(x=ind.coord, grouping=data[resp][, 1],
@@ -109,8 +109,8 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
        pc <- prcomp(x=data[vn], retx=TRUE, center=center, scale.=scale,
                 tol=tol, rank.=max.pc)
        cn <- colnames(pc$x)
-       ind.coord <- as.data.frame(pc$x[, 1:n.pc])
-       colnames(ind.coord) <- cn[1:n.pc]
+       ind.coord <- as.data.frame(pc$x[, seq_len(n.pc)])
+       colnames(ind.coord) <- cn[seq_len(n.pc)]
        lda.model <- lda(x=ind.coord, grouping=grouping,
                     tol=tol, method=method)
    }
@@ -174,7 +174,7 @@ predict.pcaLDA <- function(object, newdata,
        return(apply(x, 2, sum))
    }
    nc <- ncol(object$lda$means)
-   loadings <- object$pca$rotation[, 1:nc]
+   loadings <- object$pca$rotation[, seq_len(nc)]
    if (nc == 1 ) loadings <- as.matrix(loadings)
 
    ind.coord <- t(apply(dt.scaled, 1, coord_func, loadings))

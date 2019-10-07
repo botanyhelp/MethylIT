@@ -140,7 +140,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
 
        if (model == "all" || model == "2P") {
            if (!inherits( FIT1, "try-error")) {
-               if (sum(summary(FIT1)$parameters[1:2, 4] > 0.05) == 2 ||
+               if (sum(summary(FIT1)$parameters[c(1,2), 4] > 0.05) == 2 ||
                    coef(FIT1)[2] < 1e-07 ) {
                    PASS1 <- FALSE
                } else PASS1 <- TRUE
@@ -148,7 +148,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
        } else PASS1 <- FALSE
        if (model == "all" || model == "3P")  {
            if (!inherits( FIT2, "try-error" )) {
-               suma <- sum(summary(FIT2)$parameters[1:3, 4] > 0.05)
+               suma <- sum(summary(FIT2)$parameters[c(1,2,3), 4] > 0.05)
                if (suma == 3 || coef(FIT2)[2] < 1e-07 || coef(FIT2)[3] < 0) {
                    PASS2 <- FALSE
                } else PASS2 <- TRUE
@@ -201,7 +201,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                formula <- as.formula("Y ~ pweibull( X, shape, scale )")
            }
            cros.ind.1 <- sample.int(n, size=round(n/2))
-           cros.ind.2 <- setdiff(1:n, cros.ind.1)
+           cros.ind.2 <- setdiff(seq_len(n), cros.ind.1)
            starts <- as.list(coef(FIT))
 
            FIT1 <- try(nlsLM(formula, data=data.frame(X=X[cros.ind.1],
@@ -243,7 +243,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
            }
 
            if (length(coef(FIT)) > 2) {
-               stats <- data.frame(summary(FIT)$parameters[1:3, ],
+               stats <- data.frame(summary(FIT)$parameters[c(1,2,3), ],
                             Adj.R.Square=c(Adj.R.Square, "", ""),
                             rho=c(rho, "", ""),
                             R.Cross.val=c(R.cross.FIT, "", ""),
@@ -252,7 +252,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                             BIC=c(BIC(FIT),"",""),
                             COV=vcov(FIT), n=c(N, n, n))
            } else {
-               stats = data.frame( summary( FIT )$parameters[1:2, ],
+               stats = data.frame( summary( FIT )$parameters[c(1,2), ],
                             Adj.R.Squar=c(Adj.R.Square, ""),
                             rho=c(rho, ""),
                             R.Cross.val=c(R.cross.FIT, ""),

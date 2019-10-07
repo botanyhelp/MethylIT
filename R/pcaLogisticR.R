@@ -93,11 +93,11 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
 
    cn <- colnames(pc$x)
    if (ncol(pc$x) > n.pc) {
-       ind.coord <- as.data.frame(pc$x[, 1:n.pc])
-       colnames(ind.coord) <- cn[1:n.pc]
+       ind.coord <- as.data.frame(pc$x[, seq_len(n.pc)])
+       colnames(ind.coord) <- cn[seq_len(n.pc)]
    } else {
        ind.coord <- as.data.frame(pc$x)
-       colnames(ind.coord) <- cn[1:ncol(pc$x)]
+       colnames(ind.coord) <- cn[seq_len(ncol(pc$x))]
    }
 
    resp <- as.character(formula)[2]
@@ -186,7 +186,7 @@ predict.pcaLogisticR <- function(object, newdata,
        return(apply(x, 2, sum))
    }
    nc <- ncol(object$pca$x)
-   loadings <- object$pca$rotation[, 1:nc]
+   loadings <- object$pca$rotation[, seq_len(nc)]
    if (nc == 1) loadings <- as.matrix(loadings)
 
    ind.coord <- data.frame(t(apply(dt.scaled, 1, coord_func, loadings)))
