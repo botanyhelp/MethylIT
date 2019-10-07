@@ -241,7 +241,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        if (verbose) message("*** GLM...")
        if (num.cores == 1) {
            tests = c()
-           for (k in 1:nrow(X)) {
+           for (k in seq_len(nrow(X))) {
                if (verbose) message("*** Processing sample", k, "\n")
                tests <- rbind(tests, .estimateGLM(x=X[k, ], groups=group,
                                                baseMV=baseMeanAndVar[k, ],
@@ -255,7 +255,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
            } else {
                bpparam <- SnowParam(workers = num.cores, type = "SOCK")
            }
-           tests <- bplapply(1:nrow(X),
+           tests <- bplapply(seq_len(nrow(X)),
                            function(k) .estimateGLM(x=X[k, ], groups=group,
                                                    baseMV=baseMeanAndVar[k, ],
                                                    w=w[k, ], MVrate=MVrate,
