@@ -108,7 +108,7 @@ predict.LogisticR <- function(object, newdata = NULL,
        if (Sys.info()['sysname'] == "Linux") {
            bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
        } else bpparam <- SnowParam(workers = num.cores, type = "SOCK")
-       newdata <- bplapply(1:length(dt),
+       newdata <- bplapply(seq_len(length(dt)),
                        function(k) {
                            p <- predict.glm(object$modeling, newdata = dt[[k]],
                                            type="response")
@@ -125,7 +125,7 @@ predict.LogisticR <- function(object, newdata = NULL,
        # === To not depend on BiocParallel package
        if (num.cores == 1 && is.list(dt)) {
            nms <- names(newdata)
-           newdata <- lapply(1:length(dt),
+           newdata <- lapply(seq_len(length(dt)),
                                function(k) {
                                    p <- predict.glm(object$modeling,
                                                    newdata = dt[[k]],

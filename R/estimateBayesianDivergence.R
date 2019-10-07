@@ -145,7 +145,7 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
        x <- cbind(p1, p2)
 
        if (verbose) cat("*** Estimating Hellinger divergence... \n")
-       hdiv <- bplapply(1:nrow(x), function(i) {
+       hdiv <- bplapply(seq_len(nrow(x)), function(i) {
                                    estimateHellingerDiv(p=as.numeric(x[i, ]),
                                                         n=as.numeric(n[i, ]))},
                         BPPARAM=bpparam)
@@ -161,7 +161,7 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
        }
    } else {
        if (verbose) cat("*** Estimating Hellinger divergence... \n")
-       hdiv <- bplapply(1:nrow(x), function(i) {
+       hdiv <- bplapply(seq_len(nrow(x)), function(i) {
            estimateHellingerDiv(p=as.numeric(x[i, ]))}, BPPARAM=bpparam)
        if (verbose) cat( "* Coercing from list to vector...\n" )
        hdiv <- unlist(hdiv)

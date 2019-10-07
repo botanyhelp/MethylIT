@@ -89,7 +89,7 @@
 #'
 #' @seealso \code{\link[MethylIT.utils]{rmstGR}}
 #' @export
-FisherTest <- function(LR, count.col=1:2, control.names=NULL,
+FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
                        treatment.names=NULL, pooling.stat = "sum", tv.cut=NULL,
                        hdiv.cut=NULL, hdiv.col=NULL, pAdjustMethod="BH",
                        pvalCutOff=0.05, saveAll=FALSE, num.cores=1L, tasks=0L,
@@ -110,7 +110,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
    # === Auxiliar function to perform FT ===
    ftest <- function(GR, ...) {
        count.matrix = as.matrix(mcols(GR))
-       p1 <- count.matrix[, 1:2]
+       p1 <- count.matrix[, c(1,2)]
        p1 <- p1[, 1]/rowSums(p1)
        p2 <- count.matrix[, 3:4]
        p2 <- p2[, 1]/rowSums(p2)
@@ -138,7 +138,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
        } else count.matrix = as.matrix(mcols(GR))
 
        if (nrow(count.matrix) > 1 ) {
-           count.matrix <- count.matrix[, 1:4]
+           count.matrix <- count.matrix[, c(1,2,3,4)]
            sites <- nrow(count.matrix)
            GR$TV <- TV
            GR$pvalue <- rep(1, length(GR))
@@ -156,7 +156,7 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
              fisher.test(matrix(as.integer(v), 2, byrow = TRUE))$p.value
            }, BPPARAM=bpparam)))
        } else {
-           count.matrix = count.matrix[1:4]
+           count.matrix = count.matrix[c(1,2,3,4)]
            pvals <- fisher.test(matrix(count.matrix, 2, byrow = TRUE))$p.value
        }
 
@@ -214,8 +214,8 @@ FisherTest <- function(LR, count.col=1:2, control.names=NULL,
            res = list()
            i = 1
            test.name = c()
-           for(j in 1:length(ctrl)){
-               for (k in 1:length(treat)) {
+           for(j in seq_len(length(ctrl))){
+               for (k in seq_len(length(treat))) {
                    test.name = c(test.name, paste0(control.names[j], ".",
                                                treatment.names[k]))
                    GR <- uniqueGRanges(list(ctrl[[j]], treat[[k]]),

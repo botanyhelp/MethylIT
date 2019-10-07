@@ -171,7 +171,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
        return(x)
    }
    if (is.null(num.cores)) {
-       x <- lapply(1:length(LR), toFit, sample.size=sample.size,
+       x <- lapply(seq_len(length(LR)), toFit, sample.size=sample.size,
                npoints=npoints, maxiter=maxiter,
                tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,
                verbose=verbose)
@@ -181,7 +181,7 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
        } else {
          bpparam <- SnowParam(workers = num.cores, type = "SOCK")
        }
-       x <- bplapply(1:length(LR), toFit, sample.size=sample.size,
+       x <- bplapply(seq_len(length(LR)), toFit, sample.size=sample.size,
                  npoints=npoints, maxiter=maxiter,
                  tol=tol, ftol=ftol, ptol=ptol, minFactor=minFactor,
                  verbose=verbose, BPPARAM=bpparam)

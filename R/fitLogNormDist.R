@@ -150,7 +150,7 @@ fitLogNormDist <- function(x, probability.x, parameter.values,
        set.seed(123)
 
        cros.ind.1 <- sample.int(N, size=round(N / 2))
-       cros.ind.2 <- setdiff(1:N, cros.ind.1)
+       cros.ind.2 <- setdiff(seq_len(N), cros.ind.1)
        starts1 <- as.list(coef(FIT))
 
        FIT1 <- try(nls.lm(par = starts1, fn = optFun, probfun = plnorm,
@@ -188,7 +188,7 @@ fitLogNormDist <- function(x, probability.x, parameter.values,
                n <- length(x)
                pX <- Fy(x)
                cros.ind.1 <- sample.int(n, size = round(n / 2))
-               cros.ind.2 <- setdiff(1:n, cros.ind.1)
+               cros.ind.2 <- setdiff(seq_len(n), cros.ind.1)
            }
            n <- length(x)
 

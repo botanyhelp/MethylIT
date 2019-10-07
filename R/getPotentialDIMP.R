@@ -176,7 +176,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
        return(d)
    }
    sn <- names(LR)
-   LR <- lapply(1:length(LR), P, keep.attr = TRUE)
+   LR <- lapply(seq_len(length(LR)), P, keep.attr = TRUE)
    names(LR) <- sn
    if (cl) {
        LR <- structure(LR, class = c("pDMP", "InfDiv", "testDMP", "list"))

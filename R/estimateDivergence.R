@@ -90,7 +90,7 @@ estimateDivergence <- function(ref, indiv, Bayesian=FALSE, columns=NULL,
                           num.cores=1L, tasks=0L, meth.level=FALSE,
                           verbose=TRUE, ...) {
 
-   if (is.null(columns) && (!meth.level)) columns <- 1:2
+   if (is.null(columns) && (!meth.level)) columns <- c(1,2)
    if (meth.level && (is.null(columns))) columns <- 1
    sn <- names(indiv)
 
@@ -100,7 +100,7 @@ estimateDivergence <- function(ref, indiv, Bayesian=FALSE, columns=NULL,
        bpparam <- SnowParam(workers = num.cores, type = "SOCK")
    }
    if (meth.level) {
-       x = bplapply(1:length(indiv), function(k, ref, indv, sn) {
+       x = bplapply(seq_len(length(indiv)), function(k, ref, indv, sn) {
            if (verbose) message("*** Processing sample #", k, " ", sn[k])
            x <- indv[[k]]
            x <- x[ ,columns]
@@ -113,7 +113,7 @@ estimateDivergence <- function(ref, indiv, Bayesian=FALSE, columns=NULL,
            return(x)
            }, BPPARAM=bpparam, ref=ref, indv=indiv, sn=sn)
    } else {
-       x = bplapply(1:length(indiv), function(k, ref, indv, sn) {
+       x = bplapply(seq_len(length(indiv)), function(k, ref, indv, sn) {
            if (verbose) message("*** Processing sample #", k, " ", sn[ k ])
            x = uniqueGRfilterByCov(x=ref, y=indv[[k]],
                                min.coverage=min.coverage,

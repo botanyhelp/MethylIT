@@ -125,8 +125,8 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
    mzeros <- function(l, nc, seq, hits) {
        if (nc > 1) {
            m <- matrix(missing, l, nc)
-           m[subjectHits(hits), 1:nc] <- as.matrix(mcols(seq)[queryHits(hits),
-                                                         1:nc])
+           m[subjectHits(hits), seq_len(nc)] <- as.matrix(mcols(seq)[queryHits(hits),
+                                                         seq_len(nc)])
        } else{
            m <- rep(missing, l)
            seq <- as.vector(mcols(seq)[queryHits(hits), 1])
@@ -189,7 +189,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
            }
            if (!is.null(ncols)) {
                ncol <- ncols
-               snames <- colnames(mcols(seq))[1:ncol]
+               snames <- colnames(mcols(seq))[seq_len(ncol)]
            }
        }
 
@@ -212,7 +212,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
                }
                if (!is.null(ncols)) {
                    ncol <- ncols
-                   nam <- colnames(mcols(seq))[1:ncol]
+                   nam <- colnames(mcols(seq))[seq_len(ncol)]
                }
            }
 

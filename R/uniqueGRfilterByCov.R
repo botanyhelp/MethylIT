@@ -80,8 +80,8 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
        }
    }
 
-   cov1 <- rowSums(as.matrix(mcols(x[,1:2])))
-   cov2 <- rowSums(as.matrix(mcols(x[,3:4])))
+   cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
+   cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
    q1 <- quantile(cov1, probs=percentile)
    q2 <- quantile(cov2, probs=percentile)
    q <- max(q1, q2, high.coverage)

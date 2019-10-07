@@ -209,7 +209,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
    set.seed(123)
 
    cros.ind.1 <- sample.int(N, size=round(N / 2))
-   cros.ind.2 <- setdiff(1:N, cros.ind.1)
+   cros.ind.2 <- setdiff(seq_len(N), cros.ind.1)
    starts1 <- as.list(coef(FIT))
 
    if (length(starts1) > 2) {

@@ -172,7 +172,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        vn <- setdiff(vn, "pos")
        sn <- names(LR)
        dt <- data.frame()
-       for (k in 1:length(LR)) {
+       for (k in seq_len(length(LR))) {
            dc <- c()
            x <- LR[[k]]
            if (!is.null(pval.col)) x$wprob <- mcols(x[, pval.col])[, 1]
@@ -347,7 +347,7 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
        if (.Platform$OS.type == "unix") {
            bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
        } else bpparam <- SnowParam(workers=num.cores)
-       boots <- bplapply(1:num.boot, function(k){
+       boots <- bplapply(seq_len(num.boot), function(k){
                x <- conf.mat(k)$Performance
                return(c(x$overall, x$byClass))}, BPPARAM=bpparam)
        boots <- do.call(rbind,boots)

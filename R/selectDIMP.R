@@ -3,7 +3,7 @@
 #' @title Selection of DMPs
 #' @description For a given cutpoint (previously estimated with the function
 #'     estimateCutPoint), 'selectDIMP' will return the differentially
-#'     informative methylated positions (DMPs). DMPs are cytosine positions 
+#'     informative methylated positions (DMPs). DMPs are cytosine positions
 #'     for which the divergence is greater than the cutpoint.
 #' @details Theoretically a DMP denotes a cytosine position with high
 #'     probability to be differentially methylated. That is, in the statistical
@@ -78,7 +78,7 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
            or 'pval.col' must be not NULL")
    if (is.null(div.col)) target.col = pval.col else target.col = div.col
 
-   for (k in 1:length(LR)) {
+   for (k in seq_len(length(LR))) {
        x <- LR[[k]]
        if (!is.null(tv.cut) && !is.null(tv.col))
            x <- x[abs(mcols(x[, tv.col])[, 1]) > tv.cut]

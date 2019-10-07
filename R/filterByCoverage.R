@@ -48,7 +48,7 @@ filterByCoverage <- function(x, min.coverage=4, max.coverage=Inf,
    if ((inherits(x, "list") || inherits(x, "GRangesList")) &&
        inherits(x[[1]], "GRanges")) {
      sn <- names(x)
-     x <- lapply(1:length(x), function(k) {
+     x <- lapply(seq_len(length(x)), function(k) {
        filterGRange(x=x[[k]], min.coverage=min.coverage,
                     max.coverage=max.coverage, percentile=percentile,
                     col.names=col.names, sample.name=sn[[k]],
