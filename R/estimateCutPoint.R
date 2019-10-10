@@ -351,7 +351,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            cutpoint <- min(mcols(unlist(LR)[idx, div.col])[, 1])
            res$postCut <- cutpoint
            cuts <- cutpoint
-           if (stat %in% c(1,2,3,4,5,6,7,8,9,10,11))
+           if (stat %in% seq_len(11))
                st <- conf.mat$Performance$byClass[stat]
            if (stat == 0) st <- conf.mat$Performance$overall[1]
            if (stat == 12) st <- conf.mat$FDR
