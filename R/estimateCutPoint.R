@@ -391,7 +391,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        if (st == 1) opt <- TRUE
                            k <- k + 1
                        }
-                       if (stat %in% c(1,2,3,4,5,6,7,8,9,10,11)) {
+                       if (stat %in% seq_len(11)) {
                            st0 <- conf.mat$Performance$byClass[stat]
                        if (st < st0) {
                            st <- st0
@@ -432,7 +432,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                num.cores=num.cores,
                                                tasks=tasks, ...)
                if (stat == 0) st <- conf.mat$Performance$overall[1]
-               if (stat %in% c(1,2,3,4,5,6,7,8,9,10,11))
+               if (stat %in% seq_len(11))
                    st <- conf.mat$Performance$byClass[stat]
            }
            predClasses <- predict(object = conf.mat$model, newdata = dmps,
