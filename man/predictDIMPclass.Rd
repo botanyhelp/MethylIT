@@ -44,7 +44,6 @@ Predictions only makes sense if the query DMPs belong to same
     same condition set for the DMPs used to build the model.
 }
 \examples{
-library(MethylIT)
 
 data(cutpoint, PS, package = "MethylIT")
 

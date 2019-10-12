@@ -28,7 +28,6 @@
 #' @importFrom caret confusionMatrix
 #' @importFrom S4Vectors mcols DataFrame
 #' @examples
-#' library(MethylIT)
 #'
 #' data(cutpoint, PS, package = "MethylIT")
 #'
