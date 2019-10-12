@@ -42,7 +42,7 @@ An object from "pDMP" class containing only differentially
 \description{
 For a given cutpoint (previously estimated with the function
     estimateCutPoint), 'selectDIMP' will return the differentially
-    informative methylated positions (DMPs). DMPs are cytosine positions 
+    informative methylated positions (DMPs). DMPs are cytosine positions
     for which the divergence is greater than the cutpoint.
 }
 \details{

@@ -278,13 +278,14 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
            DS <- DS[ DS$optionData$adj.pval < pvalCutOff ]
        } else {
            if (!is.null(pvalCutOff) && saveAll) {
-               DS$optionData$adj.pval <- p.adjust(DS$optionData$pvalue
-                                                   , method=pAdjustMethod)
                if (FilterLog2FC) {
                    idx <- which(abs(DS$optionData$log2FC) > Minlog2FC)
                    pval <- DS$optionData$pvalue[idx]
                    DS$optionData$adj.pval[idx] <- p.adjust(pval,
                                                            method=pAdjustMethod)
+               } else {
+                   DS$optionData$adj.pval <- p.adjust(DS$optionData$pvalue,
+                                                       method=pAdjustMethod)
                }
            }
        }
