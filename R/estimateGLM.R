@@ -94,7 +94,6 @@
        aic <- aic[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdls <- mdls[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
        mdl <- mdl[c(mdl$P$Eval, mdl$Q$Eval, mdl$NB$Eval, mdl$NBW$Eval)]
-       # print(mdls)
    } else {
        mdls <- c("QuasiPoisson", "Neg.Binomial", "Neg.Binomial.W")
        mdl$Q <- .evaluateModel(model(dat, "QuasiPoisson"), test = test[1])
@@ -117,9 +116,13 @@
        } else mdl <- mdl[[1]]
    } else Eval <- FALSE
    if (Eval) {
-       res <- data.frame(log2FC=mdl$log2FC, pvalue=mdl$coef.pval, model=mdls)
+       m <- mdl$mdl
+       disp <- summary(m, dispersion = NULL)$dispersion
+       deviance <- (m$null.deviance - m$deviance)/disp
+       res <- data.frame(log2FC = mdl$log2FC, scaled.deviance = deviance,
+                       pvalue = mdl$coef.pval, model = mdls)
    } else {
-       res <- data.frame(log2FC=NA, pvalue=NA, model=NA)
+       res <- data.frame(log2FC=NA, scaled.deviance = NA, pvalue=NA, model=NA)
    }
    return(res)
 }
