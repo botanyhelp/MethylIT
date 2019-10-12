@@ -266,6 +266,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
 
        # ================= Post processing filtering Block =================== #
        DS$optionData <- DataFrame(tests)
+       DS$optionData$adj.pval <- rep(NA, nrow(DS$optionData))
        DS <- DS[!is.na(tests$log2FC)]
        if (FilterLog2FC && is.null(pvalCutOff) && !saveAll) {
            DS <- DS[abs(DS$optionData$log2FC) > Minlog2FC]
