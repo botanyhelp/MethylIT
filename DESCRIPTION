@@ -10,7 +10,7 @@ Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
 Maintainer: Robersy Sanchez <rus547@psu.edu>
 Description: Methylation Analysis based on Signal Detection Theory.
 Depends: 
-  R (>= 3.5.0),
+  R (>= 3.6.0),
   rtracklayer
 License: file LICENSE
 biocViews: 
@@ -22,23 +22,18 @@ Imports:
   ArgumentCheck,
   BiocGenerics,
   BiocParallel,
-  Biostrings,
-  betareg,
   caret,
   data.table,
-  e1071,
   genefilter,
   GenomeInfoDb,
   GenomicRanges,
   graphics,
-  grDevices,
   IRanges,
   matrixStats,
   MASS,
   methods,
   minpack.lm,
   nls2,
-  parallel,
   RCurl,
   S4Vectors,
   stats,
