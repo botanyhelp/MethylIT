@@ -286,11 +286,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
 
        if (simple) {
            cutpoint <- roc(dt = infDiv(LR=LR, div.col = div.col))
-           predClasses <- unlist(LR)$hdiv > cutpoint
+           predClasses <- unlist(LR)[, div.col] > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
            predClasses <- factor(predClasses, levels = c("CT", "TT"))
-           cf.mat <- confusionMatrix(data=predClasses, reference=classes,
+           cf.mat <- confusionMatrix(data = predClasses, reference = classes,
                                        positive="TT")
 
            if (clas.perf) {
