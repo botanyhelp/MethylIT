@@ -185,7 +185,10 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                                0, Adj.R.Square)
 
            ## Stain adjusted R square
-           rho <- 1 - ((n - 2) / (n - 3)) * ((n + 1) / (n)) * (1 - Adj.R.Square)
+           if (length(coef(FIT)) > 2)
+              rho <- ((n - 1)/(n - 4)) * ((n - 2)/(n - 5)) * ((n + 1)/n)
+           else rho <- ((n - 1)/(n - 3)) * ((n - 2)/(n - 4)) * ((n + 1)/n)
+           rho <- 1 - rho * (1 - Adj.R.Square)
            rho <- ifelse(is.na(rho) | rho < 0, 0, rho)
 
            ##---- Crossvalidation standard model for Nonlinear regression:
