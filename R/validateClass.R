@@ -1,7 +1,20 @@
 #' @rdname validateClass
 #' @title Function to validate S3 classes in MethylIT
+#' @description S3 generic used internally by MethylIT to ensure correct object
+#'     classes are being used.  validateClass() is called by these functions:
+#'     estimateCutPoint evaluateDIMPclass FisherTest getPotentialDIMP
+#'     nonlinearFitDist predictDIMPclass predictLogisticR selectDIMP
+#'     uniqueGRfilterByCov
+#'
 #' @param LR An object from class 'pDMP' or 'InfDiv'
+#' @return TRUE if object is valid, otherwise warning() and stop() are called
 #' @keywords internal
+#' @examples
+#' data(HD, nlms)
+#' PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 9L, alpha = 0.05)
+#' validateClass(HD)
+#' validateClass(PS)
+#'
 #' @export
 validateClass <- function(LR) UseMethod("validateClass")
 
