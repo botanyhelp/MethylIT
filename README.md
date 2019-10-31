@@ -93,7 +93,11 @@ https://git.psu.edu/genomath/MethylIT_examples
 References
 ----------
 
-<a name="1">1</a>. Sanchez R, Mackenzie SA: Information Thermodynamics of Cytosine DNA Methylation. [Plos One 2016, 11](https://doi.org/10.1371/journal.pone.0150427). <br> <a name="2">2</a>. Sanchez R, Mackenzie SA: Genome-Wide Discriminatory Information Patterns of Cytosine DNA Methylation. [Int. J. Mol. Sci. 2016, 17(6), 938](https://dx.doi.org/10.3390%2Fijms17060938). <br> <a name="3">3</a>. Sanchez R, Yang X, Kundariya H, Barreras JR, Wamboldt Y, Mackenzie S. Enhancing resolution of natural methylome reprogramming behavior in plants. [BioRxiv](https://doi.org/10.1101/252106). <br>
+<a name="1">1</a>. Sanchez, R.; Yang, X.; Maher, T.; Mackenzie, S.A. Discrimination of DNA Methylation Signal from Background Variation for Clinical Diagnostics. Int. J. Mol. Sci. 2019, 20, 5343. https://doi.org/10.3390/ijms20215343. 
+
+<br> <a name="2">2</a>. Sanchez R, Mackenzie SA: Genome-Wide Discriminatory Information Patterns of Cytosine DNA Methylation. [Int. J. Mol. Sci. 2016, 17(6), 938](https://dx.doi .org/10.3390%2Fijms17060938). 
+
+<br><a name="3">3</a>. Sanchez R, Mackenzie SA: Information Thermodynamics of Cytosine DNA Methylation. [Plos One 2016, 11](https://doi.org/10.1371/journal.pone.0150427).<br>
 
 License
 -------
