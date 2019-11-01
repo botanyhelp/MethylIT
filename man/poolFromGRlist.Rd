@@ -15,7 +15,8 @@ pool)}
 
 \item{stat}{statistic used to estimate the methylation pool: row "sum", row
 "mean", row "median", or Jacknife row mean ("jackmean") of methylated and
-unmethylated read counts across individuals.}
+unmethylated read counts across individuals. Notice that, for only two
+samples, "jackmean" makes not sense.}
 
 \item{num.cores}{The number of cores to use, i.e. at most how many child
 processes will be run simultaneously (see bplapply function from
