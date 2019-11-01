@@ -19,14 +19,16 @@
 #'     cumulative distribution function is used to get the potential DMPs.
 #' @param div.col Column number for divergence variable is located in the
 #'     meta-column.
-#' @param dist.name name of the distribution to fit: Weibull2P (default:
-#'     "Weibull2P"), Weibull three-parameters (Weibull3P), gamma with
-#'     three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
-#'     generalized gamma with three-parameter ("GGamma3P") or four-parameter
-#'     ("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-#'     "None". If \strong{dist.name != "None"}, and \strong{nlms != NULL}, then
-#'     a column named "wprob" with a probability vector derived from the
-#'     application of model "nlms" will be returned.
+#' @param dist.name Name of the fitted distribution. This could be the name of
+#'     one distribution or a characters vector of length(nlms). Default is two
+#'     paramaters Weibull distribution: "Weibull2P". The available options are
+#'     Weibull three- parameters ("Weibull3P"), gamma with three-parameter
+#'     ("Gamma3P"), gamma with two-parameter ("Gamma2P"), generalized gamma with
+#'     three-parameter ("GGamma3P") or four-parameter ("GGamma4P"), the
+#'     empirical cumulative distribution function ("ECDF") or "None". If
+#'     \strong{dist.name != "None"}, and \strong{nlms != NULL}, then a column
+#'     named "wprob" with a probability vector derived from the application of
+#'     model "nlms" will be returned.
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -78,8 +80,12 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
    validateClass(LR)
    # ------------------------------------------------------------------------- #
 
+   if (length(dist.name) > 1 && length(dist.name) != length(nlms))
+       stop("*** If more than one distribution names are provided, then\n",
+           " the length(dist.name) must be equal to length(nlms)")
+
    cl <- inherits(LR, "testDMP")
-   model <- (!is.null(nlms) && dist.name != "None")
+   model <- (!is.null(nlms) && dist.name[1] != "None")
 
    if (!is.null(hdiv.cut) && is.null(hdiv.col)) {
        cat("\n")
@@ -116,7 +122,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
            }
            q <- mcols(d[, div.col])[, 1]
 
-           if (dist.name == "ECDF") ECDF <- ecdf(q)
+           if (dist.name[k] == "ECDF") ECDF <- ecdf(q)
 
            if (!is.null(tv.col) && !is.null(tv.cut)) {
                idx <- which( abs(mcols(d[, tv.col])[, 1]) > tv.cut)
@@ -130,13 +136,13 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                m <- m[, 1]
            } else  {
                if (!cl || !model) {
-                   dist.name <- "ECDF"
+                   dist.name[k] <- "ECDF"
                    ECDF <- ecdf(q)
                }
            }
 
-           if (dist.name != "ECDF" && model) {
-               p <- switch(dist.name,
+           if (dist.name[k] != "ECDF" && model) {
+               p <- switch(dist.name[k],
                            LogNorm=plnorm(q, meanlog=m[1], sdlog=m[2],
                                            lower.tail=FALSE),
                            Weibull2P=pweibull(q, shape=m[1], scale=m[2],
@@ -153,7 +159,7 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                                            psi=m[4], lower.tail = FALSE)
                )
            }
-           if (dist.name == "ECDF") p <- (1 - ECDF(q))
+           if (dist.name[k] == "ECDF") p <- (1 - ECDF(q))
            if (!model && cl && is.null(pval.col)) p <- d$adj.pval
            else if (!model && is.numeric(pval.col)) p <- mcols(d)[, pval.col]
            if (!model && !cl) p <- (1 - ECDF(q))

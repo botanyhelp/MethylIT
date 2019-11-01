@@ -21,14 +21,16 @@ cumulative distribution function is used to get the potential DMPs.}
 \item{div.col}{Column number for divergence variable is located in the
 meta-column.}
 
-\item{dist.name}{name of the distribution to fit: Weibull2P (default:
-"Weibull2P"), Weibull three-parameters (Weibull3P), gamma with
-three-parameter (Gamma3P), gamma with two-parameter (Gamma2P),
-generalized gamma with three-parameter ("GGamma3P") or four-parameter
-("GGamma4P"), the empirical cumulative distribution function (ECDF) or
-"None". If \strong{dist.name != "None"}, and \strong{nlms != NULL}, then
-a column named "wprob" with a probability vector derived from the
-application of model "nlms" will be returned.}
+\item{dist.name}{Name of the fitted distribution. This could be the name of
+one distribution or a characters vector of length(nlms). Default is two
+paramaters Weibull distribution: "Weibull2P". The available options are
+Weibull three- parameters ("Weibull3P"), gamma with three-parameter
+("Gamma3P"), gamma with two-parameter ("Gamma2P"), generalized gamma with
+three-parameter ("GGamma3P") or four-parameter ("GGamma4P"), the
+empirical cumulative distribution function ("ECDF") or "None". If
+\strong{dist.name != "None"}, and \strong{nlms != NULL}, then a column
+named "wprob" with a probability vector derived from the application of
+model "nlms" will be returned.}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
