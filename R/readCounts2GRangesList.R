@@ -108,6 +108,8 @@ readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
 
    ArgumentCheck::finishArgCheck(Check)
 
+   columns <- as.integer(columns)
+
    meth <- lapply(filenames, function(file) {
        if (verbose) message("*** Processing file: ", file)
        gunzippedfile <- sub(gz.ext, "", file)
