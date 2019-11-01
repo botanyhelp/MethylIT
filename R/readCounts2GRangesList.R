@@ -107,6 +107,7 @@ readCounts2GRangesList <- function(filenames=NULL, sample.id=NULL, pattern=NULL,
    }
 
    ArgumentCheck::finishArgCheck(Check)
+   columns <- as.integer(columns)
 
    columns <- as.integer(columns)
 
