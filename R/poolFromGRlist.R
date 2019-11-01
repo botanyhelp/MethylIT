@@ -11,9 +11,10 @@
 #'
 #' @param LR  list of GRanges objects to build a virtual individual (methylation
 #'     pool)
-#' @param stat statistic used to estimate the methylation pool: row sum, row
-#'     mean or row median of methylated and unmethylated read counts across
-#'     individuals
+#' @param stat statistic used to estimate the methylation pool: row "sum", row
+#'     "mean", row "median", or Jacknife row mean ("jackmean") of methylated and
+#'     unmethylated read counts across individuals. Notice that, for only two
+#'     samples, "jackmean" makes not sense.
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bplapply function from
 #'     BiocParallel package).
@@ -30,6 +31,10 @@
 #'     using the inverse of Fisher's transformation.
 #' @param column If prob == TRUE, then the 'column' from the LR metacolumns
 #'     where the prob values are found must be provided. Otherwise, column = 1L.
+#' @param jstat If stat = "jackmean", then any of the 'stat' possible values:
+#'     "sum", "mean", or "median" can be used to compute, for each cytosine
+#'     site, the Jacknife vector of the selected statistics and then to
+#'     compute the corresponding mean. Default is jstat = "sum".
 #' @param verbose If TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'uniqueGRanges' function.
 #'
@@ -53,8 +58,14 @@
 #' @importFrom methods as
 #'
 #' @export
-poolFromGRlist <- function(LR, stat="sum", num.cores=1, tasks=0L,
-                           prob=FALSE, column=1L, verbose=TRUE, ...) {
+poolFromGRlist <- function(LR, stat = c("sum", "mean", "median", "jackmean"),
+                           num.cores=1, tasks=0L, prob=FALSE, column=1L,
+                           jstat =  c("sum", "mean", "median"),
+                           verbose=TRUE, ...) {
+   stat <- match.arg(stat)
+   jstat <- match.arg(jstat)
+   jstat <- eval(parse(text = jstat))
+
    if (verbose)
        message("*** Building a unique GRanges object from the list...")
    if (inherits(LR, "list")) {
@@ -85,9 +96,10 @@ poolFromGRlist <- function(LR, stat="sum", num.cores=1, tasks=0L,
    cn <- colnames(mcols(x0))
    statist <- function(x, stat) {
        x <- switch(stat,
-               sum=rowSums(x),
-               mean=round(rowMeans(x)),
-               median=round(rowMedians(x)))
+               sum = rowSums(x),
+               mean = round(rowMeans(x)),
+               median = round(rowMedians(x)),
+               jackmean = round(rowJMean(x, stat = jstat)))
    }
 
    if (prob) {
@@ -103,3 +115,34 @@ poolFromGRlist <- function(LR, stat="sum", num.cores=1, tasks=0L,
    }
    return(x0)
 }
+
+# ============== Auxiliary function for Jacknife mean estimation ============= #
+
+jackstat <- function(x, stat = mean){
+   ## x is a vector
+   n <- length(x)
+   vls <- numeric(length = 1)
+   return(vapply(1:length(x), function(k) stat(x[-k], na.rm = TRUE), vls))
+}
+
+# --- x is a matrix
+## Function "apply" returns column vectors !
+rowJMean <- function(x, stat = mean)
+   colMeans(apply(x, 1, jackstat, stat = stat), na.rm = TRUE)
+
+## colJMean <- function(x, stat = mean)
+##    colMeans(apply(x, 2, jackstat, stat = stat), na.rm = TRUE)
+##
+## rowJMean1 <- function(x) apply(x, 1, jackstat)
+## colJMean1 <- function(x) apply(x, 2, jackstat)
+##
+## x = matrix(1:9, nrow = 3)
+## rowJMean1(x)
+## jackstat(x[2,])
+## mean(jackstat(x[2,]))
+##
+## colMeans(rowJMean1(x))
+## rowJMean(x)
+
+
+

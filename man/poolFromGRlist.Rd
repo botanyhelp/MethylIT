@@ -5,16 +5,17 @@
 \title{Methylation pool from a list of GRanges objects with methylation read
     counts}
 \usage{
-poolFromGRlist(LR, stat = "sum", num.cores = 1, tasks = 0L,
-  prob = FALSE, column = 1L, verbose = TRUE, ...)
+poolFromGRlist(LR, stat = c("sum", "mean", "median", "jackmean"),
+  num.cores = 1, tasks = 0L, prob = FALSE, column = 1L,
+  jstat = c("sum", "mean", "median"), verbose = TRUE, ...)
 }
 \arguments{
 \item{LR}{list of GRanges objects to build a virtual individual (methylation
 pool)}
 
-\item{stat}{statistic used to estimate the methylation pool: row sum, row
-mean or row median of methylated and unmethylated read counts across
-individuals}
+\item{stat}{statistic used to estimate the methylation pool: row "sum", row
+"mean", row "median", or Jacknife row mean ("jackmean") of methylated and
+unmethylated read counts across individuals.}
 
 \item{num.cores}{The number of cores to use, i.e. at most how many child
 processes will be run simultaneously (see bplapply function from
@@ -35,6 +36,11 @@ using the inverse of Fisher's transformation.}
 
 \item{column}{If prob == TRUE, then the 'column' from the LR metacolumns
 where the prob values are found must be provided. Otherwise, column = 1L.}
+
+\item{jstat}{If stat = "jackmean", then any of the 'stat' possible values:
+"sum", "mean", or "median" can be used to compute, for each cytosine
+site, the Jacknife vector of the selected statistics and then to
+compute the corresponding mean. Default is jstat = "sum".}
 
 \item{verbose}{If TRUE, prints the function log to stdout}
 
