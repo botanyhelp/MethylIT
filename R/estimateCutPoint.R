@@ -10,7 +10,7 @@
 #' @details The function performs an estimation of the optimal cutpoint for the
 #'     classification of the differentially methylated (cytosines) positions
 #'     into two classes: DMPs from control and DMPs from treatment. The simplest
-#'     approach to estimate the cutpoint  is based on the application of Youden
+#'     approach to estimate the cutpoint is based on the application of Youden
 #'     Index. More complexes approach based in several machine learning model
 #'     are provided as well.
 #'
@@ -28,6 +28,18 @@
 #'     the same batch experiment. This is a machine learning approach to
 #'     discriminate the biological regulatory signal naturally generated in the
 #'     control from that one induced by the treatment.
+#'
+#'     Notice that the estimation of an optimal cutpoint based on the
+#'     application Youden Index (simple = TRUE) only uses the information
+#'     provided by the selected information divergence. As a result,
+#'     classification results based only in one variable can be poor or can
+#'     fail. However, option simple = FALSE, uses the information from several
+#'     variables following a machine-learnig (ML) approach.
+#'
+#'     Nevertheless, when simple = TRUE, still a ML model classifier can
+#'     be built using the optimal cutpoint estimated and setting
+#'     clas.perf = TRUE. Such a ML model can be used for predictions in futher
+#'     analyses with function \code{\link{predictDIMPclass}}.
 #'
 #' @param LR An object from 'pDMP' class. This object is previously obtained
 #'     with function \code{\link{getPotentialDIMP}}.
@@ -103,6 +115,12 @@
 #'         \item 11 = "Balanced Accuracy"
 #'         \item 12 = FDR
 #'    }
+#' @param cutp_data Logic (optional). If TRUE, and simple = TRUE, then a
+#'     data frame for further analysis or estimation of the optimal cutpoint
+#'     based  only on the selected divergence is provided. A further analysis
+#'     for the estimation of an “optimal” cutpoints can be accomplish, for
+#'     example with function \code{\link[cutpointr]{cutpointr}} from the R
+#'     package \strong{cutpointr}.
 #' @param ... arguments passed to or from other methods.
 #' @return Depending the parameter setting will return the following list with
 #'     elements:
@@ -149,7 +167,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        classifier2=NULL, tv.cut = 0.25, div.col = NULL,
                        clas.perf = FALSE, post.cut = 0.5, prop=0.6,
                        n.pc=1, interaction = NULL, cut.values = NULL,
-                       stat = 1, num.cores=1L, tasks=0L, ...) {
+                       stat = 1, cutp_data = FALSE,
+                       num.cores=1L, tasks=0L, ...) {
    if (!simple && sum(column) == 0) {
        cat("\n")
        stop(paste("*** At least one of columns with the predictor \n",
@@ -227,7 +246,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        auc <- sum((sens[-1] + sens[-nr])/2 * abs(diff(1 - spec)))
        # Youden Index
        idx <- which.max(sens[-1] + spec[-nr])
-       return(as.numeric(names(idx)))
+       return(list(cutp = as.numeric(names(idx)), auc = auc, sens = sens[idx],
+                   spec = spec[idx]))
    }
 
    res <- list(cutpoint = NA,
@@ -240,7 +260,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                postCut = NA,
                classifier = NA,
                statistic = NA,
-               optStatVal = NA
+               optStatVal = NA,
+               cutpData = NA
    )
    res <- structure(res, class = c("CutPoint", "list"))
 
@@ -285,13 +306,32 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        classes <- factor(classes, levels = c("CT", "TT"))
 
        if (simple) {
-           cutpoint <- roc(dt = infDiv(LR=LR, div.col = div.col))
-           predClasses <- unlist(LR)[, div.col] > cutpoint
+           dt = infDiv(LR = LR, div.col = div.col)
+           cutp <- roc(dt); cutpoint <- cutp$cutp
+           predClasses <- mcols(unlist(LR)[, div.col])[, 1] > cutpoint
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
            predClasses <- factor(predClasses, levels = c("CT", "TT"))
-           cf.mat <- confusionMatrix(data = predClasses, reference = classes,
-                                       positive="TT")
+           cf.mat <- try(confusionMatrix(data = predClasses, reference = classes,
+                                         positive="TT"),
+                         silent = TRUE)
+
+           if (inherits(cf.mat, "try-error"))
+               stop("*** Cutpoint estimation based on Youden index failed. \n",
+                   "Only ",
+                   100 * sum(dt$treat$idiv > cutpoint)/length(dt$treat$idiv),
+                   " percent of the cytosine positions from treatment are \n",
+                   "greater than the cutpoint value: ", round(cutpoint, 2),
+                   "\n\n  Other indicators are: \n",
+                   "sensitivity = ", round(cutp$sens, 3), "\n",
+                   "specificity = ", round(cutp$spec, 3), "\n",
+                   "auc = ", round(cutp$auc, 4), "\n\n",
+                   "   Please try the optimal cutpoint estimation with ",
+                   "machine-learning \n classifiers (simple = FALSE, ",
+                   "see examples given in \n the help for function:",
+                   " ?estimateCutPoint)")
+           res$cutpoint <- cutpoint
+           if (cutp_data) res$cutpData <- dt
 
            if (clas.perf) {
                dmps <- selectDIMP(LR, div.col = div.col, cutpoint = cutpoint,
@@ -316,7 +356,6 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                                reference=classes,
                                                positive="TT")
 
-               res$cutpoint <- cutpoint
                res$testSetPerformance <- conf.mat$Performance
                res$testSetModel.FDR <- conf.mat$FDR
                res$model <- conf.mat$model
@@ -325,7 +364,6 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                res$initModelConfMatrix <- cf.mat
                res$classifier <- classifier1[1]
            } else {
-               res$cutpoint <- cutpoint
                res$modelConfMatrix <- cf.mat
                res$initModel <- "Youden Index"
            }
