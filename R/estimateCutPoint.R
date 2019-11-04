@@ -169,6 +169,11 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        n.pc=1, interaction = NULL, cut.values = NULL,
                        stat = 1, cutp_data = FALSE,
                        num.cores=1L, tasks=0L, ...) {
+
+   classifier1 <- match.arg(classifier1)
+   classifier2 <- match.arg(c("logistic", "pca.logistic", "lda",
+                              "qda","pca.lda", "pca.qda"))
+
    if (!simple && sum(column) == 0) {
        cat("\n")
        stop(paste("*** At least one of columns with the predictor \n",
