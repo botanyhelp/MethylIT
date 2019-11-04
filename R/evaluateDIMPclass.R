@@ -133,6 +133,8 @@ evaluateDIMPclass <- function(LR, control.names, treatment.names,
                                prop=0.6, num.boot=100, num.cores=1L,
                                tasks=0L, seed=1234, verbose=FALSE) {
 
+   classifier <- match.arg(classifier)
+
    # -------------------------- valid "pDMP" object--------------------------- #
    validateClass(LR)
    # ---------------------------------------------------=--------------------- #
