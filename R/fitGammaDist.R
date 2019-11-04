@@ -191,14 +191,15 @@ fitGammaDist <- function(x, probability.x, parameter.values,
 
 
    if (!inherits( FIT, "try-error" )) {
-    ## **** R squares ****
-       Adj.R.Square <- (1 - (deviance(FIT) / ((n - length(coef(FIT))) *
+       m <- length(coef(FIT))
+       ## **** R squares ****
+       Adj.R.Square <- (1 - (deviance(FIT) / ((n - m) *
                                                var(pX, use="everything"))))
        Adj.R.Square <- ifelse(is.na(Adj.R.Square) || Adj.R.Square < 0,
                            0, Adj.R.Square)
 
-    ## Stein adjusted R square
-       if (length(coef(FIT)) > 2)
+       ## Stein adjusted R square
+       if (m > 2)
            rho <- ((n - 1)/(n - 4)) * ((n - 2)/(n - 5)) * ((n + 1)/n)
        else rho <- ((n - 1)/(n - 3)) * ((n - 2)/(n - 4)) * ((n + 1)/n)
        rho <- 1 - rho * (1 - Adj.R.Square)
@@ -287,7 +288,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
       }
     res <- pX - getPreds(coef(FIT), x)
 
-    if (length( coef(FIT)) > 2) {
+    if (m > 2) {
       COV = try(vcov(FIT), silent = TRUE)
       if (inherits(COV, "try-error")) COV = matrix(NA, nrow = 3, ncol = 3)
 
@@ -298,7 +299,8 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                            DEV=c(deviance(FIT), "", ""),
                            AIC=c(AICmodel(FIT, residuals=res, np=4), "", ""),
                            BIC=c(BICmodel(FIT, residuals=res, np=4), "",""),
-                           COV=COV, n=c(N - 3, n - 3, n - 3))
+                           COV=COV, n = c(N - 3, n - 3, n - 3),
+                           model = c("Gamma3P", "", ""))
     } else {
       COV = try(vcov(FIT), silent = TRUE)
       if (inherits(COV, "try-error")) COV = matrix(NA, nrow = 2, ncol = 2)
@@ -311,18 +313,20 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                           BIC=c(BICmodel(FIT, residuals=res, np=3), ""),
                           COV=COV,
                           COV.mu=c(NA, NA),
-                          n=c(N - 2, n - 2))
+                          n=c(N - 2, n - 2),
+                          model = c("Gamma2P", "", ""))
     }
   } else {
     warning(paste("Data did not fit to the model.",
                   "Returning empty coefficient table."))
     stats <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-                        NA, NA, NA)
+                        NA, NA, NA, NA)
   }
 
   colnames(stats) <- c( "Estimate", "Std. Error", "t value", "Pr(>|t|))",
                         "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
-                        "BIC", "COV.alpha", "COV.scale", "COV.mu", "df")
+                        "BIC", "COV.alpha", "COV.scale", "COV.mu", "df",
+                        "model")
   if (nlms) stats <- list(stats, nlms = FIT)
   return(stats)
 }
