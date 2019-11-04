@@ -17,8 +17,8 @@ are estimated using the empirical cumulative distribution function
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
 the locator paramter is included (mu != 0), this must be given as
-parameter.values = list(alpha = 'value', scale = 'value', mu = 'value')
-or if mu = 0, as: parameter.values = list(alpha = 'value',
+parameter.values = list(shape = 'value', scale = 'value', mu = 'value')
+or if mu = 0, as: parameter.values = list(shape = 'value',
 scale = 'value'). If not provided, then an initial guess is provided.}
 
 \item{location.par}{whether to consider the fitting to generalized gamma

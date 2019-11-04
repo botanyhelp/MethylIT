@@ -22,8 +22,8 @@
 #'     ('ecdf') from 'stats' R package.
 #' @param parameter.values initial parameter values for the nonlinear fit. If
 #'     the locator paramter is included (mu != 0), this must be given as
-#'     parameter.values = list(alpha = 'value', scale = 'value', mu = 'value')
-#'     or if mu = 0, as: parameter.values = list(alpha = 'value',
+#'     parameter.values = list(shape = 'value', scale = 'value', mu = 'value')
+#'     or if mu = 0, as: parameter.values = list(shape = 'value',
 #'     scale = 'value'). If not provided, then an initial guess is provided.
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (Gamma) including the location parameter, i.e., a Gamma
@@ -80,12 +80,12 @@ fitGammaDist <- function(x, probability.x, parameter.values,
    } else stop("*** Sample size is lower than the set minimun size: ",
                sample.size)
 
-   pgamma3p <- function(q, alpha, scale, mu)
-       pgamma(q - mu, shape=alpha, scale=scale)
+   pgamma3p <- function(q, shape, scale, mu)
+       pgamma(q - mu, shape=shape, scale=scale)
 
    getPreds <- function(par, q) {
        if (length(par) > 2) {
-           pred <- pgamma3p(q, alpha=par[1], scale=par[2], mu=par[3])
+           pred <- pgamma3p(q, shape=par[1], scale=par[2], mu=par[3])
        } else pred <- pgamma(q, shape=par[1], scale=par[2])
        return(pred)
    }
@@ -131,12 +131,13 @@ fitGammaDist <- function(x, probability.x, parameter.values,
        VAR <- var(x, na.rm = TRUE, use = "everything")
        MIN <- min( x, na.rm = TRUE)
 
-       alpha = MEAN^2/VAR
+       shape = MEAN^2/VAR
        mu = MIN
        scale = VAR/MEAN
 
-       if (location.par) starts <- c(shape = alpha, scale = scale, mu = mu[1])
-       else starts <- c(shape = alpha, scale = scale)
+       if (location.par)
+           starts <- list(shape = shape, scale = scale, mu = mu[1])
+       else starts <- list(shape = shape, scale = scale)
    } else starts = parameter.values
 
   ## ============ END starting parameter values ========== #
@@ -150,12 +151,14 @@ fitGammaDist <- function(x, probability.x, parameter.values,
        FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma3p,
                        quantiles = x, prob = pX,
                        control = nls.lm.control(maxiter = maxiter, ftol = ftol,
-                                               maxfev = maxfev, ptol = 1e-12)),
+                                               maxfev = maxfev, ptol = ptol)),
                silent = TRUE)
        if (inherits( FIT, "try-error")) {
            messg = paste0("* The 'Gamma' model did not fit the data.\n",
                        "Trying to fit based on approach to 'Gamma2P' model ...")
            message(messg)
+           starts <- unname(starts)
+
            starts <- list(shape = starts[1], scale = starts[2])
            FIT <- try(nls.lm(par = starts, fn = optFun, probfun = pgamma,
                            quantiles = x, prob = pX,
@@ -251,7 +254,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT2, "try-error")) {
-           starts <- c(shape = alpha, scale = scale, mu = mu[1])
+           starts <- c(shape = shape, scale = scale, mu = mu[1])
            FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma3p,
                            quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
@@ -265,7 +268,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                                                maxfev = maxfev, ptol = ptol)),
                    silent = TRUE)
        if (inherits( FIT2, "try-error")) {
-           starts <- c(shape = alpha, scale = scale)
+           starts <- c(shape = shape, scale = scale)
            FIT2 <- try(nls.lm(par=starts, fn=optFun, probfun=pgamma,
                            quantiles=x[ cros.ind.2 ], prob=pX[cros.ind.2],
                            control=nls.lm.control(maxiter=maxiter, ftol=ftol,
@@ -314,7 +317,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                           COV=COV,
                           COV.mu=c(NA, NA),
                           n=c(N - 2, n - 2),
-                          model = c("Gamma2P", "", ""))
+                          model = c("Gamma2P", ""))
     }
   } else {
     warning(paste("Data did not fit to the model.",
@@ -325,7 +328,7 @@ fitGammaDist <- function(x, probability.x, parameter.values,
 
   colnames(stats) <- c( "Estimate", "Std. Error", "t value", "Pr(>|t|))",
                         "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
-                        "BIC", "COV.alpha", "COV.scale", "COV.mu", "df",
+                        "BIC", "COV.shape", "COV.scale", "COV.mu", "df",
                         "model")
   if (nlms) stats <- list(stats, nlms = FIT)
   return(stats)
