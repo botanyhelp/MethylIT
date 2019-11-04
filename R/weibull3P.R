@@ -178,14 +178,15 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
        if (model == "3P") rm(FIT2)
 
        if (PASS1 || PASS2) {
+           m <- length(coef(FIT))
            ## **** R squares ****
-           Adj.R.Square <- 1 - (deviance(FIT) / ((n - length(coef(FIT))) *
+           Adj.R.Square <- 1 - (deviance(FIT) / ((n - m) *
                                var(pX, use="everything")))
            Adj.R.Square <- ifelse(is.na(Adj.R.Square) || Adj.R.Square < 0,
                                0, Adj.R.Square)
 
            ## Stain adjusted R square
-           if (length(coef(FIT)) > 2)
+           if (m > 2)
               rho <- ((n - 1)/(n - 4)) * ((n - 2)/(n - 5)) * ((n + 1)/n)
            else rho <- ((n - 1)/(n - 3)) * ((n - 2)/(n - 4)) * ((n + 1)/n)
            rho <- 1 - rho * (1 - Adj.R.Square)
@@ -196,7 +197,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
            if (verbose)
                cat(paste("*** Performing nonlinear regression model",
                        "crossvalidation...\n" ))
-           if (length(coef(FIT)) > 2) {
+           if (m > 2) {
                getPreds <- function(par, x) pweibull(x - par[3], par[1], par[2])
                formula <- as.formula("Y ~ pweibull( X - mu, shape, scale )")
            } else {
@@ -245,7 +246,7 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                                R.FIT2) / (length(p.FIT1) + length(p.FIT2))
            }
 
-           if (length(coef(FIT)) > 2) {
+           if (m > 2) {
                stats <- data.frame(summary(FIT)$parameters[c(1,2,3), ],
                             Adj.R.Square=c(Adj.R.Square, "", ""),
                             rho=c(rho, "", ""),
@@ -253,7 +254,8 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                             DEV=c(deviance(FIT), "", ""),
                             AIC=c(AIC(FIT), "", ""),
                             BIC=c(BIC(FIT),"",""),
-                            COV=vcov(FIT), n=c(N, n, n))
+                            COV=vcov(FIT), n=c(N, n, n),
+                            model = c("Weibull3P", "", ""))
            } else {
                stats = data.frame( summary( FIT )$parameters[c(1,2), ],
                             Adj.R.Squar=c(Adj.R.Square, ""),
@@ -262,24 +264,26 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                             DEV=c(deviance(FIT), ""),
                             AIC=c(AIC(FIT), ""), BIC=c(BIC(FIT),""),
                             COV=vcov(FIT),
-                            COV.mu=c(NA, NA), n=c(N, n))
+                            COV.mu=c(NA, NA), n=c(N, n),
+                            model = c("Weibull2P", ""))
            }
        } else {
            ##TODO log error in screen / file
            warning(paste("Data did not fit to the model.",
                        "Returning empty coefficient table."))
            stats <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-                               NA, NA)
+                               NA, NA, NA)
        }
    } else {
        warning(paste("Insufficient data to fit the model.",
             "Returning empty coefficient table."))
        stats <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-                       NA)
+                       NA, NA)
    }
-   colnames(stats) <- c( "Estimate", "Std. Error", "t value", "Pr(>|t|))",
-                          "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
-                          "BIC", "COV.shape", "COV.scale", "COV.mu", "n")
+   colnames(stats) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|))",
+                       "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
+                       "BIC", "COV.shape", "COV.scale", "COV.mu", "n",
+                       "model")
    if (nlms) stats <- list(stats, nlms = FIT)
    return(stats)
 }
