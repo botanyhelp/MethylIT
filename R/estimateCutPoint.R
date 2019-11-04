@@ -162,17 +162,20 @@
 estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                        column=c(hdiv=TRUE, TV=TRUE,  bay.TV=FALSE,
                                wprob=TRUE, pos=TRUE),
-                       classifier1=c("logistic", "pca.logistic", "lda",
-                                   "qda","pca.lda", "pca.qda"),
-                       classifier2=NULL, tv.cut = 0.25, div.col = NULL,
+                       classifier1 = c("logistic", "pca.logistic", "lda",
+                                       "qda","pca.lda", "pca.qda"),
+                       classifier2 = NULL, tv.cut = 0.25, div.col = NULL,
                        clas.perf = FALSE, post.cut = 0.5, prop=0.6,
                        n.pc=1, interaction = NULL, cut.values = NULL,
                        stat = 1, cutp_data = FALSE,
                        num.cores=1L, tasks=0L, ...) {
 
    classifier1 <- match.arg(classifier1)
-   classifier2 <- match.arg(c("logistic", "pca.logistic", "lda",
-                              "qda","pca.lda", "pca.qda"))
+   if (!is.null(classifier2))
+       classifier2 <- match.arg(classifier2,
+                               c("logistic", "pca.logistic", "lda", "qda",
+                                   "pca.lda", "pca.qda"))
+
 
    if (!simple && sum(column) == 0) {
        cat("\n")
