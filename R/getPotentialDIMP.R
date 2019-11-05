@@ -182,6 +182,8 @@ getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
        return(d)
    }
    sn <- names(LR)
+   if (length(dist.name) == 1) dist.name <- rep(dist.name, length(nlms))
+
    LR <- lapply(seq_len(length(LR)), P, keep.attr = TRUE)
    names(LR) <- sn
    if (cl) {
