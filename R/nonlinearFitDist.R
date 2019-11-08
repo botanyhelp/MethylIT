@@ -37,9 +37,9 @@
 #'     with four parameters (GGamam4P).
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
-#'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which is
-#'     an information divergence that can be fitted to Weibull or to Generalized
-#'     Gamma distribution.
+#'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which 
+#'     is an information divergence that can be fitted to Weibull or to 
+#'     Generalized Gamma distribution.
 #' @param npoints number of points used in the fit
 #' @param model Distribution model to fit, two-parameters and three-parameters
 #'     Weibull model ("2P" and "3P"). Default is "all" and the model with the

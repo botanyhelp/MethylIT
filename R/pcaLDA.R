@@ -75,7 +75,7 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
    if (is.null(formula) && !is.null(grouping)) {
        vn <- setdiff(colnames(data), as.character(grouping))
        if (length(vn) < n.pc) {
-           ans <- "The number of number predictor variables must be greater than "
+           ans <- "The number of predictor variables must be greater than "
            ans1 <- "or equal the number of principal components: "
            ArgumentCheck::addError(msg=paste0(ans, ans1, n.pc), argcheck=Check)
        }
@@ -125,8 +125,8 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #' @description Predict using a PCA-LDA model built with function 'pcaLDA'
 #' @details NULL
 #' @param object To use with function 'predict'. A 'pcaLDA' object containing a
-#'     list of two objects: 1) an object of class inheriting from "lda" and 2) an
-#'     object of class inheriting from "prcomp".
+#'     list of two objects: 1) an object of class inheriting from "lda" and 
+#'     2) an object of class inheriting from "prcomp".
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction
 #' @param type To use with function 'predict'. . The type of prediction

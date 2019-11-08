@@ -9,9 +9,9 @@
 #'     model parameters can be retrieved using resid(model) and coef(model),
 #'     respectively.
 #' @param residuals if provided, it is numerical vector with the residuals:
-#'     residuals = observed.values - predicted.values, where predicted values are
-#'     estimated from the model. If the parameter 'model' is not provided, then
-#'     this parameter must be provided.
+#'     residuals = observed.values - predicted.values, where predicted values 
+#'     are estimated from the model. If the parameter 'model' is not provided, 
+#'     then this parameter must be provided.
 #' @param np number of model parameters. If the parameter 'model' is not
 #'     provided, then 'np' and 'residuals' must be provided.
 #'
