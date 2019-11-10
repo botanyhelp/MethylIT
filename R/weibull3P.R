@@ -255,7 +255,8 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                             AIC=c(AIC(FIT), "", ""),
                             BIC=c(BIC(FIT),"",""),
                             COV=vcov(FIT), n=c(N, n, n),
-                            model = c("Weibull3P", "", ""))
+                            model = c("Weibull3P", "", ""),
+                            stringsAsFactors = FALSE)
            } else {
                stats = data.frame( summary( FIT )$parameters[c(1,2), ],
                             Adj.R.Squar=c(Adj.R.Square, ""),
@@ -265,7 +266,8 @@ weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
                             AIC=c(AIC(FIT), ""), BIC=c(BIC(FIT),""),
                             COV=vcov(FIT),
                             COV.mu=c(NA, NA), n=c(N, n),
-                            model = c("Weibull2P", ""))
+                            model = c("Weibull2P", ""),
+                            stringsAsFactors = FALSE)
            }
        } else {
            ##TODO log error in screen / file

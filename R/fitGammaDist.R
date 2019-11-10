@@ -303,7 +303,8 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                            AIC=c(AICmodel(FIT, residuals=res, np=4), "", ""),
                            BIC=c(BICmodel(FIT, residuals=res, np=4), "",""),
                            COV=COV, n = c(N - 3, n - 3, n - 3),
-                           model = c("Gamma3P", "", ""))
+                           model = c("Gamma3P", "", ""),
+                           stringsAsFactors = FALSE)
     } else {
       COV = try(vcov(FIT), silent = TRUE)
       if (inherits(COV, "try-error")) COV = matrix(NA, nrow = 2, ncol = 2)
@@ -317,7 +318,8 @@ fitGammaDist <- function(x, probability.x, parameter.values,
                           COV=COV,
                           COV.mu=c(NA, NA),
                           n=c(N - 2, n - 2),
-                          model = c("Gamma2P", ""))
+                          model = c("Gamma2P", ""),
+                          stringsAsFactors = FALSE)
     }
   } else {
     warning(paste("Data did not fit to the model.",
