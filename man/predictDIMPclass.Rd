@@ -9,11 +9,11 @@ predictDIMPclass(LR, model, conf.matrix = FALSE, control.names = NULL,
 }
 \arguments{
 \item{LR}{A list of GRanges objects obtained through the through MethylIT
-downstream analysis. Basically, this object is a list of GRanges containing
-only differentially methylated position (DMPs). The metacolumn of each
-GRanges must contain the columna: Hellinger divergence "hdiv", total
-variation "TV", the probability of potential DMP "wprob", which naturally
-are added in the downstream analysis of MethylIT.}
+downstream analysis. Basically, this object is a list of GRanges
+containing only differentially methylated position (DMPs). The metacolumn
+of each GRanges must contain the columna: Hellinger divergence "hdiv",
+total variation "TV", the probability of potential DMP "wprob", which
+naturally are added in the downstream analysis of MethylIT.}
 
 \item{model}{A classifier model obtained with the function
 'evaluateDIMPclass'.}
@@ -28,11 +28,22 @@ be include in thr variable LR (default, NULL).}
 must be include in the variable LR (default, NULL).}
 }
 \value{
-The same LR object with a column named "class" added to a GRanges
-    object from LR (default). Based on the model prediction each DMP is
-    labeled as control "CT" or as treatment "TT". If "conf.matrix" is TRUE and
-    the arguments control.names and treatment.names are provided, then the
-    overall confusion matrix is returned
+The same LR object with tow new columns named "class" and "posterior"
+    added to each GRanges object from LR (default). Based on the model
+    prediction each DMP is labeled as control "CT" or as treatment "TT" in
+    column "class". Column "posterior" provides, for each DMP, the posterior
+    probability that the given DMP can be classified as induced by the
+    'treatment' (a treatment DMP).
+
+    Control DMPs classified as 'treatment' are false positives. However, if
+    the same cytosine position is classified as 'treatment DMP' in both
+    groups, control and treatment, but with higher posterior probability
+    in the treatment group, then this would indicate a reinforcement of the
+    methylation status in such a position induced by the treatment.
+
+    If "conf.matrix" is TRUE and the arguments control.names and
+    treatment.names are provided, then the overall confusion matrix is
+    returned.
 }
 \description{
 This function classify each DMP as a control or a treatment

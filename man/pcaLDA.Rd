@@ -11,7 +11,7 @@ pcaLDA(formula = NULL, data = NULL, grouping = NULL, n.pc = 1,
   max.pc = NULL)
 
 \method{predict}{pcaLDA}(object, newdata, type = c("lda.pred", "class",
-  "posterior", "scores", "pca.ind.coord"), ...)
+  "posterior", "scores", "pca.ind.coord", "all"), ...)
 }
 \arguments{
 \item{formula}{Same as in 'lda'from pakage 'MASS'.}
@@ -33,15 +33,18 @@ pcaLDA(formula = NULL, data = NULL, grouping = NULL, n.pc = 1,
 \item{max.pc}{Same as in paramter 'rank.' from pakage 'prcomp'.}
 
 \item{object}{To use with function 'predict'. A 'pcaLDA' object containing a
-list of two objects: 1) an object of class inheriting from "lda" and 2) an
-object of class inheriting from "prcomp".}
+list of two objects: 1) an object of class inheriting from "lda" and 2)
+an object of class inheriting from "prcomp".}
 
 \item{newdata}{To use with function 'predict'. New data for classification
 prediction}
 
-\item{type}{To use with function 'predict'. . The type of prediction
-required. The default is "all" given by function 'predict.lda' from MASS
-package: 'class', 'posterior', and 'scores' (see ?predict.lda).}
+\item{type}{To use with function 'predict'. The type of prediction
+required.  The default is "all" basic predictions: classes and posterior
+classification probabilities. Option "lda.pred" returns the
+object given by function 'predict.lda' from MASS package: 'class',
+'posterior', 'scores' (cases scores on discriminant variables,
+see \code{\link[MASS]{lda}}.}
 
 \item{...}{Not in use.}
 }
@@ -82,4 +85,8 @@ newdata.prediction <- predict(ld2, newdata = newdata)
 x <- data.frame(TRUE.class = iris$Species[idx],
                PRED.class = newdata.prediction$class)
 table(x)
+}
+\seealso{
+\code{\link{pcaQDA}}, \code{\link[MASS]{lda}} and
+    \code{\link[MASS]{predict.lda}}
 }

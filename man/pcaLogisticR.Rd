@@ -3,14 +3,14 @@
 \name{pcaLogisticR}
 \alias{pcaLogisticR}
 \alias{predict.pcaLogisticR}
-\title{Linear Discriminant Analysis (logistic) using Principal Component
+\title{Logistic Classification Model using Principal Component
     Analysis (PCA)}
 \usage{
 pcaLogisticR(formula = NULL, data = NULL, n.pc = 1, scale = FALSE,
   center = FALSE, tol = 1e-04, max.pc = NULL)
 
 \method{predict}{pcaLogisticR}(object, newdata, type = c("class",
-  "response", "pca.ind.coord", "all"), ...)
+  "posterior", "pca.ind.coord", "all"), ...)
 }
 \arguments{
 \item{formula}{Same as in 'glm' from pakage 'stats'.}
@@ -35,10 +35,10 @@ containing a list of two objects: 1) an object of class inheriting from
 prediction}
 
 \item{type}{To use with function 'predict'. The type of prediction required:
-"class", "response", "pca.ind.coord", or "all". If type = 'all', function
+"class", "posterior", "pca.ind.coord", or "all". If type = 'all', function
 'predict.pcaLogisticR' ('predict') returns a list with:
     1) 'class': individual classification.
-    2) 'response': probabilities for the positive class.
+    2) 'posterior': probabilities for the positive class.
     3) 'pca.ind.coord': PC individual coordinate.
 Each element of this list can be requested independently using parameter
 'type'.}
@@ -61,20 +61,20 @@ Function 'pcaLogisticR' returns an object ('pcaLogisticR' class)
     For information on how to use these objects see ?glm and ?prcomp.
 }
 \description{
-The principal components (PCs) for predictor variables provided
-    as input data are estimated and then the individual coordinates in the
-    selected PCs are used as predictors in the logistic
+Principal components (PCs) are estimated from the predictor
+    variables provided as input data. Next, the individual coordinates in the
+    selected PCs are used as predictors in the logistic regresson.
 
 Logistic regression using Principal Components from PCA as
     predictor variables
 }
 \details{
 The principal components (PCs) are obtained using the function
-    'prcomp' from R pacakage 'stats', while the logistic is performed using
-    the 'logistic' function from R package 'MASS'. The current application
-    only use basic functionalities of mentioned functions. As shown in the
-    example, 'pcaLogisticR' function can be used in general classification
-    problems.
+    \code{\link[stats]{prcomp}}, while the logistic regression is performed
+    using function \code{\link[stats]{glm}}, both functions from R package
+    'stats'. The current application only use basic functionalities from the
+    mentioned functions. As shown in the example, 'pcaLogisticR' function can
+    be used in general classification problems.
 }
 \examples{
 data(iris)

@@ -5,7 +5,7 @@
 \title{Predict function for 'ldaDMP' method}
 \usage{
 \method{predict}{ldaDMP}(object, newdata, type = c("class", "posterior",
-  "scores"), ...)
+  "scores", "lda.pred"), ...)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from class 'ldaDMP'}
@@ -14,9 +14,11 @@
 prediction}
 
 \item{type}{To use with function 'predict'. The type of prediction
-required. The default is "all" given by function 'predict.lda' from MASS
-package: 'class', 'posterior', and 'scores' (cases scores on discriminant
-variables, see \code{link[MASS]{lda}}).}
+required.  The default is "all" basic predictions: classes and posterior
+classification probabilities. Option "lda.pred" returns the
+object given by function 'predict.lda' from MASS package: 'class',
+'posterior', 'scores' (cases scores on discriminant variables,
+see \code{link[MASS]{lda}}.}
 
 \item{...}{arguments passed to or from other methods.}
 }
