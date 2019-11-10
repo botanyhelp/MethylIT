@@ -7,11 +7,11 @@
 #'     methylation context and derive from an experiment accomplished under the
 #'     same condition set for the DMPs used to build the model.
 #' @param LR A list of GRanges objects obtained through the through MethylIT
-#'     downstream analysis. Basically, this object is a list of GRanges containing
-#'     only differentially methylated position (DMPs). The metacolumn of each
-#'     GRanges must contain the columna: Hellinger divergence "hdiv", total
-#'     variation "TV", the probability of potential DMP "wprob", which naturally
-#'     are added in the downstream analysis of MethylIT.
+#'     downstream analysis. Basically, this object is a list of GRanges
+#'     containing only differentially methylated position (DMPs). The metacolumn
+#'     of each GRanges must contain the columna: Hellinger divergence "hdiv",
+#'     total variation "TV", the probability of potential DMP "wprob", which
+#'     naturally are added in the downstream analysis of MethylIT.
 #' @param model A classifier model obtained with the function
 #'     'evaluateDIMPclass'.
 #' @param conf.matrix Optional. Logic, whether a confusion matrix should be
@@ -20,11 +20,22 @@
 #'     be include in thr variable LR (default, NULL).
 #' @param treatment.names Optional. Names/IDs of the treatment samples, which
 #'     must be include in the variable LR (default, NULL).
-#' @return The same LR object with a column named "class" added to a GRanges
-#'     object from LR (default). Based on the model prediction each DMP is
-#'     labeled as control "CT" or as treatment "TT". If "conf.matrix" is TRUE and
-#'     the arguments control.names and treatment.names are provided, then the
-#'     overall confusion matrix is returned
+#' @return The same LR object with tow new columns named "class" and "posterior"
+#'     added to each GRanges object from LR (default). Based on the model
+#'     prediction each DMP is labeled as control "CT" or as treatment "TT" in
+#'     column "class". Column "posterior" provides, for each DMP, the posterior
+#'     probability that the given DMP can be classified as induced by the
+#'     'treatment' (a treatment DMP).
+#'
+#'     Control DMPs classified as 'treatment' are false positives. However, if
+#'     the same cytosine position is classified as 'treatment DMP' in both
+#'     groups, control and treatment, but with higher posterior probability
+#'     in the treatment group, then this would indicate a reinforcement of the
+#'     methylation status in such a position induced by the treatment.
+#'
+#'     If "conf.matrix" is TRUE and the arguments control.names and
+#'     treatment.names are provided, then the overall confusion matrix is
+#'     returned.
 #' @importFrom caret confusionMatrix
 #' @importFrom S4Vectors mcols DataFrame
 #' @examples
@@ -93,7 +104,11 @@ predictDIMPclass <- function(LR, model, conf.matrix = FALSE,
    }
    else {
        classifier <- function(GR) {
-           GR$class <- predict(object = model, newdata = GR, type = "class")
+           pred <- predict(object = model, newdata = GR, type = "all")
+           GR$class <- pred$class
+           if (inherits(model, "pcaLogisticR")) {
+               GR$posterior <- pred$posterior
+           } else GR$posterior <- pred$posterior[, 2]
            return(GR)
        }
        LR <- lapply(classSet, classifier)
