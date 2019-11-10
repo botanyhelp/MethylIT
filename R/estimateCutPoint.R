@@ -320,7 +320,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
            predClasses <- factor(predClasses, levels = c("CT", "TT"))
-           cf.mat <- try(confusionMatrix(data = predClasses, reference = classes,
+           cf.mat <- try(confusionMatrix(data = predClasses, 
+                                         reference = classes,
                                          positive="TT"),
                          silent = TRUE)
 
