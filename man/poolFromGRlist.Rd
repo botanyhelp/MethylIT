@@ -16,7 +16,13 @@ pool)}
 \item{stat}{statistic used to estimate the methylation pool: row "sum", row
 "mean", row "median", or Jacknife row mean ("jackmean") of methylated and
 unmethylated read counts across individuals. Notice that, for only two
-samples, "jackmean" makes not sense.}
+samples, "jackmean" makes not sense. Since the centrality statistics are
+sensitive to extreme values, stat = 'sum' is an atractive option.
+However, in this last case, a further correction for the minimun coverage
+for the reference sample must be taken into account in a furhter
+estimation of the Hellinger divergence of methylation levels, which is
+explained in the detail section from the help of function
+\code{\link{estimateDivergence}}.}
 
 \item{num.cores}{The number of cores to use, i.e. at most how many child
 processes will be run simultaneously (see bplapply function from

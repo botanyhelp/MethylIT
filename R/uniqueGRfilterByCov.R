@@ -17,13 +17,17 @@
 #'     meta-column. Default is NULL. If x is a 'InfDiv', or 'pDMP', then 'y' is
 #'     not needed, since samples '1' and '2' are the first four columns of these
 #'     objects.
-#' @param min.coverage Cytosine sites where the coverage in both samples, 'x'
-#'     and 'y', are less than 'min.coverage' are discarded. The cytosine site is
-#'     preserved, however, if  the coverage is greater than 'min.coverage'in at
-#'     least one sample.
-#' @param min.meth Cytosine sites where the numbers of read counts of methylated
-#'     cytosine in both samples, '1' and '2', are less than 'min.meth' are
-#'     discarded.
+#' @param min.coverage An integer or an integer vector of length 2. Cytosine
+#'     sites where the coverage in both samples, 'x' and 'y', are less than
+#'     'min.coverage' are discarded. The cytosine site is preserved, however, if
+#'     the coverage is greater than 'min.coverage'in at least one sample. If
+#'     'min.coverage' is an integer vector, then the corresponding min coverage
+#'     is applied to each sample.
+#' @param min.meth An integer or an integer vector of length 2. Cytosine sites
+#'     where the numbers of read counts of methylated cytosine in both samples,
+#'     '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
+#'     integer vector, then the corresponding min number of reads is applied to
+#'     each sample.
 #' @param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
@@ -37,7 +41,7 @@
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see bplapply function from
 #'     BiocParallel package).
-#' @param tasks integer(1). The number of tasks per job. value must be a scalar
+#' @param tasks Integer(1). The number of tasks per job. value must be a scalar
 #'     integer >= 0L. In this documentation a job is defined as a single call to
 #'     a function, such as bplapply, bpmapply etc. A task is the division of the
 #'     X argument into chunks. When tasks == 0 (default), X is divided as evenly
@@ -80,19 +84,22 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
        }
    }
 
+   if (length(min.coverage) == 1) min.coverage <- c(min.coverage, min.coverage)
+   if (length(min.meth) == 1) min.meth <- c(min.meth, min.meth)
+
    cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
    q1 <- quantile(cov1, probs=percentile)
    q2 <- quantile(cov2, probs=percentile)
    q <- max(q1, q2, high.coverage)
-   idx1 <- which((cov1 >= min.coverage) | (cov2 >= min.coverage))
+   idx1 <- which((cov1 >= min.coverage[1]) | (cov2 >= min.coverage[2]))
    idx2 <- which((cov1 <= q) & (cov2 <= q))
    idx <- intersect(idx1, idx2)
 
-   if (min.meth > 0) {
+   if (max(min.meth) > 0) {
        c1 <- mcols(x[, 1])[, 1]
        c2 <- mcols(x[, 3])[, 1]
-       idx1 <- which((c1 >= min.meth) | (c2 >= min.meth))
+       idx1 <- which((c1 >= min.meth[1]) | (c2 >= min.meth[2]))
        idx <- intersect(idx, idx1)
    }
    return(x[ idx ])

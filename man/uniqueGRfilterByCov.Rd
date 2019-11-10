@@ -21,14 +21,18 @@ meta-column. Default is NULL. If x is a 'InfDiv', or 'pDMP', then 'y' is
 not needed, since samples '1' and '2' are the first four columns of these
 objects.}
 
-\item{min.coverage}{Cytosine sites where the coverage in both samples, 'x'
-and 'y', are less than 'min.coverage' are discarded. The cytosine site is
-preserved, however, if  the coverage is greater than 'min.coverage'in at
-least one sample.}
+\item{min.coverage}{An integer or an integer vector of length 2. Cytosine
+sites where the coverage in both samples, 'x' and 'y', are less than
+'min.coverage' are discarded. The cytosine site is preserved, however, if
+the coverage is greater than 'min.coverage'in at least one sample. If
+'min.coverage' is an integer vector, then the corresponding min coverage
+is applied to each sample.}
 
-\item{min.meth}{Cytosine sites where the numbers of read counts of methylated
-cytosine in both samples, '1' and '2', are less than 'min.meth' are
-discarded.}
+\item{min.meth}{An integer or an integer vector of length 2. Cytosine sites
+where the numbers of read counts of methylated cytosine in both samples,
+'1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
+integer vector, then the corresponding min number of reads is applied to
+each sample.}
 
 \item{percentile}{Threshold to remove the outliers from each file and all
 files stacked.}
@@ -48,7 +52,7 @@ BiocParallel package).}
 \item{ignore.strand}{When set to TRUE, the strand information is ignored in
 the overlap calculations. Default value: TRUE}
 
-\item{tasks}{integer(1). The number of tasks per job. value must be a scalar
+\item{tasks}{Integer(1). The number of tasks per job. value must be a scalar
 integer >= 0L. In this documentation a job is defined as a single call to
 a function, such as bplapply, bpmapply etc. A task is the division of the
 X argument into chunks. When tasks == 0 (default), X is divided as evenly
