@@ -124,12 +124,14 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
    } else {
        bpparam <- SnowParam(workers = num.cores, type = "SOCK")
    }
+   if (ncol(mcols(ref)) > 2) ref <- ref[ , columns]
+   indiv <- lapply(indiv, function(x) x[, columns])
+
    if (meth.level) {
        x = bplapply(seq_len(length(indiv)), function(k, ref, indv, sn) {
            if (verbose) message("*** Processing sample #", k, " ", sn[k])
            x <- indv[[k]]
            x <- x[ ,columns]
-           if (ncol(mcols(ref)) > 2) ref <- ref[ , columns]
            x <- uniqueGRanges(list(ref,x), num.cores=1L, tasks=tasks,
                                verbose=verbose, ...)
            x = estimateBayesianDivergence(x, Bayesian=Bayesian,
@@ -142,8 +144,7 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
            if (verbose) message("*** Processing sample #", k, " ", sn[ k ])
            x = uniqueGRfilterByCov(x=ref, y=indv[[k]],
                                min.coverage=min.coverage, min.meth = min.meth,
-                               percentile=percentile, columns=columns,
-                               num.cores=1L, tasks=tasks,
+                               percentile=percentile, num.cores=1L, tasks=tasks,
                                verbose=verbose, ...)
            x = estimateBayesianDivergence(x, Bayesian=Bayesian, num.cores=1L,
                                tasks=tasks, meth.level=meth.level,
