@@ -129,7 +129,7 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
            if (verbose) message("*** Processing sample #", k, " ", sn[k])
            x <- indv[[k]]
            x <- x[ ,columns]
-           ref <- ref[ ,columns]
+           if (ncol(mcols(ref)) > 2) ref <- ref[ , columns]
            x <- uniqueGRanges(list(ref,x), num.cores=1L, tasks=tasks,
                                verbose=verbose, ...)
            x = estimateBayesianDivergence(x, Bayesian=Bayesian,
