@@ -48,7 +48,7 @@ You can install MethylIT from GitHub or PSU's GitLab:
     # Master stable version (0.3.2)
     devtools::install_git("https://github.com/genomaths/MethylIT.git")
     
-    # Beta (developing) version (0.3.2):
+    # Beta (developing) version (0.3.2_beta):
     devtools::install_git("https://github.com/genomaths/MethylIT.git", ref = "MethylIT_0.3.2_beta")
     
     Or (0.3.1)
