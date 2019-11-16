@@ -28,6 +28,11 @@
 #'     '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 #'     integer vector, then the corresponding min number of reads is applied to
 #'     each sample.
+#' @param min.umeth An integer or an integer vector of length 2. Min number of
+#'     reads to consider cytosine position. Specifically cytosine positions
+#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+#'     removed, where mC and uC stand for the numbers of methylated and
+#'     unmethylated reads. Default is min.umeth = 0.
 #' @param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
@@ -65,11 +70,12 @@
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
 #'
-uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
-                               percentile=.9999, high.coverage=NULL,
-                               columns=c(mC=1, uC=2), num.cores=1L,
-                               ignore.strand=FALSE, tasks=0L,
-                               verbose=TRUE, ...) {
+uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
+                               min.umeth = 0, percentile = 0.9999,
+                               high.coverage = NULL,
+                               columns = c(mC = 1, uC = 2), num.cores = 1L,
+                               ignore.strand = FALSE, tasks = 0L,
+                               verbose = TRUE, ...) {
 
    if (!is.null(y)) {
        x <- x[, columns]
@@ -99,8 +105,27 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
    if (max(min.meth) > 0) {
        c1 <- mcols(x[, 1])[, 1]
        c2 <- mcols(x[, 3])[, 1]
+
+       t1 <- mcols(x[, 2])[, 1]
+       t2 <- mcols(x[, 4])[, 1]
+
        idx1 <- which((c1 >= min.meth[1]) | (c2 >= min.meth[2]))
        idx <- intersect(idx, idx1)
+
+       x <- x[ idx ]
+
+       # To remove positions similar to, e.g., c1 = 20, 40, c2 = 1 & t2 = 0,
+       # not captured on the above filtering conditions (see example).
+       c1 <- mcols(x[, 1])[, 1]
+       c2 <- mcols(x[, 3])[, 1]
+
+       t1 <- mcols(x[, 2])[, 1]
+       t2 <- mcols(x[, 4])[, 1]
+
+       idx <- which((t1 <= min.umeth) & (c1 > 0) & (c1 <= min.meth[1]))
+       idx1 <- which((t2 <= min.umeth) & (c2 > 0) & (c2 <= min.meth[2]))
+       idx <- union(idx, idx1)
+       x <- x[ -idx ]
    }
-   return(x[ idx ])
+   return(x)
 }

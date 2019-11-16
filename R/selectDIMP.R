@@ -69,7 +69,7 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
    if (!inherits(LR, what=c("pDMP", "InfDiv")))
        stop("*** LR object must be from 'pDMP' or 'InfDiv' class")
 
-  # -------------------------- valid "pDMP" object ----------------------------
+  # -------------------------- valid "pDMP" object -------------------------- #
   validateClass(LR)
   # ------------------------------------------------------------------------- #
 

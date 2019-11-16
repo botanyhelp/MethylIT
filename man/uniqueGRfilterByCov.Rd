@@ -5,9 +5,9 @@
 \title{Unique GRanges of methylation read counts filtered by coverages}
 \usage{
 uniqueGRfilterByCov(x, y = NULL, min.coverage = 4, min.meth = 0,
-  percentile = 0.9999, high.coverage = NULL, columns = c(mC = 1, uC =
-  2), num.cores = 1L, ignore.strand = FALSE, tasks = 0L,
-  verbose = TRUE, ...)
+  min.umeth = 0, percentile = 0.9999, high.coverage = NULL,
+  columns = c(mC = 1, uC = 2), num.cores = 1L, ignore.strand = FALSE,
+  tasks = 0L, verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{An object from the classes 'GRanges', 'InfDiv', or 'pDMP' with
@@ -33,6 +33,12 @@ where the numbers of read counts of methylated cytosine in both samples,
 '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 integer vector, then the corresponding min number of reads is applied to
 each sample.}
+
+\item{min.umeth}{An integer or an integer vector of length 2. Min number of
+reads to consider cytosine position. Specifically cytosine positions
+where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+removed, where mC and uC stand for the numbers of methylated and
+unmethylated reads. Default is min.umeth = 0.}
 
 \item{percentile}{Threshold to remove the outliers from each file and all
 files stacked.}
