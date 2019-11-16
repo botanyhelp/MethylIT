@@ -7,15 +7,17 @@
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction
 #' @param type To use with function 'predict'. The type of prediction
-#'     required. The default is "all" given by function 'predict.lda' from MASS
-#'     package: 'class', 'posterior', and 'scores' (cases scores on discriminant
-#'     variables, see \code{link[MASS]{lda}}).
+#'     required.  The default is "all" basic predictions: classes and posterior
+#'     classification probabilities. Option "lda.pred" returns the
+#'     object given by function 'predict.lda' from MASS package: 'class',
+#'     'posterior', 'scores' (cases scores on discriminant variables,
+#'     see \code{link[MASS]{lda}}.
 #' @param ... arguments passed to or from other methods.
 #' @seealso \code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}
 #' @keywords internal
 #' @exportMethod predict.ldaDMP
 predict.ldaDMP <- function(object, newdata,
-                           type = c("class", "posterior", "scores"), ...) {
+                           type = c("class", "posterior", "scores", "lda.pred"), ...) {
    if (!inherits(object, "ldaDMP")) {
        stop("* 'object' must be a model from class 'ldaDMP'")
    }
@@ -44,9 +46,13 @@ predict.ldaDMP <- function(object, newdata,
    class(object) <- "lda"
 
    pred <- predict(object, newdata = newdata, prior= object$prior)
-   pred <- switch(type[1], lda.pred=pred, class=pred$class,
-               posterior=pred$posterior,
-               scores=pred$x ## cases scores on discriminant variables
+   pred <- switch(type[1],
+                   lda.pred = pred,
+                   class = pred$class,
+                   posterior = pred$posterior,
+                   scores = pred$x, ## cases scores on discriminant variables
+                   all = list(class = pred$class,
+                               posterior = pred$posterior)
                )
   return(pred)
 }

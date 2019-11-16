@@ -75,7 +75,7 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
    if (is.null(formula) && !is.null(grouping)) {
        vn <- setdiff(colnames(data), as.character(grouping))
        if (length(vn) < n.pc) {
-           ans <- "The number of predictor variables must be greater than "
+           ans <- "The number of number predictor variables must be greater than "
            ans1 <- "or equal the number of principal components: "
            ArgumentCheck::addError(msg=paste0(ans, ans1, n.pc, "\n"),
                                    argcheck=Check)
@@ -128,10 +128,15 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #'     an object of class inheriting from "prcomp".
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction.
-#' @param type To use with function 'predict'. The type of prediction required.
-#'     The default is "all" given by function 'predict.qda' from MASS package:
-#'     'class', 'posterior', and 'scores' (see ?predict.QDA).
+#' @param type To use with function 'predict'. The type of prediction
+#'     required. The default is "all" basic predictions: classes and posterior
+#'     classification probabilities. Option "qda.pred" returns the
+#'     object given by function 'predict.qda' from MASS package: 'class',
+#'     'posterior', 'scores' (cases scores on discriminant variables,
+#'     see \code{\link[MASS]{qda}}.
 #' @param ... Not in use.
+#' @seealso \code{\link{pcaLDA}}, \code{\link[MASS]{qda}} and
+#'     \code{\link[MASS]{predict.lda}}
 #' @export
 predict.pcaQDA <- function(object, newdata,
                            type=c("qda.pred", "class", "posterior",
@@ -139,6 +144,9 @@ predict.pcaQDA <- function(object, newdata,
    if (!inherits(object, "pcaQDA")) {
        stop("* 'object' must be a model from class 'pcaQDA'")
    }
+
+   type <- match.arg(type)
+
    vn <- rownames(object$pca$rotation)
 
    if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv", "GRanges"))) {
@@ -177,10 +185,13 @@ predict.pcaQDA <- function(object, newdata,
    ind.coord <- t(apply(dt.scaled, 1, coord_func, loadings))
    if (nc == 1 ) ind.coord <- t(ind.coord)
    pred <- predict(object$qda, newdata=ind.coord, prior=object$qda$prior)
-   pred <- switch(type[1], qda.pred=pred, class=pred$class,
-               posterior=pred$posterior, pca.ind.coord=ind.coord,
-               all=list(class=pred$class, posterior=pred$posterior,
-                           pca.ind.coord=ind.coord))
+   pred <- switch(type,
+                   qda.pred=pred,
+                   class=pred$class,
+                   posterior=pred$posterior, pca.ind.coord=ind.coord,
+                   all = list(class = pred$class,
+                               posterior = pred$posterior,
+                               pca.ind.coord = ind.coord))
   return(pred)
 }
 

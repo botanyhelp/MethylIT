@@ -320,8 +320,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            predClasses[ predClasses == TRUE ] <- "TT"
            predClasses[ predClasses == FALSE ] <- "CT"
            predClasses <- factor(predClasses, levels = c("CT", "TT"))
-           cf.mat <- try(confusionMatrix(data = predClasses, 
-                                         reference = classes,
+           cf.mat <- try(confusionMatrix(data = predClasses, reference = classes,
                                          positive="TT"),
                          silent = TRUE)
 
@@ -393,7 +392,8 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
            post <- predict(object = conf.mat$model, newdata = LR,
                            type = "posterior")
 
-           if (classifier1[1] == "logistic") idx <- which(post > post.cut)
+           if (classifier1[1] == "logistic" || classifier1[1] == "pca.logistic")
+               idx <- which(post > post.cut)
            else idx <- which(post[, 2] > post.cut)
            cutpoint <- min(mcols(unlist(LR)[idx, div.col])[, 1])
            res$postCut <- cutpoint

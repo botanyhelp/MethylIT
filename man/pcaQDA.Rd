@@ -39,9 +39,12 @@ an object of class inheriting from "prcomp".}
 \item{newdata}{To use with function 'predict'. New data for classification
 prediction.}
 
-\item{type}{To use with function 'predict'. The type of prediction required.
-The default is "all" given by function 'predict.qda' from MASS package:
-'class', 'posterior', and 'scores' (see ?predict.QDA).}
+\item{type}{To use with function 'predict'. The type of prediction
+required. The default is "all" basic predictions: classes and posterior
+classification probabilities. Option "qda.pred" returns the
+object given by function 'predict.qda' from MASS package: 'class',
+'posterior', 'scores' (cases scores on discriminant variables,
+see \code{\link[MASS]{qda}}.}
 
 \item{...}{Not in use.}
 }
@@ -82,4 +85,8 @@ newdata.prediction <- predict(qd2, newdata = newdata, type = "all")
 x <- data.frame(TRUE.class = iris$Species[idx],
                PRED.class = newdata.prediction$class)
 table(x)
+}
+\seealso{
+\code{\link{pcaLDA}}, \code{\link[MASS]{qda}} and
+    \code{\link[MASS]{predict.lda}}
 }

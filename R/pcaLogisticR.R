@@ -1,16 +1,16 @@
 #' @rdname pcaLogisticR
 #' @name pcaLogisticR
-#' @title Linear Discriminant Analysis (logistic) using Principal Component
+#' @title Logistic Classification Model using Principal Component
 #'     Analysis (PCA)
-#' @description The principal components (PCs) for predictor variables provided
-#'     as input data are estimated and then the individual coordinates in the
-#'     selected PCs are used as predictors in the logistic
+#' @description Principal components (PCs) are estimated from the predictor
+#'     variables provided as input data. Next, the individual coordinates in the
+#'     selected PCs are used as predictors in the logistic regresson.
 #' @details The principal components (PCs) are obtained using the function
-#'     'prcomp' from R pacakage 'stats', while the logistic is performed using
-#'     the 'logistic' function from R package 'MASS'. The current application
-#'     only use basic functionalities of mentioned functions. As shown in the
-#'     example, 'pcaLogisticR' function can be used in general classification
-#'     problems.
+#'     \code{\link[stats]{prcomp}}, while the logistic regression is performed
+#'     using function \code{\link[stats]{glm}}, both functions from R package
+#'     'stats'. The current application only use basic functionalities from the
+#'     mentioned functions. As shown in the example, 'pcaLogisticR' function can
+#'     be used in general classification problems.
 #'
 #' @param formula Same as in 'glm' from pakage 'stats'.
 #' @param data Same as in 'glm' from pakage 'stats'.
@@ -49,8 +49,7 @@
 #' @importFrom stats prcomp glm
 #'
 #' @rdname pcaLogisticR
-#' @title Linear Discriminant Analysis (logistic) using Principal Component
-#'     Analysis
+#' @title Logistic Classification Model using Principal Component Analysis
 #' @description NULL
 #' @details NULL
 #' @export
@@ -130,10 +129,10 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction
 #' @param type To use with function 'predict'. The type of prediction required:
-#'     "class", "response", "pca.ind.coord", or "all". If type = 'all', function
+#'     "class", "posterior", "pca.ind.coord", or "all". If type = 'all', function
 #'     'predict.pcaLogisticR' ('predict') returns a list with:
 #'         1) 'class': individual classification.
-#'         2) 'response': probabilities for the positive class.
+#'         2) 'posterior': probabilities for the positive class.
 #'         3) 'pca.ind.coord': PC individual coordinate.
 #'     Each element of this list can be requested independently using parameter
 #'     'type'.
@@ -143,12 +142,13 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
 #' @export
 predict.pcaLogisticR <- function(object, ...) UseMethod("predict")
 predict.pcaLogisticR <- function(object, newdata,
-                                 type=c("class", "response", "pca.ind.coord",
-                                       "all"), ...) {
+                                 type = c("class", "posterior", "pca.ind.coord",
+                                           "all"), ...) {
 
    if (class(object) != "pcaLogisticR") {
        stop("* Parameter 'object' must be a model from class 'pcaLogisticR'")
    }
+   type <- match.arg(type)
    ## predictor names
    vn <- rownames(object$pca$rotation)
 
@@ -203,14 +203,14 @@ predict.pcaLogisticR <- function(object, newdata,
        return(PredClass)
    }
 
-   pred <- switch(type[1],
-               response=predict(object$logistic, newdata=ind.coord,
-                             type="response"),
-               class=predictClass(object=object, dt=ind.coord),
-               pca.ind.coord=ind.coord,
-               all=list(class=predictClass(object=object, dt=ind.coord),
-               response=predict(object$logistic, newdata=ind.coord,
-                               type="response"),
-               pca.ind.coord=ind.coord))
+   pred <- switch(type,
+               posterior = predict(object$logistic, newdata=ind.coord,
+                                   type = "response"),
+               class = predictClass(object=object, dt=ind.coord),
+               pca.ind.coord = ind.coord,
+               all = list(class = predictClass(object=object, dt = ind.coord),
+                       posterior = predict(object$logistic, newdata = ind.coord,
+                                           type = "response"),
+                       pca.ind.coord = ind.coord))
    return(pred)
 }

@@ -5,9 +5,9 @@
 \title{Information divergence estimator in respect to a reference sample}
 \usage{
 estimateDivergence(ref, indiv, Bayesian = FALSE, columns = NULL,
-  min.coverage = 4, high.coverage = NULL, percentile = 0.999,
-  num.cores = 1L, tasks = 0L, meth.level = FALSE, verbose = TRUE,
-  ...)
+  min.coverage = 4, min.meth = 0, high.coverage = NULL,
+  percentile = 0.999, num.cores = 1L, tasks = 0L,
+  meth.level = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{ref}{The GRanges object of the reference individual that will be used
@@ -26,8 +26,18 @@ levels. If columns = NULL and meth.level = FALSE, then columns = c(1,2)
 is assumed. If columns = NULL and meth.level = TRUE, then columns = 1 is
 assumed.}
 
-\item{min.coverage}{Cytosine sites with coverage less than min.coverage are
-discarded.}
+\item{min.coverage}{An integer or an integer vector of length 2. Cytosine
+sites where the coverage in both samples, 'x' and 'y', are less than
+'min.coverage' are discarded. The cytosine site is preserved, however, if
+the coverage is greater than 'min.coverage'in at least one sample. If
+'min.coverage' is an integer vector, then the corresponding min coverage
+is applied to each sample.}
+
+\item{min.meth}{An integer or an integer vector of length 2. Cytosine sites
+where the numbers of read counts of methylated cytosine in both samples,
+'1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
+integer vector, then the corresponding min number of reads is applied to
+each sample.}
 
 \item{high.coverage}{An integer for read counts. Cytosine sites having
 higher coverage than this are discarded.}
@@ -69,20 +79,36 @@ Wrapper of 'InfDiv' function to operate on list of GRanges
 }
 \details{
 For the current version, the Information divergence of methylation
-    levels is estimated based on Hellinger divergence. If read counts are
+    levels is estimated based on Hellinger divergence (H). If read counts are
     provided, then Hellinger divergence is computed as given in the first
-    formula from Theorem 1 from reference 1. In the present case: hdiv =
-    2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1-p[1]) -
-    sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)
+    formula from Theorem 1 from reference 1. In the present case:
+
+    \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
+         (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
 
     where n[1] and n[2] are the coverage for the control and treatment,
     respectively. Notice that each row from the matrix of counts correspond
     to a single cytosine position and has four values corresponding to "mC1"
     and "uC1" (control), and mC2" and "uC2" for treatment.
 
+    According with the above equation, to estimate Hellinger divergence, not
+    only the methylation levels are considered in the estimation of H,
+    but also the control and treatment coverage at each given cytosine site.
+    At this point, it is worthy to do mention that if the reference sample is
+    derived with function \code{\link{poolFromGRlist}} using the 'sum' of
+    read counts to conpute a methylation pool, then 'min.coverage' parameter
+    value must be used to prevent an over estimation of the divergence for
+    low coverage cytosines sites. For example, if a reference sample is
+    derived as the methylation pool of read count sum from 3 individuals and
+    we want to consider only methylation sites with minimum coverage of 4,
+    then we can set min.coverage = c(12, 4), where the number 12 (3 x 4) is
+    the minimum coverage requested for the each cytosine site in the
+    reference sample.
+
     If the methylation levels are provided in place of counts, then
     Hellinger divergence is computed as:
-    hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) - sqrt(1 - p[2]))^2
+    \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) -
+          sqrt(1 - p[2]))^2}
 
     This formula assumes that the probability vectors derived from the
     methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function

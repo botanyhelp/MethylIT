@@ -75,7 +75,7 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
    if (is.null(formula) && !is.null(grouping)) {
        vn <- setdiff(colnames(data), as.character(grouping))
        if (length(vn) < n.pc) {
-           ans <- "The number of predictor variables must be greater than "
+           ans <- "The number of number predictor variables must be greater than "
            ans1 <- "or equal the number of principal components: "
            ArgumentCheck::addError(msg=paste0(ans, ans1, n.pc), argcheck=Check)
        }
@@ -125,22 +125,28 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #' @description Predict using a PCA-LDA model built with function 'pcaLDA'
 #' @details NULL
 #' @param object To use with function 'predict'. A 'pcaLDA' object containing a
-#'     list of two objects: 1) an object of class inheriting from "lda" and 
-#'     2) an object of class inheriting from "prcomp".
+#'     list of two objects: 1) an object of class inheriting from "lda" and 2)
+#'     an object of class inheriting from "prcomp".
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction
-#' @param type To use with function 'predict'. . The type of prediction
-#'     required. The default is "all" given by function 'predict.lda' from MASS
-#'     package: 'class', 'posterior', and 'scores' (see ?predict.lda).
+#' @param type To use with function 'predict'. The type of prediction
+#'     required.  The default is "all" basic predictions: classes and posterior
+#'     classification probabilities. Option "lda.pred" returns the
+#'     object given by function 'predict.lda' from MASS package: 'class',
+#'     'posterior', 'scores' (cases scores on discriminant variables,
+#'     see \code{\link[MASS]{lda}}.
 #' @param ... Not in use.
 #' @importFrom S4Vectors mcols
+#' @seealso \code{\link{pcaQDA}}, \code{\link[MASS]{lda}} and
+#'     \code{\link[MASS]{predict.lda}}
 #' @export
 predict.pcaLDA <- function(object, newdata,
                            type = c("lda.pred", "class", "posterior",
-                                    "scores", "pca.ind.coord"), ...) {
+                                    "scores", "pca.ind.coord", "all"), ...) {
    if (!inherits(object, "pcaLDA")) {
        stop("* 'object' must be a model from class 'pcaLDA'")
    }
+   type <- match.arg(type)
    vn <- rownames(object$pca$rotation)
 
    if (!is.null(newdata) && inherits(newdata, c("pDMP", "InfDiv", "GRanges"))) {
@@ -168,8 +174,8 @@ predict.pcaLDA <- function(object, newdata,
    ## Centering and scaling new individuals
    dt.scaled <- scale(newdata, center=object$pca$center,
                    scale=object$pca$scale)
-  ## Coordinates of the individuals
-  coord_func <- function(ind, loadings) {
+   ## Coordinates of the individuals
+   coord_func <- function(ind, loadings) {
        x <- loadings*ind
        return(apply(x, 2, sum))
    }
@@ -180,9 +186,14 @@ predict.pcaLDA <- function(object, newdata,
    ind.coord <- t(apply(dt.scaled, 1, coord_func, loadings))
    if (nc == 1 ) ind.coord <- t(ind.coord)
    pred <- predict(object$lda, newdata=ind.coord, prior=object$lda$prior)
-   pred <- switch(type[1], lda.pred=pred, class=pred$class,
-               posterior=pred$posterior,
-               scores=pred$x, ## cases scores on discriminant variables
-               pca.ind.coord=ind.coord)
-  return(pred)
+   pred <- switch(type,
+                   lda.pred = pred,
+                   class = pred$class,
+                   posterior = pred$posterior,
+                   scores = pred$x, ## cases scores on discriminant variables
+                   pca.ind.coord = ind.coord,
+                   all = list(class = pred$class,
+                               posterior = pred$posterior,
+                               pca.ind.coord = ind.coord))
+   return(pred)
 }
