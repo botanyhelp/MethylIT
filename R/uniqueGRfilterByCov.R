@@ -92,6 +92,7 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
 
    if (length(min.coverage) == 1) min.coverage <- c(min.coverage, min.coverage)
    if (length(min.meth) == 1) min.meth <- c(min.meth, min.meth)
+   if (length(min.umeth) == 1) min.umeth <- c(min.umeth, min.umeth)
 
    cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
@@ -116,14 +117,19 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
 
        # To remove positions similar to, e.g., c1 = 20, 40, c2 = 1 & t2 = 0,
        # not captured on the above filtering conditions (see example).
+       cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
+       cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
+
        c1 <- mcols(x[, 1])[, 1]
        c2 <- mcols(x[, 3])[, 1]
 
        t1 <- mcols(x[, 2])[, 1]
        t2 <- mcols(x[, 4])[, 1]
 
-       idx <- which((t1 <= min.umeth) & (c1 > 0) & (c1 < min.meth[1]))
-       idx1 <- which((t2 <= min.umeth) & (c2 > 0) & (c2 < min.meth[2]))
+       idx <- which((t1 <= min.umeth[1]) & (c1 > 0) & (c1 < min.meth[1]) &
+                       cov1 < min.coverage[1])
+       idx1 <- which((t2 <= min.umeth[2]) & (c2 > 0) & (c2 < min.meth[2]) &
+                       cov2 < min.coverage[2])
        idx <- union(idx, idx1)
        x <- x[ -idx ]
    }
