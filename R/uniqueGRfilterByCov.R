@@ -59,13 +59,24 @@
 #'   counts filtered for each cytosine position.
 #'
 #' @examples
-#' dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,
-#'                     mC = 1:5, uC = 1:5)
-#' dfChr2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
-#'                     mC = 1:7, uC = 1:7)
-#' gr1 <- makeGRangesFromDataFrame(dfChr1, keep.extra.columns = TRUE)
-#' gr2 <- makeGRangesFromDataFrame(dfChr2, keep.extra.columns = TRUE)
+#' df1 <- data.frame(chr = "chr1", start = 11:16, end = 11:16,
+#'                   mC = c(2,10,7,9,1,10), uC = c(30,20,4,8,0,10))
+#' df2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
+#'                   mC2 = 1:7, uC2 = 0:6)
+#' gr1 <- makeGRangesFromDataFrame(df1, keep.extra.columns = TRUE)
+#' gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
+#'
+#' ## Filtering
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
+#' r1
+#' ## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
+#' ## filtering conditions of min.coverage = 4 and lead to meaningless situations
+#' ## with methylation levels p = 1/(1 + 0) = 1
+#' r1[c(2,5)]
+#'
+#' ## The last situation can be prevent, in this case, by setting min.meth = 4:
+#' r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
+#' r1
 #'
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
@@ -126,9 +137,9 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
        t1 <- mcols(x[, 2])[, 1]
        t2 <- mcols(x[, 4])[, 1]
 
-       idx <- which((t1 <= min.umeth[1]) & (c1 > 0) & (c1 < min.meth[1]) &
+       idx <- which((t1 <= min.umeth[1]) & (c1 > 0) & (c1 <= min.meth[1]) &
                        cov1 < min.coverage[1])
-       idx1 <- which((t2 <= min.umeth[2]) & (c2 > 0) & (c2 < min.meth[2]) &
+       idx1 <- which((t2 <= min.umeth[2]) & (c2 > 0) & (c2 <= min.meth[2]) &
                        cov2 < min.coverage[2])
        idx <- union(idx, idx1)
        x <- x[ -idx ]
