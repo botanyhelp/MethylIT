@@ -30,7 +30,7 @@
 #'     each sample.
 #' @param min.umeth An integer or an integer vector of length 2. Min number of
 #'     reads to consider cytosine position. Specifically cytosine positions
-#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+#'     where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
 #' @param percentile Threshold to remove the outliers from each file and all
@@ -122,8 +122,8 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
        t1 <- mcols(x[, 2])[, 1]
        t2 <- mcols(x[, 4])[, 1]
 
-       idx <- which((t1 <= min.umeth) & (c1 > 0) & (c1 <= min.meth[1]))
-       idx1 <- which((t2 <= min.umeth) & (c2 > 0) & (c2 <= min.meth[2]))
+       idx <- which((t1 <= min.umeth) & (c1 > 0) & (c1 < min.meth[1]))
+       idx1 <- which((t2 <= min.umeth) & (c2 > 0) & (c2 < min.meth[2]))
        idx <- union(idx, idx1)
        x <- x[ -idx ]
    }

@@ -36,7 +36,7 @@ each sample.}
 
 \item{min.umeth}{An integer or an integer vector of length 2. Min number of
 reads to consider cytosine position. Specifically cytosine positions
-where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
 removed, where mC and uC stand for the numbers of methylated and
 unmethylated reads. Default is min.umeth = 0.}
 
