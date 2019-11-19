@@ -125,12 +125,14 @@ For the current version, the Information divergence of methylation
 
     It is important to observe that several filtering conditions are provided
     to select biological meaningful cytosine positions, which prevent to
-    carry experimental errors in the dowstream analyses. It is the user
-    responsability to check whether cytosine positions used in the analysis
-    are biological meaningful. For example, a cytosine position with counts
-    mC1 = 10 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 = 0 in an
-    'indv' sample will lead to methylation levels p1 = 0.333 and p2 = 1,
-    respectively, and TV = p2 - p1 = 0.667, which apparently indicates a
+    carry experimental errors in the dowstream analyses. By filtering the
+    read count we try to remove bad quality data, which would be in the edge
+    of the experimental error originated by the BS-seq sequencing. It is
+    responsability of the user to check whether cytosine positions used in
+    the analysis are biological meaningful. For example, a cytosine position
+    with counts mC1 = 10 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 =
+    0 in an 'indv' sample will lead to methylation levels p1 = 0.333 and p2 =
+    1, respectively, and TV = p2 - p1 = 0.667, which apparently indicates a
     hypermethylated site. However, there are not enough reads supporting p2 =
     1. A Bayesian estimation of TV will reveal that this site would be, in
     fact, hypomethylated. So, the best practice will be the removing of sites
