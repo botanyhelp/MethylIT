@@ -100,7 +100,7 @@ r1
 ## with methylation levels p = 1/(1 + 0) = 1
 r1[c(2,5)]
 
-## The last situation can be prevent, in this case, by setting min.meth = 4:
+## The last situation can be prevent, in this case, by setting min.meth = 1:
 r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
 r1
 
