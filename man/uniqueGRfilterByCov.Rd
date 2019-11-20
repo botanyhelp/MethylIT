@@ -96,8 +96,8 @@ gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
 r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
 r1
 ## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
-## filtering conditions of min.coverage = 4 and lead to meaningless situations
-## with methylation levels p = 1/(1 + 0) = 1
+## filtering conditions of min.coverage = 4 and lead to meaningless
+## situations with methylation levels p = 1/(1 + 0) = 1
 r1[c(2,5)]
 
 ## The last situation can be prevent, in this case, by setting min.meth = 1:

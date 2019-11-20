@@ -70,8 +70,8 @@
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
 #' r1
 #' ## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
-#' ## filtering conditions of min.coverage = 4 and lead to meaningless situations
-#' ## with methylation levels p = 1/(1 + 0) = 1
+#' ## filtering conditions of min.coverage = 4 and lead to meaningless
+#' ## situations with methylation levels p = 1/(1 + 0) = 1
 #' r1[c(2,5)]
 #'
 #' ## The last situation can be prevent, in this case, by setting min.meth = 1:
@@ -111,8 +111,13 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
    q2 <- quantile(cov2, probs=percentile)
    q <- max(q1, q2, high.coverage)
    idx1 <- which((cov1 >= min.coverage[1]) | (cov2 >= min.coverage[2]))
+   if (!(length(idx1) > 0))
+       stop("*** Some filtering condition from min.coverage = c(",
+           paste(min.coverage, collapse = ","), ") is not hold by the sample")
    idx2 <- which((cov1 <= q) & (cov2 <= q))
    idx <- intersect(idx1, idx2)
+   if (!(length(idx) > 0))
+       stop("*** Some filtering condition is not hold by the sample")
 
    if (max(min.meth) > 0) {
        c1 <- mcols(x[, 1])[, 1]
@@ -123,13 +128,21 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
 
        idx1 <- which((c1 >= min.meth[1]) | (c2 >= min.meth[2]))
        idx <- intersect(idx, idx1)
+       if (!(length(idx) > 0))
+           stop("*** Some filtering condition from min.meth = c(",
+               paste(min.meth, collapse = ","), ") is not hold by the sample")
 
        x <- x[ idx ]
 
        # To remove positions similar to, e.g., c1 = 20, 40, c2 = 1 & t2 = 0,
        # not captured on the above filtering conditions (see example).
-       cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
-       cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
+       if (length(x) == 1) {
+           cov1 <- sum(as.matrix(mcols(x[,c(1,2)])))
+           cov2 <- sum(as.matrix(mcols(x[,c(3,4)])))
+       } else {
+           cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
+           cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
+       }
 
        c1 <- mcols(x[, 1])[, 1]
        c2 <- mcols(x[, 3])[, 1]
@@ -142,7 +155,7 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
        idx1 <- which((t2 <= min.umeth[2]) & (c2 > 0) & (c2 <= min.meth[2]) &
                        cov2 < min.coverage[2])
        idx <- union(idx, idx1)
-       x <- x[ -idx ]
+       if (length(idx) > 0) x <- x[ -idx ]
    }
    return(x)
 }

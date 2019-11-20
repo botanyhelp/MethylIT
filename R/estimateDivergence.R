@@ -170,6 +170,11 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
                                min.coverage=min.coverage, min.meth = min.meth,
                                min.umeth = min.umeth, percentile=percentile,
                                num.cores=1L, tasks=tasks, verbose=verbose, ...)
+           if (length(x) < 2)
+               stop("*** At least two cytosine sites must pass the filtering ",
+                   "conditions to estimate informations divergences. \n",
+                   "The issue was found at sample number: ", k, ", id: ",
+                   names(indv)[k])
            x = estimateBayesianDivergence(x, Bayesian=Bayesian, num.cores=1L,
                                tasks=tasks, meth.level=meth.level,
                                verbose=verbose)
