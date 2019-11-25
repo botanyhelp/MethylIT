@@ -15,8 +15,8 @@
 #' @param X numerical vector
 #' @param sample.size size of the sample
 #' @param model Distribution model to fit, two-parameters and three-parameters
-#'     Weibull model ("2P" and "3P). Default is "all" and the model with the
-#'     best AIC criterion is reported.
+#'     Weibull model ("Weibull2P" or simply "2P" and "Weibull3P" or "3P).
+#'     Default is "all" and the model with the best AIC criterion is reported.
 #' @param npoints number of points used in the fit
 #' @param maxiter positive integer. Termination occurs when the number of
 #'     iterations reaches maxiter. Default value: 1024
@@ -46,7 +46,7 @@
 #'
 #' @references 1. Stevens JP. Applied Multivariate Statistics for the Social
 #'     Sciences. Fifth Edit. Routledge Academic; 2009.
-#' @author Robersy Sanchez - 06/03/2016
+#' @author Robersy Sanchez - 06/03/2016 <https://github.com/genomaths>
 #'
 #' @examples
 #' x <- rweibull(1000, shape=0.75, scale=1)
@@ -60,11 +60,15 @@
 #' @importFrom minpack.lm nlsLM
 #'
 #' @export
-weibull3P <- function(X, sample.size = 20, model = c("all", "2P", "3P"),
+weibull3P <- function(X, sample.size = 20,
+                       model = c("all", "2P", "3P", "Weibull2P", "Weibull3P"),
                        npoints=NULL, maxiter = 1024, tol = 1e-12, ftol = 1e-12,
                        ptol=1e-12, minFactor=10^-6, nlms = FALSE,
                        verbose=TRUE, ...) {
    model <- match.arg(model)
+   if (model == "Weibull2P") model <- "2P"
+   if (model == "Weibull3P") model <- "3P"
+
    ind <- which(X > 0)
    if (length(ind) > sample.size) {
        X <- X[ind]
