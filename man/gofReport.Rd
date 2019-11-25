@@ -2,7 +2,7 @@
 % Please edit documentation in R/gofReport.R
 \name{gofReport}
 \alias{gofReport}
-\title{Report the Best Fitted Probility Distribution Model}
+\title{Report the Best Fitted Probability Distribution Model}
 \usage{
 gofReport(HD, model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"),
   column = 9, absolute = FALSE, output = c("best.model", "all"),

@@ -1,5 +1,5 @@
 #' @rdname gofReport
-#' @title Report the Best Fitted Probility Distribution Model
+#' @title Report the Best Fitted Probability Distribution Model
 #' @description In Methyl-IT,  the signal detection step requires for the
 #'     knowledge of the probability distribution of the methylation noise, which
 #'     is the null hypothesis used to discriminate the signal from the noise.
