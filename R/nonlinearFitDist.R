@@ -37,13 +37,15 @@
 #'     with four parameters (GGamam4P).
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
-#'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which is
-#'     an information divergence that can be fitted to Weibull or to Generalized
-#'     Gamma distribution.
+#'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
+#'     is an information divergence that can be fitted to Weibull or to
+#'     Generalized Gamma distribution.
 #' @param npoints number of points used in the fit
-#' @param model Distribution model to fit, two-parameters and three-parameters
-#'     Weibull model ("2P" and "3P"). Default is "all" and the model with the
-#'     best AIC criterion is reported.
+#' @param model Optional. Only when dist.name = "Weibull". A selection of the
+#'     distribution model, two-parameters and three-parameters Weibull model
+#'     ("2P" and "3P"). Default is "all" and the model with the best AIC
+#'     criterion is reported. Alternatively, just use dist.name = "Weibull2P" or
+#'     dist.name = "Weibull3P".
 #' @param maxiter positive integer. Termination occurs when the number of
 #'     iterations reaches maxiter. Default value: 1024
 #' @param tol A positive numeric value specifying the tolerance level for the
@@ -66,14 +68,15 @@
 #'     100*(length(par) + 1) if maxfev = integer(), where par is the list or
 #'     vector of parameters to be optimized.
 #' @param num.cores The number of cores to use, i.e. at most how many child
-#'     processes will be run simultaneously (see bplapply function from
-#'     BiocParallel package).
+#'     processes will be run simultaneously (see
+#'     \code{\link[BiocParallel]{bplapply}} function from BiocParallel package).
 #' @param tasks integer(1). The number of tasks per job. value must be a scalar
 #'     integer >= 0L. In this documentation a job is defined as a single call to
 #'     a function, such as bplapply, bpmapply etc. A task is the division of the
 #'     X argument into chunks. When tasks == 0 (default), X is divided as evenly
-#'     as possible over the number of workers (see MulticoreParam from
-#'     BiocParallel package).
+#'     as possible over the number of workers (see
+#'     \code{\link[BiocParallel]{MulticoreParam-class}} from BiocParallel
+#'     package).
 #' @param verbose If TRUE, prints the function log to stdout
 #' @param ... other parameters
 #'
@@ -81,12 +84,15 @@
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
 #'     coefficient covariance matrix.
 #' @references
-#'     1. Stevens JP. Applied Multivariate Statistics for the Social
-#'     Sciences. Fifth Edit. Routledge Academic; 2009.
-#'     2. [1] R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-#'     Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-#'     Mar. 2016.
-#' @author Robersy Sanchez 01/31/2018
+#'     \enumerate{
+#'         \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+#'             Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+#'             Mar. 2016.
+#'         \item Stevens JP. Applied Multivariate Statistics for the Social
+#'             Sciences. Fifth Edit. Routledge Academic; 2009.
+#'     }
+#' @seealso \code{\link{gofReport}}
+#' @author Robersy Sanchez 01/31/2018 <https://github.com/genomaths>
 #'
 #' @examples
 #' ## Load a dataset with Hellinger Divergence of methylation levels on it.
@@ -142,10 +148,20 @@ nonlinearFitDist <- function(LR, column=9, dist.name="Weibull",
                                        ftol = ftol, ptol = ptol,
                                        verbose = verbose),
                    Weibull=weibull3P(x, sample.size=sample.size,
-                                   model = model, npoints=npoints,
-                                   maxiter=maxiter, tol=tol, ftol=ftol,
-                                   ptol = ptol, minFactor = minFactor,
-                                   verbose=verbose, ...),
+                                       model = model, npoints=npoints,
+                                       maxiter=maxiter, tol=tol, ftol=ftol,
+                                       ptol = ptol, minFactor = minFactor,
+                                       verbose=verbose, ...),
+                   Weibull2P=weibull3P(x, sample.size=sample.size,
+                                       model = "2P", npoints=npoints,
+                                       maxiter=maxiter, tol=tol, ftol=ftol,
+                                       ptol = ptol, minFactor = minFactor,
+                                       verbose=verbose, ...),
+                   Weibull3P=weibull3P(x, sample.size=sample.size,
+                                       model = "3P", npoints=npoints,
+                                       maxiter=maxiter, tol=tol, ftol=ftol,
+                                       ptol = ptol, minFactor = minFactor,
+                                       verbose=verbose, ...),
                    Gamma2P=fitGammaDist(x, location.par=FALSE,
                                        sample.size=sample.size, npoints=npoints,
                                        maxiter=maxiter, ftol=ftol, ptol=ptol,

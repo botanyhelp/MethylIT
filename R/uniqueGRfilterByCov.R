@@ -28,6 +28,11 @@
 #'     '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 #'     integer vector, then the corresponding min number of reads is applied to
 #'     each sample.
+#' @param min.umeth An integer or an integer vector of length 2. Min number of
+#'     reads to consider cytosine position. Specifically cytosine positions
+#'     where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
+#'     removed, where mC and uC stand for the numbers of methylated and
+#'     unmethylated reads. Default is min.umeth = 0.
 #' @param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
@@ -54,22 +59,34 @@
 #'   counts filtered for each cytosine position.
 #'
 #' @examples
-#' dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,
-#'                     mC = 1:5, uC = 1:5)
-#' dfChr2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
-#'                     mC = 1:7, uC = 1:7)
-#' gr1 <- makeGRangesFromDataFrame(dfChr1, keep.extra.columns = TRUE)
-#' gr2 <- makeGRangesFromDataFrame(dfChr2, keep.extra.columns = TRUE)
+#' df1 <- data.frame(chr = "chr1", start = 11:16, end = 11:16,
+#'                   mC = c(2,10,7,9,1,10), uC = c(30,20,4,8,0,10))
+#' df2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
+#'                   mC2 = 1:7, uC2 = 0:6)
+#' gr1 <- makeGRangesFromDataFrame(df1, keep.extra.columns = TRUE)
+#' gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
+#'
+#' ## Filtering
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
+#' r1
+#' ## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
+#' ## filtering conditions of min.coverage = 4 and lead to meaningless
+#' ## situations with methylation levels p = 1/(1 + 0) = 1
+#' r1[c(2,5)]
+#'
+#' ## The last situation can be prevent, in this case, by setting min.meth = 1:
+#' r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
+#' r1
 #'
 #' @importFrom GenomicRanges GRanges GRangesList
 #' @export
 #'
-uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
-                               percentile=.9999, high.coverage=NULL,
-                               columns=c(mC=1, uC=2), num.cores=1L,
-                               ignore.strand=FALSE, tasks=0L,
-                               verbose=TRUE, ...) {
+uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
+                               min.umeth = 0, percentile = 0.9999,
+                               high.coverage = NULL,
+                               columns = c(mC = 1, uC = 2), num.cores = 1L,
+                               ignore.strand = FALSE, tasks = 0L,
+                               verbose = TRUE, ...) {
 
    if (!is.null(y)) {
        x <- x[, columns]
@@ -86,6 +103,7 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
 
    if (length(min.coverage) == 1) min.coverage <- c(min.coverage, min.coverage)
    if (length(min.meth) == 1) min.meth <- c(min.meth, min.meth)
+   if (length(min.umeth) == 1) min.umeth <- c(min.umeth, min.umeth)
 
    cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
@@ -93,14 +111,51 @@ uniqueGRfilterByCov <- function(x, y=NULL, min.coverage=4, min.meth=0,
    q2 <- quantile(cov2, probs=percentile)
    q <- max(q1, q2, high.coverage)
    idx1 <- which((cov1 >= min.coverage[1]) | (cov2 >= min.coverage[2]))
+   if (!(length(idx1) > 0))
+       stop("*** Some filtering condition from min.coverage = c(",
+           paste(min.coverage, collapse = ","), ") is not hold by the sample")
    idx2 <- which((cov1 <= q) & (cov2 <= q))
    idx <- intersect(idx1, idx2)
+   if (!(length(idx) > 0))
+       stop("*** Some filtering condition is not hold by the sample")
 
    if (max(min.meth) > 0) {
        c1 <- mcols(x[, 1])[, 1]
        c2 <- mcols(x[, 3])[, 1]
+
+       t1 <- mcols(x[, 2])[, 1]
+       t2 <- mcols(x[, 4])[, 1]
+
        idx1 <- which((c1 >= min.meth[1]) | (c2 >= min.meth[2]))
        idx <- intersect(idx, idx1)
+       if (!(length(idx) > 0))
+           stop("*** Some filtering condition from min.meth = c(",
+               paste(min.meth, collapse = ","), ") is not hold by the sample")
+
+       x <- x[ idx ]
+
+       # To remove positions similar to, e.g., c1 = 20, 40, c2 = 1 & t2 = 0,
+       # not captured on the above filtering conditions (see example).
+       if (length(x) == 1) {
+           cov1 <- sum(as.matrix(mcols(x[,c(1,2)])))
+           cov2 <- sum(as.matrix(mcols(x[,c(3,4)])))
+       } else {
+           cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
+           cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
+       }
+
+       c1 <- mcols(x[, 1])[, 1]
+       c2 <- mcols(x[, 3])[, 1]
+
+       t1 <- mcols(x[, 2])[, 1]
+       t2 <- mcols(x[, 4])[, 1]
+
+       idx <- which((t1 <= min.umeth[1]) & (c1 > 0) & (c1 <= min.meth[1]) &
+                       cov1 < min.coverage[1])
+       idx1 <- which((t2 <= min.umeth[2]) & (c2 > 0) & (c2 <= min.meth[2]) &
+                       cov2 < min.coverage[2])
+       idx <- union(idx, idx1)
+       if (length(idx) > 0) x <- x[ -idx ]
    }
-   return(x[ idx ])
+   return(x)
 }

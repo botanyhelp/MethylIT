@@ -5,9 +5,9 @@
 \title{Information divergence estimator in respect to a reference sample}
 \usage{
 estimateDivergence(ref, indiv, Bayesian = FALSE, columns = NULL,
-  min.coverage = 4, min.meth = 0, high.coverage = NULL,
-  percentile = 0.999, num.cores = 1L, tasks = 0L,
-  meth.level = FALSE, verbose = TRUE, ...)
+  min.coverage = 4, min.meth = 4, min.umeth = 0,
+  high.coverage = NULL, percentile = 0.999, num.cores = 1L,
+  tasks = 0L, meth.level = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{ref}{The GRanges object of the reference individual that will be used
@@ -37,7 +37,13 @@ is applied to each sample.}
 where the numbers of read counts of methylated cytosine in both samples,
 '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 integer vector, then the corresponding min number of reads is applied to
-each sample.}
+each sample. Default is min.meth = 4.}
+
+\item{min.umeth}{An integer or an integer vector of length 2. Min number of
+reads to consider cytosine position. Specifically cytosine positions
+where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+removed, where mC and uC stand for the numbers of methylated and
+unmethylated reads. Default is min.umeth = 0.}
 
 \item{high.coverage}{An integer for read counts. Cytosine sites having
 higher coverage than this are discarded.}
@@ -116,6 +122,24 @@ For the current version, the Information divergence of methylation
     The function applies a pairwise filtering after building a single GRanges
     from the two GRanges objects. Experimentally available cytosine sites are
     paired using the function 'uniqueGRanges'.
+
+    It is important to observe that several filtering conditions are provided
+    to select biological meaningful cytosine positions, which prevent to
+    carry experimental errors in the dowstream analyses. By filtering the
+    read count we try to remove bad quality data, which would be in the edge
+    of the experimental error originated by the BS-seq sequencing. It is
+    responsability of the user to check whether cytosine positions used in
+    the analysis are biological meaningful. For example, a cytosine position
+    with counts mC1 = 10 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 =
+    0 in an 'indv' sample will lead to methylation levels p1 = 0.333 and p2 =
+    1, respectively, and TV = p2 - p1 = 0.667, which apparently indicates a
+    hypermethylated site. However, there are not enough reads supporting p2 =
+    1. A Bayesian estimation of TV will reveal that this site would be, in
+    fact, hypomethylated. So, the best practice will be the removing of sites
+    like that. This particular case is removed under the default settings:
+    min.coverage = 4, min.meth = 4, and min.umeth = 0 (see example for
+    function \code{\link{uniqueGRfilterByCov}}, called by
+    estimateDivergence).
 }
 \examples{
     num.samples <- 250

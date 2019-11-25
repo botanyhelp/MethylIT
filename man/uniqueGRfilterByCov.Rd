@@ -5,9 +5,9 @@
 \title{Unique GRanges of methylation read counts filtered by coverages}
 \usage{
 uniqueGRfilterByCov(x, y = NULL, min.coverage = 4, min.meth = 0,
-  percentile = 0.9999, high.coverage = NULL, columns = c(mC = 1, uC =
-  2), num.cores = 1L, ignore.strand = FALSE, tasks = 0L,
-  verbose = TRUE, ...)
+  min.umeth = 0, percentile = 0.9999, high.coverage = NULL,
+  columns = c(mC = 1, uC = 2), num.cores = 1L, ignore.strand = FALSE,
+  tasks = 0L, verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{An object from the classes 'GRanges', 'InfDiv', or 'pDMP' with
@@ -33,6 +33,12 @@ where the numbers of read counts of methylated cytosine in both samples,
 '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 integer vector, then the corresponding min number of reads is applied to
 each sample.}
+
+\item{min.umeth}{An integer or an integer vector of length 2. Min number of
+reads to consider cytosine position. Specifically cytosine positions
+where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
+removed, where mC and uC stand for the numbers of methylated and
+unmethylated reads. Default is min.umeth = 0.}
 
 \item{percentile}{Threshold to remove the outliers from each file and all
 files stacked.}
@@ -79,12 +85,23 @@ Cytosine sites with 'coverage' > 'min.coverage' in at least one of
     that the columns of methylated and unmethylated counts are given.
 }
 \examples{
-dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,
-                    mC = 1:5, uC = 1:5)
-dfChr2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
-                    mC = 1:7, uC = 1:7)
-gr1 <- makeGRangesFromDataFrame(dfChr1, keep.extra.columns = TRUE)
-gr2 <- makeGRangesFromDataFrame(dfChr2, keep.extra.columns = TRUE)
+df1 <- data.frame(chr = "chr1", start = 11:16, end = 11:16,
+                  mC = c(2,10,7,9,1,10), uC = c(30,20,4,8,0,10))
+df2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
+                  mC2 = 1:7, uC2 = 0:6)
+gr1 <- makeGRangesFromDataFrame(df1, keep.extra.columns = TRUE)
+gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
+
+## Filtering
 r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
+r1
+## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
+## filtering conditions of min.coverage = 4 and lead to meaningless
+## situations with methylation levels p = 1/(1 + 0) = 1
+r1[c(2,5)]
+
+## The last situation can be prevent, in this case, by setting min.meth = 1:
+r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
+r1
 
 }

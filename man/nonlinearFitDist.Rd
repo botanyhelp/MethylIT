@@ -30,15 +30,17 @@ with four parameters (GGamam4P).}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
-analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which is
-an information divergence that can be fitted to Weibull or to Generalized
-Gamma distribution.}
+analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
+is an information divergence that can be fitted to Weibull or to
+Generalized Gamma distribution.}
 
 \item{npoints}{number of points used in the fit}
 
-\item{model}{Distribution model to fit, two-parameters and three-parameters
-Weibull model ("2P" and "3P"). Default is "all" and the model with the
-best AIC criterion is reported.}
+\item{model}{Optional. Only when dist.name = "Weibull". A selection of the
+distribution model, two-parameters and three-parameters Weibull model
+("2P" and "3P"). Default is "all" and the model with the best AIC
+criterion is reported. Alternatively, just use dist.name = "Weibull2P" or
+dist.name = "Weibull3P".}
 
 \item{maxiter}{positive integer. Termination occurs when the number of
 iterations reaches maxiter. Default value: 1024}
@@ -63,15 +65,16 @@ sum of squares has been decreased or until the step-size factor has been
 reduced below this limit. Default value: 10^-6.}
 
 \item{num.cores}{The number of cores to use, i.e. at most how many child
-processes will be run simultaneously (see bplapply function from
-BiocParallel package).}
+processes will be run simultaneously (see
+\code{\link[BiocParallel]{bplapply}} function from BiocParallel package).}
 
 \item{tasks}{integer(1). The number of tasks per job. value must be a scalar
 integer >= 0L. In this documentation a job is defined as a single call to
 a function, such as bplapply, bpmapply etc. A task is the division of the
 X argument into chunks. When tasks == 0 (default), X is divided as evenly
-as possible over the number of workers (see MulticoreParam from
-BiocParallel package).}
+as possible over the number of workers (see
+\code{\link[BiocParallel]{MulticoreParam-class}} from BiocParallel
+package).}
 
 \item{maxfev}{integer; termination occurs when the number of calls to fn has
 reached maxfev. Note that nls.lm sets the value of maxfev to
@@ -139,12 +142,17 @@ res
 
 }
 \references{
-1. Stevens JP. Applied Multivariate Statistics for the Social
-    Sciences. Fifth Edit. Routledge Academic; 2009.
-    2. [1] R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-    Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-    Mar. 2016.
+\enumerate{
+        \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+            Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+            Mar. 2016.
+        \item Stevens JP. Applied Multivariate Statistics for the Social
+            Sciences. Fifth Edit. Routledge Academic; 2009.
+    }
+}
+\seealso{
+\code{\link{gofReport}}
 }
 \author{
-Robersy Sanchez 01/31/2018
+Robersy Sanchez 01/31/2018 <https://github.com/genomaths>
 }
