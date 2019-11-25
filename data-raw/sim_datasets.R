@@ -19,7 +19,7 @@ treatment.nam <- c("T1", "T2", "T3")
 
 # Reference group
 ref0 = simulateCounts(num.samples = 4, sites = sites, alpha = alpha.ct, beta = 0.5,
-                      size = 50, theta = 4.5, sample.ids = c("R1", "R2", "R3"))
+                      size = 50, theta = 4.5, sample.ids = c("R1", "R2", "R3", "R4"))
 # Control group
 ctrl = simulateCounts(num.samples = 3, sites = sites, alpha = alpha.ct, beta = 0.5,
                       size = 50, theta = 4.5, sample.ids = control.nam)
