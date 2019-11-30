@@ -4,9 +4,9 @@
 \alias{estimateBayesianDivergence}
 \title{Information divergence estimator}
 \usage{
-estimateBayesianDivergence(x, Bayesian = FALSE, num.cores = 1,
-  tasks = 0L, columns = c(mC1 = 1, uC1 = 2, mC2 = 3, uC2 = 4),
-  meth.level = FALSE, preserve.gr = FALSE, verbose = TRUE)
+estimateBayesianDivergence(x, Bayesian = FALSE, JD = FALSE,
+  num.cores = 1, tasks = 0L, columns = c(mC1 = 1, uC1 = 2, mC2 = 3,
+  uC2 = 4), meth.level = FALSE, preserve.gr = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{A matrix of counts or GRanges object with the table of counts in
@@ -18,6 +18,10 @@ and unmethylated counts for treatment sample, respectively.}
 
 \item{Bayesian}{logical. Whether to perform the estimations based on
 posterior estimations of methylation levels.}
+
+\item{JD}{Logic (Default:FALSE). Option on whether to add a column with
+values of J-information divergence (see \code{\link{estimateJDiv}}).
+It is only compute if JD = TRUE and meth.level = FALSE.}
 
 \item{num.cores}{The number of cores to use, i.e. at most how many child
 processes will be run simultaneously (see 'bplapply' function from
@@ -78,6 +82,7 @@ For the current version, the Information divergence of methylation
     'estimateHellingerDiv') are an unbiased estimation of the expected one.
 }
 \examples{
+## The read count data are created
     x <- data.frame(chr = "chr1", start = 1:10,
                     end = 1:10,strand = '*',
                     mC1 = rnbinom(size = 10, mu = 4, n = 500),
@@ -85,7 +90,12 @@ For the current version, the Information divergence of methylation
                     mC2 = rnbinom(size = 10, mu = 4, n = 500),
                     uC2 = rnbinom(size = 10, mu = 4, n = 500))
     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
-    HD <- estimateBayesianDivergence(x)
+## Estimation of the information divergences
+    hd <- estimateBayesianDivergence(x, JD = TRUE)
+
+## Keep in mind that Hellinger and J divergences are, in general, correlated!
+    cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
+            method = "kendall")
 
 }
 \references{

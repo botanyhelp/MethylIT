@@ -6,8 +6,9 @@
 \usage{
 estimateDivergence(ref, indiv, Bayesian = FALSE, columns = NULL,
   min.coverage = 4, min.meth = 4, min.umeth = 0,
-  high.coverage = NULL, percentile = 0.999, num.cores = 1L,
-  tasks = 0L, meth.level = FALSE, verbose = TRUE, ...)
+  high.coverage = NULL, percentile = 0.999, JD = FALSE,
+  num.cores = 1L, tasks = 0L, meth.level = FALSE, verbose = TRUE,
+  ...)
 }
 \arguments{
 \item{ref}{The GRanges object of the reference individual that will be used
@@ -51,6 +52,10 @@ higher coverage than this are discarded.}
 \item{percentile}{Threshold to remove the outliers from each file and all
 files stacked.}
 
+\item{JD}{Logic (Default:FALSE). Option on whether to add a column with
+values of J-information divergence (see \code{\link{estimateJDiv}}).
+It is only compute if JD = TRUE and meth.level = FALSE.}
+
 \item{num.cores}{The number of cores to use, i.e. at most how many child
 processes will be run simultaneously (see 'bplapply' function from
 BiocParallel package).}
@@ -63,7 +68,7 @@ evenly as possible over the number of workers (see MulticoreParam from
 BiocParallel package).}
 
 \item{meth.level}{Logic. Whether methylation levels are given in place of
-counts.}
+counts. Default is FALSE.}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 
@@ -142,6 +147,7 @@ For the current version, the Information divergence of methylation
     estimateDivergence).
 }
 \examples{
+## The read count data are created
     num.samples <- 250
     x <- data.frame(chr = "chr1", start = 1:num.samples,
                     end = 1:num.samples,strand = '*',
@@ -153,7 +159,11 @@ For the current version, the Information divergence of methylation
                     uC = rnbinom(size = num.samples, mu = 4, n = 500))
     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
     y <- makeGRangesFromDataFrame(y, keep.extra.columns = TRUE)
-    HD <- estimateDivergence(ref = x, indiv = list(y))
+    hd <- estimateDivergence(ref = x, indiv = list(y), JD = TRUE)[[1]]
+
+## Keep in mind that Hellinger and J divergences are, in general, correlated!
+    cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
+            method = "kendall")
 
 }
 \author{
