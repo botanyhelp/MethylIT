@@ -16,8 +16,10 @@ gofReport(HD, model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"),
 model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"). See
 \code{\link{nonlinearFitDist}} for more options.}
 
-\item{column}{An integer number denoting the index of the GRanges column
-where the information divergence is given. Default column = 1}
+\item{column}{An integer number denoting the index of the GRanges column where
+the information divergence is given. Default column = 9, which is the
+column where the Hellinger divergence values are reported (by default) by
+function \code{\link{estimateDivergence}}.}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
