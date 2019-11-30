@@ -172,7 +172,7 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
            jdiv <- bplapply(seq_len(nrow(x)), function(i) {
                            estimateJDiv(p = as.numeric(x[i, c("p1", "p2")]))},
                            BPPARAM=bpparam)
-           x$jdiv <- jdiv
+           x$jdiv <- unlist(jdiv)
        }
    } else {
        if (verbose) cat("*** Estimating Hellinger divergence... \n")
