@@ -1,11 +1,32 @@
 #' @rdname estimateDivergence
 #'
-#' @title Information divergence estimator in respect to a reference sample
-#' @description Wrapper of 'InfDiv' function to operate on list of GRanges
-#' @details For the current version, the Information divergence of methylation
-#'     levels is estimated based on Hellinger divergence (H). If read counts are
-#'     provided, then Hellinger divergence is computed as given in the first
-#'     formula from Theorem 1 from reference 1. In the present case:
+#' @title Information Divergences of Methylation Levels
+#' @description This function prepares the data for the estimation of
+#'     information divergences and works as a wrapper calling the functions that
+#'     compute selected information divergences of methylation levels. In the
+#'     downstream analysis, the probability distribution of a given information
+#'     divergence is used in Methyl-IT as the null hypothesis of the noise
+#'     distribution, which permits, in a further signal detection step, the
+#'     discrimination of the methylation regulatory signal from the background
+#'     noise.
+#'
+#'     For the current version, two information divergences of methylation
+#'     levels are computed by default: 1) Hellinger divergence (\emph{H}) and 2)
+#'     the total variation distance (\emph{TVD}). In the context of methylation
+#'     analysis \emph{TVD} corresponds to the absolute difference of methylation
+#'     levels. Here, although the variable reported is the total variation
+#'     (\emph{TV}), the variable actually used for the downstream analysis is
+#'     \emph{TVD}. Once a differentially methylated position (DMP) is identified
+#'     in the downstream analysis, \emph{TV} is the standard indicator of
+#'     whether the cytosine position is hyper- or hypo-methylated.
+#'
+#'     The option to compute the J-information divergence (JD) is currently
+#'     provided. The motivation to introduce this divergence is given in the
+#'     help of function \code{\link{estimateJDiv}}.
+#'
+#' @details If read counts are provided, then Hellinger divergence is computed
+#'     as given in the first formula from Theorem 1 from reference 1. In the
+#'     present case:
 #'
 #'     \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
 #'          (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
@@ -29,7 +50,7 @@
 #'     the minimum coverage requested for the each cytosine site in the
 #'     reference sample.
 #'
-#'     If the methylation levels are provided in place of counts, then
+#'     If the methylation levels are provided in place of counts, then the
 #'     Hellinger divergence is computed as:
 #'     \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) -
 #'           sqrt(1 - p[2]))^2}
