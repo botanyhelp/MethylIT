@@ -90,7 +90,8 @@ The potential signals are cytosine sites k with information
 \examples{
 ## Get a dataset of Hellinger divergency of methylation levels and their
 ## corresponding best nonlinear fit distribution models from the package
-data(HD, nlms)
-PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 9L, alpha = 0.05)
+data(HD, gof)
+PS <- getPotentialDIMP(LR = HD, nlms = gof$nlms, dist.name = gof$bestModel,
+                    div.col = 9L, alpha = 0.05)
 
 }

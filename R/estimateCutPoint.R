@@ -152,7 +152,7 @@
 #'                             classifier1 = "qda",
 #'                             control.names = c("C1", "C2", "C3"),
 #'                             treatment.names = c("T1", "T2", "T3"),
-#'                             tv.cut = 0.92, clas.perf = TRUE, prop = 0.6,
+#'                             tv.cut = 0.68, clas.perf = TRUE, prop = 0.6,
 #'                             div.col = 9L)
 #' @importFrom S4Vectors mcols
 #' @importFrom caret confusionMatrix
