@@ -94,16 +94,18 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                       num.cores = 1L, verbose = FALSE, ...) {
    validateClass(HD)
    output <- match.arg(output)
+   model <- unique(model) # just in case
 
    idx <- is.element(model, c("Weibull2P", "Weibull3P",
-                              "Gamma2P", "Gamma3P"))
+                              "Gamma2P", "Gamma3P", "GGamma3P", "GGamma4P"))
 
-   if (!all(is.element(model,
-                       c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P")))) {
-       stop("*** The requested model is not listed. Please check it. Perhaps",
-           " you have some typing mistake")
+   if (!all(idx)) {
+       stop("*** The requested model is not listed. \n",
+            "The valid model names are: \n",
+            "'Weibull2P', 'Weibull3P', 'Gamma2P', 'Gamma3P',
+            'GGamma3P', and 'GGamma4P'")
    }
-   nams <- c("w2p", "w3p", "g2p", "g3p")
+   nams <- c("w2p", "w3p", "g2p", "g3p", "gg3p", "gg4p")
    nams <- nams[idx]
    sn <- names(HD)
 
