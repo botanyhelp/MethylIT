@@ -52,6 +52,9 @@
 #' @param output If output == "all", the table with the GoF statistics is
 #'     returned in a list together with the best fitted model and the
 #'     corresponding statistics. Default is "best.model"
+#' @param confl_model Logic. If TRUE, then the best model based on higest
+#'     R.Cross.val is returned for those samples where the model(s) with lowest
+#'     AIC has not the highest R.Cross.val.
 #' @param num.cores The number of cores to use in the nonlinear fit step, i.e.
 #'     at most how many child processes will be run simultaneously (see
 #'     \code{\link[BiocParallel]{bplapply}} function from BiocParallel package).
@@ -63,6 +66,22 @@
 #'     the next step to get the potential DMPs with function
 #'     \code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
 #'     table carrying the GoF values and the previously mentioned data.
+#'
+#'     The best model selection is based on the lowest AIC. However, if
+#'     'confl_model = TRUE', then the returned list will contain a sublist named
+#'     'confl_model' with the best model selected based on the highest
+#'     R.Cross.val. This sublist is returned only if at least there is one
+#'     sample where the model with the lowest AIC has not the highest
+#'     R.Cross.val. This report is useful to analyse any conflict between
+#'     models. For example, some times the best model selected based on AIC has
+#'     a R.Cross.val = 0.99945, while the higest R.Cross.val is 0.99950. In such
+#'     a situation the model with lowest AIC is still fine. However, some times
+#'     the model with the best AIC has some meaningless paramater value. For
+#'     example,  scale = 0.0000000001 in 'GGamm3P' or in 'Weibull2P' models.
+#'     This last situation can result from the numerical algorithm used in
+#'     the parameter estimation. The numerical algorithms for nonlinear fit
+#'     estimation are not perfect!
+#'
 #' @export
 #'
 #' @author Robersy Sanchez 11/25/2019 <https://github.com/genomaths>
@@ -91,16 +110,18 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                                    "Gamma2P", "Gamma3P"),
                       column = 9, absolute = FALSE,
                       output = c("best.model", "all"),
+                      confl_model = FALSE,
                       num.cores = 1L, verbose = FALSE, ...) {
    validateClass(HD)
    output <- match.arg(output)
    model <- unique(model) # just in case
 
-   idx <- is.element(model, c("Weibull2P", "Weibull3P",
-                              "Gamma2P", "Gamma3P", "GGamma3P", "GGamma4P"))
+   idx <- match(model, c("Weibull2P", "Weibull3P",
+                              "Gamma2P", "Gamma3P",
+                              "GGamma3P", "GGamma4P"))
 
-   if (!all(idx)) {
-       stop("*** The requested model is not listed. \n",
+   if (any(is.na(idx))) {
+       stop("*** At least one of the requested models is not valid \n",
             "The valid model names are: \n",
             "'Weibull2P', 'Weibull3P', 'Gamma2P', 'Gamma3P',
             'GGamma3P', and 'GGamma4P'")
@@ -133,6 +154,7 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
        else stats <- cbind(stats, data.frame(t(stat)))
    }
    close(pb)
+   nlms <- unlist(nlms, recursive = FALSE)
 
    cat("\n *** Creating report ... \n")
    aic_col <- grep("AIC", colnames(stats))
@@ -145,8 +167,17 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
 
    if (inherits(mdl, "list")) {
        issue <- unlist(lapply(mdl, function(x) length(x) > 1))
-       if (sum(issue) > 1)
+       if (sum(issue) > 1) {
+           if (confl_model) {
+              mdl2 <- mdl
+              mdl2[issue] <- vapply(mdl[issue], function(x) x[2], character(1))
+              mdl2 <- unlist(mdl2)
+              mdl2 <- mdl2[issue]
+              issuekey <- paste(names(mdl2), mdl2, sep = "_")
+              issue_nlms <- nlms[match(issuekey, names(nlms))]
+           }
            mdl[issue] <- vapply(mdl[issue], function(x) x[1], character(1))
+       }
        else mdl[issue][[1]] <- mdl[issue][[1]][1]
        bestAIC <- unlist(mdl)
        mdl[issue] <- "Needs revision"
@@ -158,7 +189,6 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
    } else bestAIC <- unlist(mdl)
 
    modelkey <- paste(names(bestAIC), bestAIC, sep = "_")
-   nlms <- unlist(nlms, recursive = FALSE)
    nlms <- nlms[match(modelkey, names(nlms))]
    names(nlms) <- sn
 
@@ -168,7 +198,9 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
    if (output == "best.model") {
        print(stats)
        cat("\n")
-       return(list(bestModel = bestModel, nlms = nlms))
-   } else return(list(stats = stats, bestModel = bestModel, nlms = nlms))
+       res <- list(bestModel = bestModel, nlms = nlms)
+   } else res <- list(stats = stats, bestModel = bestModel, nlms = nlms)
+   if (confl_model) res$confl_model <- issue_nlms
+   return(res)
 }
 

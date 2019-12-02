@@ -6,7 +6,7 @@
 \usage{
 gofReport(HD, model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"),
   column = 9, absolute = FALSE, output = c("best.model", "all"),
-  num.cores = 1L, verbose = FALSE, ...)
+  confl_model = FALSE, num.cores = 1L, verbose = FALSE, ...)
 }
 \arguments{
 \item{HD}{An "InfDiv" object returned by function
@@ -30,6 +30,10 @@ is an information divergence that can be fitted as well.}
 returned in a list together with the best fitted model and the
 corresponding statistics. Default is "best.model"}
 
+\item{confl_model}{Logic. If TRUE, then the best model based on higest
+R.Cross.val is returned for those samples where the model(s) with lowest
+AIC has not the highest R.Cross.val.}
+
 \item{num.cores}{The number of cores to use in the nonlinear fit step, i.e.
 at most how many child processes will be run simultaneously (see
 \code{\link[BiocParallel]{bplapply}} function from BiocParallel package).}
@@ -44,6 +48,21 @@ If 'output = "best.model"', a character vector with the name of the
     the next step to get the potential DMPs with function
     \code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
     table carrying the GoF values and the previously mentioned data.
+
+    The best model selection is based on the lowest AIC. However, if
+    'confl_model = TRUE', then the returned list will contain a sublist named
+    'confl_model' with the best model selected based on the highest
+    R.Cross.val. This sublist is returned only if at least there is one
+    sample where the model with the lowest AIC has not the highest
+    R.Cross.val. This report is useful to analyse any conflict between
+    models. For example, some times the best model selected based on AIC has
+    a R.Cross.val = 0.99945, while the higest R.Cross.val is 0.99950. In such
+    a situation the model with lowest AIC is still fine. However, some times
+    the model with the best AIC has some meaningless paramater value. For
+    example,  scale = 0.0000000001 in 'GGamm3P' or in 'Weibull2P' models.
+    This last situation can result from the numerical algorithm used in
+    the parameter estimation. The numerical algorithms for nonlinear fit
+    estimation are not perfect!
 }
 \description{
 In Methyl-IT,  the signal detection step requires for the
