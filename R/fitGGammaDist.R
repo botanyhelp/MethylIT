@@ -289,6 +289,7 @@ fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
                            AIC=c(AICmodel(FIT, residuals=res, np=4), "", "",""),
                            BIC=c(BICmodel(FIT, residuals=res, np=4), "","", ""),
                            COV=COV, n=c(N, n, n, n),
+                           model = c("GGamma4P", "","", ""),
                            stringsAsFactors = FALSE)
        }
        else {
@@ -304,19 +305,20 @@ fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
                            COV=COV,
                            COV.mu=c(NA, NA, NA),
                            n=c(N, n, n),
+                           model = c("GGamma3P","", ""),
                            stringsAsFactors = FALSE)
        }
    } else {
        warning(paste("Data did not fit to the model.",
                    "Returning empty coefficient table."))
        stats <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-                        NA, NA, NA)
+                        NA, NA, NA, NA)
    }
 
    colnames(stats) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|))",
                         "Adj.R.Square", "rho", "R.Cross.val", "DEV", "AIC",
                         "BIC", "COV.alpha", "COV.scale", "COV.psi",
-                        "COV.mu", "N")
+                        "COV.mu", "N", "model")
    if (nlms) stats <- list(stats, nlms = FIT)
    return(stats)
 }

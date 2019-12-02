@@ -165,20 +165,19 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                nams[which.max(x[r_col])]))
    })
 
-   if (inherits(mdl, "list")) {
+   conflict <- inherits(mdl, "list")
+   if (conflict) {
        issue <- unlist(lapply(mdl, function(x) length(x) > 1))
-       if (sum(issue) > 1) {
-           if (confl_model) {
-              mdl2 <- mdl
-              mdl2[issue] <- vapply(mdl[issue], function(x) x[2], character(1))
-              mdl2 <- unlist(mdl2)
-              mdl2 <- mdl2[issue]
-              issuekey <- paste(names(mdl2), mdl2, sep = "_")
-              issue_nlms <- nlms[match(issuekey, names(nlms))]
-           }
-           mdl[issue] <- vapply(mdl[issue], function(x) x[1], character(1))
+       if (confl_model) {
+          mdl2 <- mdl
+          mdl2[issue] <- vapply(mdl[issue], function(x) x[2], character(1))
+          mdl2 <- unlist(mdl2)
+          mdl2 <- mdl2[issue]
+          issuekey <- paste(names(mdl2), mdl2, sep = "_")
+          issue_nlms <- nlms[match(issuekey, names(nlms))]
        }
-       else mdl[issue][[1]] <- mdl[issue][[1]][1]
+       mdl[issue] <- vapply(mdl[issue], function(x) x[1], character(1))
+
        bestAIC <- unlist(mdl)
        mdl[issue] <- "Needs revision"
        mdl <- unlist(mdl)
@@ -200,7 +199,7 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
        cat("\n")
        res <- list(bestModel = bestModel, nlms = nlms)
    } else res <- list(stats = stats, bestModel = bestModel, nlms = nlms)
-   if (confl_model) res$confl_model <- issue_nlms
+   if (confl_model && conflict) res$confl_model <- issue_nlms
    return(res)
 }
 
