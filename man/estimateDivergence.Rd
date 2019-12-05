@@ -7,8 +7,8 @@
 estimateDivergence(ref, indiv, Bayesian = FALSE, columns = NULL,
   min.coverage = 4, min.meth = 4, min.umeth = 0,
   high.coverage = NULL, percentile = 0.999, JD = FALSE,
-  num.cores = 1L, tasks = 0L, meth.level = FALSE, verbose = TRUE,
-  ...)
+  num.cores = 1L, tasks = 0L, meth.level = FALSE, logbase = 2,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{ref}{The GRanges object of the reference individual that will be used
@@ -69,6 +69,10 @@ BiocParallel package).}
 
 \item{meth.level}{Logic. Whether methylation levels are given in place of
 counts. Default is FALSE.}
+
+\item{logbase}{Logarithm base used to compute the JD (if JD = TRUE).
+Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
+natural logarithm.}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 

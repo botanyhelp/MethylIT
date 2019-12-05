@@ -152,14 +152,13 @@ fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
        VAR <- var(X, na.rm = TRUE)
        MIN <- min( X, na.rm = TRUE)
 
-       alpha = MEAN^2/VAR
+       psi = MEAN^2/VAR
        mu = MIN
        scale = VAR/MEAN
-       psi = 0.75
 
        if (location.par) {
-           starts <- c(alpha = alpha, scale = scale, mu = mu[1], psi = 1)
-       } else starts <- c(alpha = alpha, scale = scale, psi = 1)
+           starts <- c(alpha = 1, scale = scale, mu = mu[1], psi = psi)
+       } else starts <- c(alpha = 1, scale = scale, psi = psi)
    } else starts = parameter.values
 
    ## ============ END starting parameter values ========== #

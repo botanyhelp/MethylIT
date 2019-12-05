@@ -126,6 +126,9 @@
 #'     BiocParallel package).
 #'@param meth.level Logic. Whether methylation levels are given in place of
 #'     counts. Default is FALSE.
+#' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
+#'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
+#'     natural logarithm.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'uniqueGRanges' function.
 #'
@@ -166,7 +169,8 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
                            min.coverage = 4, min.meth = 4, min.umeth = 0,
                            high.coverage = NULL, percentile = 0.999,
                            JD = FALSE, num.cores = 1L, tasks = 0L,
-                           meth.level = FALSE, verbose = TRUE, ...) {
+                           meth.level = FALSE, logbase = 2,
+                           verbose = TRUE, ...) {
 
    if (is.null(columns) && (!meth.level)) columns <- c(1,2)
    if (meth.level && (is.null(columns))) columns <- 1
@@ -195,18 +199,20 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
    } else {
        x = bplapply(seq_len(length(indiv)), function(k, ref, indv, sn) {
            if (verbose) message("*** Processing sample #", k, " ", sn[ k ])
-           x = uniqueGRfilterByCov(x=ref, y=indv[[k]],
-                               min.coverage=min.coverage, min.meth = min.meth,
-                               min.umeth = min.umeth, percentile=percentile,
-                               num.cores=1L, tasks=tasks, verbose=verbose, ...)
+           x = uniqueGRfilterByCov(x = ref, y = indv[[k]],
+                               min.coverage = min.coverage, min.meth = min.meth,
+                               min.umeth = min.umeth, percentile = percentile,
+                               num.cores = 1L, tasks=tasks, verbose = verbose,
+                               ...)
            if (length(x) < 2)
                stop("*** At least two cytosine sites must pass the filtering ",
                    "conditions to estimate informations divergences. \n",
                    "The issue was found at sample number: ", k, ", id: ",
                    names(indv)[k])
-           x = estimateBayesianDivergence(x, Bayesian=Bayesian, JD = JD,
-                               num.cores=1L, tasks=tasks,
-                               meth.level=meth.level, verbose=verbose)
+           x = estimateBayesianDivergence(x, Bayesian = Bayesian, JD = JD,
+                               num.cores = 1L, tasks = tasks,
+                               meth.level = meth.level, logbase = logbase,
+                               verbose = verbose)
            return(x)
            }, BPPARAM=bpparam, ref=ref, indv=indiv, sn=sn)
    }
