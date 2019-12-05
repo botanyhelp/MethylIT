@@ -100,7 +100,7 @@
 #'
 #' ## DMPs are selected using the cupoints
 #' DMPs <- selectDIMP(PS, div.col = 9L, cutpoint = cutpoint$cutpoint,
-#'                    tv.cut = 0.92)
+#'                    tv.cut = 0.68)
 #'
 #' ## Classification of DMPs into two clases: DMPS from control and DMPs from
 #' ## treatment samples and evaluation of the classifier performance (for more

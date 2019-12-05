@@ -33,6 +33,9 @@
 #'     and unmethylated counts for treatment sample, respectively.
 #' @param Bayesian logical. Whether to perform the estimations based on
 #'     posterior estimations of methylation levels.
+#' @param JD Logic (Default:FALSE). Option on whether to add a column with
+#'     values of J-information divergence (see \code{\link{estimateJDiv}}).
+#'     It is only compute if JD = TRUE and meth.level = FALSE.
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see 'bplapply' function from
 #'     BiocParallel package).
@@ -60,6 +63,7 @@
 #'
 #' @author Robersy Sanchez
 #' @examples
+#' ## The read count data are created
 #'     x <- data.frame(chr = "chr1", start = 1:10,
 #'                     end = 1:10,strand = '*',
 #'                     mC1 = rnbinom(size = 10, mu = 4, n = 500),
@@ -67,7 +71,12 @@
 #'                     mC2 = rnbinom(size = 10, mu = 4, n = 500),
 #'                     uC2 = rnbinom(size = 10, mu = 4, n = 500))
 #'     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
-#'     HD <- estimateBayesianDivergence(x)
+#' ## Estimation of the information divergences
+#'     hd <- estimateBayesianDivergence(x, JD = TRUE)
+#'
+#' ## Keep in mind that Hellinger and J divergences are, in general, correlated!
+#'     cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
+#'             method = "kendall")
 #'
 #' @references 1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
 #'     two discrete populations based on the Hellinger distance. Stat Probab
@@ -78,8 +87,8 @@
 #' @importFrom S4Vectors mcols<-
 #' @export
 #' @keywords internal
-estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
-                                       tasks=0L,
+estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
+                                       num.cores=1, tasks=0L,
                                        columns=c(mC1=1, uC1=2, mC2=3, uC2=4),
                                        meth.level=FALSE,
                                        preserve.gr = FALSE, verbose=TRUE) {
@@ -159,6 +168,12 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
            x <- data.frame(x0, p1, p2, TV, hdiv)
            colnames(x) <- c("c1", "t1", "c2", "t2", "p1", "p2", "TV", "hdiv")
        }
+       if (JD) {
+           jdiv <- bplapply(seq_len(nrow(x)), function(i) {
+                           estimateJDiv(p = as.numeric(x[i, c("p1", "p2")]))},
+                           BPPARAM=bpparam)
+           x$jdiv <- unlist(jdiv)
+       }
    } else {
        if (verbose) cat("*** Estimating Hellinger divergence... \n")
        hdiv <- bplapply(seq_len(nrow(x)), function(i) {
@@ -170,8 +185,11 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, num.cores=1,
    }
    if (!ismatrix) {
        if (preserve.gr) {
-           mcols(HDiv) <- data.frame(mcols(HDiv),
-                                   x[, c("p1", "p2", "TV", "hdiv")])
+           if (JD && !meth.level)
+               mcols(HDiv) <- data.frame(mcols(HDiv),
+                                       x[, c("p1", "p2", "TV", "hdiv", "jdiv")])
+           else mcols(HDiv) <- data.frame(mcols(HDiv),
+                                           x[, c("p1", "p2", "TV", "hdiv")])
        } else mcols(HDiv) <- x
        return(HDiv)
    } else return(x)

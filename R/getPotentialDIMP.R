@@ -67,8 +67,9 @@
 #' @examples
 #' ## Get a dataset of Hellinger divergency of methylation levels and their
 #' ## corresponding best nonlinear fit distribution models from the package
-#' data(HD, nlms)
-#' PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 9L, alpha = 0.05)
+#' data(HD, gof)
+#' PS <- getPotentialDIMP(LR = HD, nlms = gof$nlms, dist.name = gof$bestModel,
+#'                     div.col = 9L, alpha = 0.05)
 #'
 getPotentialDIMP <- function(LR, nlms=NULL, div.col, dist.name = "Weibull2P",
                            absolute=FALSE, alpha=0.05, pval.col = NULL,

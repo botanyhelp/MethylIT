@@ -1,11 +1,32 @@
 #' @rdname estimateDivergence
 #'
-#' @title Information divergence estimator in respect to a reference sample
-#' @description Wrapper of 'InfDiv' function to operate on list of GRanges
-#' @details For the current version, the Information divergence of methylation
-#'     levels is estimated based on Hellinger divergence (H). If read counts are
-#'     provided, then Hellinger divergence is computed as given in the first
-#'     formula from Theorem 1 from reference 1. In the present case:
+#' @title Information Divergences of Methylation Levels
+#' @description This function prepares the data for the estimation of
+#'     information divergences and works as a wrapper calling the functions that
+#'     compute selected information divergences of methylation levels. In the
+#'     downstream analysis, the probability distribution of a given information
+#'     divergence is used in Methyl-IT as the null hypothesis of the noise
+#'     distribution, which permits, in a further signal detection step, the
+#'     discrimination of the methylation regulatory signal from the background
+#'     noise.
+#'
+#'     For the current version, two information divergences of methylation
+#'     levels are computed by default: 1) Hellinger divergence (\emph{H}) and 2)
+#'     the total variation distance (\emph{TVD}). In the context of methylation
+#'     analysis \emph{TVD} corresponds to the absolute difference of methylation
+#'     levels. Here, although the variable reported is the total variation
+#'     (\emph{TV}), the variable actually used for the downstream analysis is
+#'     \emph{TVD}. Once a differentially methylated position (DMP) is identified
+#'     in the downstream analysis, \emph{TV} is the standard indicator of
+#'     whether the cytosine position is hyper- or hypo-methylated.
+#'
+#'     The option to compute the J-information divergence (JD) is currently
+#'     provided. The motivation to introduce this divergence is given in the
+#'     help of function \code{\link{estimateJDiv}}.
+#'
+#' @details If read counts are provided, then Hellinger divergence is computed
+#'     as given in the first formula from Theorem 1 from reference 1. In the
+#'     present case:
 #'
 #'     \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
 #'          (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
@@ -29,7 +50,7 @@
 #'     the minimum coverage requested for the each cytosine site in the
 #'     reference sample.
 #'
-#'     If the methylation levels are provided in place of counts, then
+#'     If the methylation levels are provided in place of counts, then the
 #'     Hellinger divergence is computed as:
 #'     \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) -
 #'           sqrt(1 - p[2]))^2}
@@ -91,6 +112,9 @@
 #'     higher coverage than this are discarded.
 #'@param percentile Threshold to remove the outliers from each file and all
 #'     files stacked.
+#' @param JD Logic (Default:FALSE). Option on whether to add a column with
+#'     values of J-information divergence (see \code{\link{estimateJDiv}}).
+#'     It is only compute if JD = TRUE and meth.level = FALSE.
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see 'bplapply' function from
 #'     BiocParallel package).
@@ -101,7 +125,7 @@
 #'     evenly as possible over the number of workers (see MulticoreParam from
 #'     BiocParallel package).
 #'@param meth.level Logic. Whether methylation levels are given in place of
-#'     counts.
+#'     counts. Default is FALSE.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'uniqueGRanges' function.
 #'
@@ -116,6 +140,7 @@
 #'     methylation levels.
 #' @author Robersy Sanchez
 #' @examples
+#' ## The read count data are created
 #'     num.samples <- 250
 #'     x <- data.frame(chr = "chr1", start = 1:num.samples,
 #'                     end = 1:num.samples,strand = '*',
@@ -127,7 +152,11 @@
 #'                     uC = rnbinom(size = num.samples, mu = 4, n = 500))
 #'     x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
 #'     y <- makeGRangesFromDataFrame(y, keep.extra.columns = TRUE)
-#'     HD <- estimateDivergence(ref = x, indiv = list(y))
+#'     hd <- estimateDivergence(ref = x, indiv = list(y), JD = TRUE)[[1]]
+#'
+#' ## Keep in mind that Hellinger and J divergences are, in general, correlated!
+#'     cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
+#'             method = "kendall")
 #'
 #' @importFrom BiocParallel MulticoreParam bplapply SnowParam
 #' @importFrom GenomicRanges GRanges GRangesList
@@ -136,7 +165,7 @@
 estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
                            min.coverage = 4, min.meth = 4, min.umeth = 0,
                            high.coverage = NULL, percentile = 0.999,
-                           num.cores = 1L, tasks = 0L,
+                           JD = FALSE, num.cores = 1L, tasks = 0L,
                            meth.level = FALSE, verbose = TRUE, ...) {
 
    if (is.null(columns) && (!meth.level)) columns <- c(1,2)
@@ -175,9 +204,9 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
                    "conditions to estimate informations divergences. \n",
                    "The issue was found at sample number: ", k, ", id: ",
                    names(indv)[k])
-           x = estimateBayesianDivergence(x, Bayesian=Bayesian, num.cores=1L,
-                               tasks=tasks, meth.level=meth.level,
-                               verbose=verbose)
+           x = estimateBayesianDivergence(x, Bayesian=Bayesian, JD = JD,
+                               num.cores=1L, tasks=tasks,
+                               meth.level=meth.level, verbose=verbose)
            return(x)
            }, BPPARAM=bpparam, ref=ref, indv=indiv, sn=sn)
    }
