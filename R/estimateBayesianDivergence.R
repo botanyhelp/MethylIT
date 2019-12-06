@@ -52,6 +52,9 @@
 #' @param meth.level methylation levels can be provided in place of counts.
 #' @param preserve.gr Logic (Default:FALSE). Option of whether to preserve all
 #'     the metadata from the original GRange object.
+#' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
+#'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
+#'     natural logarithm.
 #' @param verbose if TRUE, prints the function log to stdout
 #'
 #' @return The input matrix or GRanges object with the four columns of counts
@@ -91,7 +94,9 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
                                        num.cores=1, tasks=0L,
                                        columns=c(mC1=1, uC1=2, mC2=3, uC2=4),
                                        meth.level=FALSE,
-                                       preserve.gr = FALSE, verbose=TRUE) {
+                                       preserve.gr = FALSE,
+                                       logbase = 2,
+                                       verbose=TRUE) {
 
    if (Sys.info()['sysname'] == "Linux") {
        bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
@@ -170,7 +175,8 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
        }
        if (JD) {
            jdiv <- bplapply(seq_len(nrow(x)), function(i) {
-                           estimateJDiv(p = as.numeric(x[i, c("p1", "p2")]))},
+                           estimateJDiv(p = as.numeric(x[i, c("p1", "p2")]),
+                                       logbase = logbase)},
                            BPPARAM=bpparam)
            x$jdiv <- unlist(jdiv)
        }

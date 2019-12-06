@@ -5,8 +5,8 @@
 #'     parameters of beta distribution
 #' @details In order to obtain the estimates for shape parameters of beta
 #'     distribution, the squared of the difference between the empirical
-#'     cumulative distribution function (ecdf) & the theoretical cdf is 
-#'     minimized using the Non-Linear Minimization function of 'stats' 
+#'     cumulative distribution function (ecdf) & the theoretical cdf is
+#'     minimized using the Non-Linear Minimization function of 'stats'
 #'     package.
 #'
 #' @param q prior probabilities
@@ -34,7 +34,7 @@
        beta <- inits[2] ## This corresponds to the initial
        ##    starting parameter for beta
        ## Because optim minimizes a function, the
-       with(data, sum(Q - pbeta(q, alpha, beta)) ^ 2)
+       with(data, sum((Q - pbeta(q, alpha, beta))^2))
    }
    pars <- try(suppressWarnings(nlm(min.RSS, p=init.pars, data=dat)),
                silent=TRUE)

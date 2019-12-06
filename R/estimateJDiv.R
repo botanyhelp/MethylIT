@@ -36,6 +36,8 @@
 #'
 #' @param p A numerical vector of the methylation levels p = c(p1, p2) from
 #'     individuals 1 and 2.
+#' @param logbase Logarithm base used to compute the JD. Logarithm base 2 is
+#'     used as default. Use logbase = exp(1) for natural logarithm.
 #' @return The J divergence value for the given methylation levels is
 #'     returned
 #' @export
@@ -64,7 +66,7 @@
 #'     }
 #'
 #' @export
-estimateJDiv <- function(p) {
+estimateJDiv <- function(p, logbase = 2) {
    if (any(p > 1) | any(p < 0))
        stop("*** Vector p has values out of the range [0, 1]")
    jdiv <- 0
@@ -73,8 +75,10 @@ estimateJDiv <- function(p) {
       p1 <- c(p[1], 1 - p[1])
       p2 <- c(p[2], 1 - p[2])
 
-      jdiv <- (p1[1] * .log(p1[1]/p2[1]) + p1[2] * .log(p1[2]/p2[2]) +
-                   p2[1] * .log(p2[1]/p1[1]) + p2[2] * .log(p2[2]/p1[2]))/2
+      jdiv <- (p1[1] * .log(p1[1]/p2[1], logbase = logbase) +
+                   p1[2] * .log(p1[2]/p2[2], logbase = logbase) +
+                   p2[1] * .log(p2[1]/p1[1], logbase = logbase) +
+                   p2[2] * .log(p2[2]/p1[2], logbase = logbase))/2
    }
    return(jdiv)
 }
@@ -86,7 +90,7 @@ estimateJDiv <- function(p) {
       n <- length(p)
       logP <- integer(n)
       idx <- (p > 0 & p != Inf)
-      logP[idx] <- log(p[idx], base=logbase)
+      logP[idx] <- log(p[idx], base = logbase)
       return(logP)
    }
    return(logb(p))
