@@ -6,7 +6,8 @@
 \usage{
 estimateBayesianDivergence(x, Bayesian = FALSE, JD = FALSE,
   num.cores = 1, tasks = 0L, columns = c(mC1 = 1, uC1 = 2, mC2 = 3,
-  uC2 = 4), meth.level = FALSE, preserve.gr = FALSE, verbose = TRUE)
+  uC2 = 4), meth.level = FALSE, preserve.gr = FALSE, logbase = 2,
+  verbose = TRUE)
 }
 \arguments{
 \item{x}{A matrix of counts or GRanges object with the table of counts in
@@ -43,6 +44,10 @@ the counts are used.}
 
 \item{preserve.gr}{Logic (Default:FALSE). Option of whether to preserve all
 the metadata from the original GRange object.}
+
+\item{logbase}{Logarithm base used to compute the JD (if JD = TRUE).
+Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
+natural logarithm.}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 }

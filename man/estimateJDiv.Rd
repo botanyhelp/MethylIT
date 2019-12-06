@@ -4,11 +4,14 @@
 \alias{estimateJDiv}
 \title{J Information Divergence of Methylation Levels}
 \usage{
-estimateJDiv(p)
+estimateJDiv(p, logbase = 2)
 }
 \arguments{
 \item{p}{A numerical vector of the methylation levels p = c(p1, p2) from
 individuals 1 and 2.}
+
+\item{logbase}{Logarithm base used to compute the JD. Logarithm base 2 is
+used as default. Use logbase = exp(1) for natural logarithm.}
 }
 \value{
 The J divergence value for the given methylation levels is
