@@ -165,8 +165,13 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                nams[which.max(x[r_col])]))
    })
 
-   if (inherits(mdl, "matrix"))  ### Split the matrix into a list by columns
-           mdl <- split(mdl, col(mdl))
+   if (inherits(mdl, "matrix")) {
+      ns <- colnames(mdl)
+      ### Split the matrix into a list by columns
+      mdl <- split(mdl, col(mdl))
+      names(mdl) <- ns
+   }
+
    conflict <- (inherits(mdl, "list"))
    if (conflict) {
        issue <- unlist(lapply(mdl, function(x) length(x) > 1))
