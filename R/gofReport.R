@@ -134,7 +134,6 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
    nlms <- list()
    pb <- txtProgressBar(max = max(stp), style = 3, char = "=")
    for (k in stp) {
-       setTxtProgressBar(pb, k)
        mdl <- suppressWarnings(nonlinearFitDist(LR = HD, column = column,
                                                absolute = absolute,
                                                num.cores = num.cores,
@@ -152,6 +151,7 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
        nlms[[k]] <- mdl
        if (k == 1 )  stats <- data.frame(t(stat))
        else stats <- cbind(stats, data.frame(t(stat)))
+       setTxtProgressBar(pb, k)
    }
    close(pb)
    nlms <- unlist(nlms, recursive = FALSE)
@@ -165,16 +165,23 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                nams[which.max(x[r_col])]))
    })
 
-   conflict <- inherits(mdl, "list")
+   if (inherits(mdl, "matrix")) {
+      ns <- colnames(mdl)
+      ### Split the matrix into a list by columns
+      mdl <- split(mdl, col(mdl))
+      names(mdl) <- ns
+   }
+
+   conflict <- (inherits(mdl, "list"))
    if (conflict) {
        issue <- unlist(lapply(mdl, function(x) length(x) > 1))
        if (confl_model) {
-          mdl2 <- mdl
-          mdl2[issue] <- vapply(mdl[issue], function(x) x[2], character(1))
-          mdl2 <- unlist(mdl2)
-          mdl2 <- mdl2[issue]
-          issuekey <- paste(names(mdl2), mdl2, sep = "_")
-          issue_nlms <- nlms[match(issuekey, names(nlms))]
+           mdl2 <- mdl
+           mdl2[issue] <- vapply(mdl[issue], function(x) x[2], character(1))
+           mdl2 <- unlist(mdl2)
+           mdl2 <- mdl2[issue]
+           issuekey <- paste(names(mdl2), mdl2, sep = "_")
+           issue_nlms <- nlms[match(issuekey, names(nlms))]
        }
        mdl[issue] <- vapply(mdl[issue], function(x) x[1], character(1))
 
