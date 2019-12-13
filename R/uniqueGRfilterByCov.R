@@ -109,7 +109,8 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
    q1 <- quantile(cov1, probs=percentile)
    q2 <- quantile(cov2, probs=percentile)
-   q <- max(q1, q2, high.coverage)
+   q <- min(q1, q2)
+   q <- max(q, high.coverage)
    idx1 <- which((cov1 >= min.coverage[1]) | (cov2 >= min.coverage[2]))
    if (!(length(idx1) > 0))
        stop("*** Some filtering condition from min.coverage = c(",
