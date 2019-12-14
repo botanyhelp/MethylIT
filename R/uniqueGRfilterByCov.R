@@ -33,10 +33,20 @@
 #'     where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
-#' @param percentile Threshold to remove the outliers from each file and all
-#'     files stacked.
+#' @param percentile Threshold to remove the outliers (PCR bias) from each file
+#'     and all files stacked. If 'high.coverage = NULL', then the threshold
+#'     \eqn{q} will be computed as:
+#'     \deqn{q1 = quantile(cov1, probs=percentile)}
+#'     \deqn{q2 = quantile(cov2, probs=percentile)}
+#'     \deqn{q = min(q1, q2)}
+#'
+#'     where \eqn{cov1} and \eqn{cov2} are the coverage vectors from samples 1
+#'     and 2, respectively.
 #' @param high.coverage An integer for read counts. Cytosine sites having higher
-#'     coverage than this are discarded.
+#'     coverage than this are discarded. Default is NULL. If
+#'     \strong{high.coverage} is not NULL, then the \strong{percentile} argument
+#'     is disregarded and \strong{high.coverage} is used as threshold to remove
+#'     the PCR bias.
 #' @param columns Vector of integer numbers of the columns (from each GRanges
 #'     meta-column) where the methylated and unmethylated counts are provided.
 #'     If not provided, then the methylated and unmethylated counts are assumed
@@ -107,10 +117,13 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
 
    cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
-   q1 <- quantile(cov1, probs=percentile)
-   q2 <- quantile(cov2, probs=percentile)
-   q <- min(q1, q2)
-   q <- max(q, high.coverage)
+
+   if (is.null(high.coverage)) {
+       q1 <- quantile(cov1, probs=percentile)
+       q2 <- quantile(cov2, probs=percentile)
+       q <- min(q1, q2)
+   } else q <- high.coverage
+
    idx1 <- which((cov1 >= min.coverage[1]) | (cov2 >= min.coverage[2]))
    if (!(length(idx1) > 0))
        stop("*** Some filtering condition from min.coverage = c(",
