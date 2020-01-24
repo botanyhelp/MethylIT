@@ -4,10 +4,20 @@
 \alias{weibull3P}
 \title{Nonlinear fit of Weibull CDF}
 \usage{
-weibull3P(X, sample.size = 20, model = c("all", "2P", "3P",
-  "Weibull2P", "Weibull3P"), npoints = NULL, maxiter = 1024,
-  tol = 1e-12, ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6,
-  nlms = FALSE, verbose = TRUE, ...)
+weibull3P(
+  X,
+  sample.size = 20,
+  model = c("all", "2P", "3P", "Weibull2P", "Weibull3P"),
+  npoints = NULL,
+  maxiter = 1024,
+  tol = 1e-12,
+  ftol = 1e-12,
+  ptol = 1e-12,
+  minFactor = 10^-6,
+  nlms = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{X}{numerical vector}

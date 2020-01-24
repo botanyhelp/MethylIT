@@ -48,10 +48,6 @@
 #'
 #' @importFrom stats prcomp glm
 #'
-#' @rdname pcaLogisticR
-#' @title Logistic Classification Model using Principal Component Analysis
-#' @description NULL
-#' @details NULL
 #' @export
 pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
                          center=FALSE, tol=1.0e-4, max.pc=NULL) {
@@ -117,12 +113,12 @@ pcaLogisticR <- function(formula=NULL, data=NULL, n.pc=1, scale=FALSE,
                    positive.level=l[2]), class="pcaLogisticR")
  return(model)
 }
+#'
 #' @rdname pcaLogisticR
 #' @name predict.pcaLogisticR
 #' @title Logistic regression using Principal Component Analysis (PCA)
 #' @description Logistic regression using Principal Components from PCA as
 #'     predictor variables
-#' @details NULL
 #' @param object To use with function 'predict'. A 'pcaLogisticR' object
 #'     containing a list of two objects: 1) an object of class inheriting from
 #'     "glm" and 2) an object of class inheriting from "prcomp".

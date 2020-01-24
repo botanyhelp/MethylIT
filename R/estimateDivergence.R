@@ -202,8 +202,8 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
            x = uniqueGRfilterByCov(x = ref, y = indv[[k]],
                                min.coverage = min.coverage, min.meth = min.meth,
                                min.umeth = min.umeth, percentile = percentile,
-                               num.cores = 1L, tasks=tasks, verbose = verbose,
-                               ...)
+                               high.coverage = high.coverage, num.cores = 1L,
+                               tasks=tasks, verbose = verbose, ...)
            if (length(x) < 2)
                stop("*** At least two cytosine sites must pass the filtering ",
                    "conditions to estimate informations divergences. \n",

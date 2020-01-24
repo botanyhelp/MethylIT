@@ -4,10 +4,19 @@
 \alias{fitLogNormDist}
 \title{Nonlinear fit of Log-Normal CDF (LogNorm)}
 \usage{
-fitLogNormDist(x, probability.x, parameter.values,
-  summarized.data = FALSE, sample.size = 20, npoints = NULL,
-  maxiter = 1024, ftol = 1e-12, ptol = 1e-12, maxfev = 1e+05,
-  verbose = TRUE)
+fitLogNormDist(
+  x,
+  probability.x,
+  parameter.values,
+  summarized.data = FALSE,
+  sample.size = 20,
+  npoints = NULL,
+  maxiter = 1024,
+  ftol = 1e-12,
+  ptol = 1e-12,
+  maxfev = 1e+05,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{numerical vector}

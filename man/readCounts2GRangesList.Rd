@@ -4,11 +4,18 @@
 \alias{readCounts2GRangesList}
 \title{Read files of methylation count tables}
 \usage{
-readCounts2GRangesList(filenames = NULL, sample.id = NULL,
-  pattern = NULL, remove = FALSE, columns = c(seqnames = NULL, start
-  = NULL, end = NULL, strand = NULL, fraction = NULL, percent = NULL, mC =
-  NULL, uC = NULL, coverage = NULL, context = NULL),
-  chromosome.names = NULL, chromosomes = NULL, verbose = TRUE, ...)
+readCounts2GRangesList(
+  filenames = NULL,
+  sample.id = NULL,
+  pattern = NULL,
+  remove = FALSE,
+  columns = c(seqnames = NULL, start = NULL, end = NULL, strand = NULL, fraction = NULL,
+    percent = NULL, mC = NULL, uC = NULL, coverage = NULL, context = NULL),
+  chromosome.names = NULL,
+  chromosomes = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{filenames}{Character vector with the file names}

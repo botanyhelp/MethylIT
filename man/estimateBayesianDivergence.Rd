@@ -4,10 +4,18 @@
 \alias{estimateBayesianDivergence}
 \title{Information divergence estimator}
 \usage{
-estimateBayesianDivergence(x, Bayesian = FALSE, JD = FALSE,
-  num.cores = 1, tasks = 0L, columns = c(mC1 = 1, uC1 = 2, mC2 = 3,
-  uC2 = 4), meth.level = FALSE, preserve.gr = FALSE, logbase = 2,
-  verbose = TRUE)
+estimateBayesianDivergence(
+  x,
+  Bayesian = FALSE,
+  JD = FALSE,
+  num.cores = 1,
+  tasks = 0L,
+  columns = c(mC1 = 1, uC1 = 2, mC2 = 3, uC2 = 4),
+  meth.level = FALSE,
+  preserve.gr = FALSE,
+  logbase = 2,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{A matrix of counts or GRanges object with the table of counts in

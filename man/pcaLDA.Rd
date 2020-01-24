@@ -6,12 +6,24 @@
 \title{Linear Discriminant Analysis (LDA) using Principal Component Analysis
     (PCA)}
 \usage{
-pcaLDA(formula = NULL, data = NULL, grouping = NULL, n.pc = 1,
-  scale = FALSE, center = FALSE, tol = 1e-04, method = "moment",
-  max.pc = NULL)
+pcaLDA(
+  formula = NULL,
+  data = NULL,
+  grouping = NULL,
+  n.pc = 1,
+  scale = FALSE,
+  center = FALSE,
+  tol = 1e-04,
+  method = "moment",
+  max.pc = NULL
+)
 
-\method{predict}{pcaLDA}(object, newdata, type = c("lda.pred", "class",
-  "posterior", "scores", "pca.ind.coord", "all"), ...)
+\method{predict}{pcaLDA}(
+  object,
+  newdata,
+  type = c("lda.pred", "class", "posterior", "scores", "pca.ind.coord", "all"),
+  ...
+)
 }
 \arguments{
 \item{formula}{Same as in 'lda'from pakage 'MASS'.}

@@ -4,8 +4,14 @@
 \alias{predict.LogisticR}
 \title{Predict function for logistic regression model from 'LogisticR' class}
 \usage{
-\method{predict}{LogisticR}(object, newdata = NULL, type = c("all",
-  "class", "posterior"), num.cores = 1L, tasks = 0L, ...)
+\method{predict}{LogisticR}(
+  object,
+  newdata = NULL,
+  type = c("all", "class", "posterior"),
+  num.cores = 1L,
+  tasks = 0L,
+  ...
+)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from 'LogisticR'
