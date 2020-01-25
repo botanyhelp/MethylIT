@@ -90,6 +90,8 @@ Scripts and examples at:
 
 https://git.psu.edu/genomath/MethylIT_examples
 
+<a href="https://drive.google.com/open?id=12D0vasaptB2IpA_HFxe6lzP5kxNEJqPF" target="_blank">R script and data for testing after installation</a>
+
 ------------
 
 
