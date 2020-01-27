@@ -5,9 +5,17 @@
 \title{Methylation pool from a list of GRanges objects with methylation read
     counts}
 \usage{
-poolFromGRlist(LR, stat = c("mean", "median", "jackmean", "sum"),
-  num.cores = 1, tasks = 0L, prob = FALSE, column = 1L,
-  jstat = c("sum", "mean", "median"), verbose = TRUE, ...)
+poolFromGRlist(
+  LR,
+  stat = c("mean", "median", "jackmean", "sum"),
+  num.cores = 1,
+  tasks = 0L,
+  prob = FALSE,
+  column = 1L,
+  jstat = c("sum", "mean", "median"),
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{LR}{list of GRanges objects to build a virtual individual (methylation

@@ -4,10 +4,21 @@
 \alias{uniqueGRfilterByCov}
 \title{Unique GRanges of methylation read counts filtered by coverages}
 \usage{
-uniqueGRfilterByCov(x, y = NULL, min.coverage = 4, min.meth = 0,
-  min.umeth = 0, percentile = 0.9999, high.coverage = NULL,
-  columns = c(mC = 1, uC = 2), num.cores = 1L, ignore.strand = FALSE,
-  tasks = 0L, verbose = TRUE, ...)
+uniqueGRfilterByCov(
+  x,
+  y = NULL,
+  min.coverage = 4,
+  min.meth = 0,
+  min.umeth = 0,
+  percentile = 0.9999,
+  high.coverage = NULL,
+  columns = c(mC = 1, uC = 2),
+  num.cores = 1L,
+  ignore.strand = FALSE,
+  tasks = 0L,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object from the classes 'GRanges', 'InfDiv', or 'pDMP' with
@@ -40,11 +51,21 @@ where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
 removed, where mC and uC stand for the numbers of methylated and
 unmethylated reads. Default is min.umeth = 0.}
 
-\item{percentile}{Threshold to remove the outliers from each file and all
-files stacked.}
+\item{percentile}{Threshold to remove the outliers (PCR bias) from each file
+    and all files stacked. If 'high.coverage = NULL', then the threshold
+    \eqn{q} will be computed as:
+    \deqn{q1 = quantile(cov1, probs=percentile)}
+    \deqn{q2 = quantile(cov2, probs=percentile)}
+    \deqn{q = min(q1, q2)}
+
+    where \eqn{cov1} and \eqn{cov2} are the coverage vectors from samples 1
+    and 2, respectively.}
 
 \item{high.coverage}{An integer for read counts. Cytosine sites having higher
-coverage than this are discarded.}
+coverage than this are discarded. Default is NULL. If
+\strong{high.coverage} is not NULL, then the \strong{percentile} argument
+is disregarded and \strong{high.coverage} is used as threshold to remove
+the PCR bias.}
 
 \item{columns}{Vector of integer numbers of the columns (from each GRanges
 meta-column) where the methylated and unmethylated counts are provided.

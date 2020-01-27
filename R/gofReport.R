@@ -108,17 +108,17 @@
 
 gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
                                    "Gamma2P", "Gamma3P"),
-                      column = 9, absolute = FALSE,
-                      output = c("best.model", "all"),
-                      confl_model = FALSE,
-                      num.cores = 1L, verbose = FALSE, ...) {
+                       column = 9, absolute = FALSE,
+                       output = c("best.model", "all"),
+                       confl_model = FALSE,
+                       num.cores = 1L, verbose = FALSE, ...) {
    validateClass(HD)
    output <- match.arg(output)
    model <- unique(model) # just in case
 
    idx <- match(model, c("Weibull2P", "Weibull3P",
-                              "Gamma2P", "Gamma3P",
-                              "GGamma3P", "GGamma4P"))
+                       "Gamma2P", "Gamma3P",
+                       "GGamma3P", "GGamma4P"))
 
    if (any(is.na(idx))) {
        stop("*** At least one of the requested models is not valid \n",
@@ -166,10 +166,10 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
    })
 
    if (inherits(mdl, "matrix")) {
-      ns <- colnames(mdl)
-      ### Split the matrix into a list by columns
-      mdl <- split(mdl, col(mdl))
-      names(mdl) <- ns
+       ns <- colnames(mdl)
+       ### Split the matrix into a list by columns
+       mdl <- split(mdl, col(mdl))
+       names(mdl) <- ns
    }
 
    conflict <- (inherits(mdl, "list"))

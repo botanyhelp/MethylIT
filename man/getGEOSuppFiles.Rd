@@ -4,8 +4,13 @@
 \alias{getGEOSuppFiles}
 \title{Get Supplemental Files from GEO}
 \usage{
-getGEOSuppFiles(GEO, makeDirectory = FALSE, baseDir = getwd(),
-  pattern = NULL, verbose = TRUE)
+getGEOSuppFiles(
+  GEO,
+  makeDirectory = FALSE,
+  baseDir = getwd(),
+  pattern = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{GEO}{A character vector with GEO accession numbers.}

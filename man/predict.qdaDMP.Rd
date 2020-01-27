@@ -5,8 +5,12 @@
 \alias{predict.pcaqda}
 \title{Predict function for 'qdaDMP' method}
 \usage{
-\method{predict}{qdaDMP}(object, newdata, type = c("all", "class",
-  "posterior", "scores", "qda.pred"), ...)
+\method{predict}{qdaDMP}(
+  object,
+  newdata,
+  type = c("all", "class", "posterior", "scores", "qda.pred"),
+  ...
+)
 }
 \arguments{
 \item{object}{To use with function 'predict'. An object from class 'qdaDMP'}

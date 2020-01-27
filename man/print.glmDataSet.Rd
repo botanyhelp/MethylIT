@@ -2,13 +2,10 @@
 % Please edit documentation in R/print.glmDataSet.R
 \name{print.glmDataSet}
 \alias{print.glmDataSet}
-\alias{print.RangedGlmDataSet}
 \title{Printing object from \emph{glmDataSet} and \emph{"RangedGlmDataSet"}
     classes by simple print methods.}
 \usage{
 \method{print}{glmDataSet}(x, digits = getOption("digits"))
-
-\method{print}{RangedGlmDataSet}(x, digits = getOption("digits"))
 }
 \arguments{
 \item{x}{Object from class \emph{glmDataSet} or from class

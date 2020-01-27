@@ -4,11 +4,24 @@
 \alias{countTest2}
 \title{Regression Test for Count}
 \usage{
-countTest2(DS, num.cores = 1, countFilter = TRUE, CountPerBp = NULL,
-  minCountPerIndv = 3, maxGrpCV = NULL, FilterLog2FC = TRUE,
-  pAdjustMethod = "BH", pvalCutOff = 0.05, MVrate = 0.98,
-  Minlog2FC = 0.5, test = c("Wald", "LRT"), scaling = 1L,
-  tasks = 0L, saveAll = FALSE, verbose = TRUE)
+countTest2(
+  DS,
+  num.cores = 1,
+  countFilter = TRUE,
+  CountPerBp = NULL,
+  minCountPerIndv = 3,
+  maxGrpCV = NULL,
+  FilterLog2FC = TRUE,
+  pAdjustMethod = "BH",
+  pvalCutOff = 0.05,
+  MVrate = 0.98,
+  Minlog2FC = 0.5,
+  test = c("Wald", "LRT"),
+  scaling = 1L,
+  tasks = 0L,
+  saveAll = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{DS}{A 'glmDataSet' object, which is created with function

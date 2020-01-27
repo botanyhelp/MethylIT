@@ -4,9 +4,20 @@
 \alias{fitGammaDist}
 \title{Nonlinear fit of Gamma CDF (Gamma)}
 \usage{
-fitGammaDist(x, probability.x, parameter.values, location.par = FALSE,
-  sample.size = 20, npoints = NULL, maxiter = 1024, ftol = 1e-12,
-  ptol = 1e-12, maxfev = 1e+05, nlms = FALSE, verbose = TRUE)
+fitGammaDist(
+  x,
+  probability.x,
+  parameter.values,
+  location.par = FALSE,
+  sample.size = 20,
+  npoints = NULL,
+  maxiter = 1024,
+  ftol = 1e-12,
+  ptol = 1e-12,
+  maxfev = 1e+05,
+  nlms = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{numerical vector}
