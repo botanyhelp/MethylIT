@@ -4,11 +4,23 @@
 \alias{FisherTest}
 \title{Fisher's exact test for read counts on GRanges objects}
 \usage{
-FisherTest(LR, count.col = c(1, 2), control.names = NULL,
-  treatment.names = NULL, pooling.stat = "sum", tv.cut = NULL,
-  hdiv.cut = NULL, hdiv.col = NULL, pAdjustMethod = "BH",
-  pvalCutOff = 0.05, saveAll = FALSE, num.cores = 1L, tasks = 0L,
-  verbose = FALSE, ...)
+FisherTest(
+  LR,
+  count.col = c(1, 2),
+  control.names = NULL,
+  treatment.names = NULL,
+  pooling.stat = "sum",
+  tv.cut = NULL,
+  hdiv.cut = NULL,
+  hdiv.col = NULL,
+  pAdjustMethod = "BH",
+  pvalCutOff = 0.05,
+  saveAll = FALSE,
+  num.cores = 1L,
+  tasks = 0L,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{LR}{A list of GRanges, a GRangesList, a CompressedGRangesList object,

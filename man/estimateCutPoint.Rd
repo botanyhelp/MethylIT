@@ -5,13 +5,28 @@
 \title{Estimate cutpoints to distinguish the treatment methylation signal
     from the control}
 \usage{
-estimateCutPoint(LR, control.names, treatment.names, simple = TRUE,
-  column = c(hdiv = TRUE, TV = TRUE, bay.TV = FALSE, wprob = TRUE, pos =
-  TRUE), classifier1 = c("logistic", "pca.logistic", "lda", "qda",
-  "pca.lda", "pca.qda"), classifier2 = NULL, tv.cut = 0.25,
-  div.col = NULL, clas.perf = FALSE, post.cut = 0.5, prop = 0.6,
-  n.pc = 1, interaction = NULL, cut.values = NULL, stat = 1,
-  cutp_data = FALSE, num.cores = 1L, tasks = 0L, ...)
+estimateCutPoint(
+  LR,
+  control.names,
+  treatment.names,
+  simple = TRUE,
+  column = c(hdiv = TRUE, TV = TRUE, bay.TV = FALSE, wprob = TRUE, pos = TRUE),
+  classifier1 = c("logistic", "pca.logistic", "lda", "qda", "pca.lda", "pca.qda"),
+  classifier2 = NULL,
+  tv.cut = 0.25,
+  div.col = NULL,
+  clas.perf = FALSE,
+  post.cut = 0.5,
+  prop = 0.6,
+  n.pc = 1,
+  interaction = NULL,
+  cut.values = NULL,
+  stat = 1,
+  cutp_data = FALSE,
+  num.cores = 1L,
+  tasks = 0L,
+  ...
+)
 }
 \arguments{
 \item{LR}{An object from 'pDMP' class. This object is previously obtained

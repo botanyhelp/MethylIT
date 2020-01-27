@@ -2,7 +2,6 @@
 #' @title Predict function for 'ldaDMP' method
 #' @description Predict using a LDA model built with function
 #'     \code{\link[MethylIT]{evaluateDIMPclass}}
-#' @details NULL
 #' @param object To use with function 'predict'. An object from class 'ldaDMP'
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction

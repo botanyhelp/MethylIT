@@ -4,8 +4,13 @@
 \alias{.gunzip}
 \title{Decompress 'gzip' files}
 \usage{
-.gunzip(filename, destname = gsub("[.]gz$", "", filename),
-  overwrite = FALSE, remove = TRUE, BFR.SIZE = 1e+07)
+.gunzip(
+  filename,
+  destname = gsub("[.]gz$", "", filename),
+  overwrite = FALSE,
+  remove = TRUE,
+  BFR.SIZE = 1e+07
+)
 }
 \arguments{
 \item{filename}{Character vector with the files names to be decompressed}

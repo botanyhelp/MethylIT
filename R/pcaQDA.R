@@ -122,7 +122,6 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #' @aliases predict.pcaQDA
 #' @title Linear Discriminant Analysis (qda) using Principal Component Analysis
 #' @description Predict using a PCA-LDA model built with function 'pcaLDA'
-#' @details NULL
 #' @param object To use with function 'predict'. A 'pcaQDA' object containing a
 #'     list of two objects: 1) an object of class inheriting from "qda" and 2)
 #'     an object of class inheriting from "prcomp".

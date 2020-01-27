@@ -68,11 +68,9 @@
 #'
 #' @importFrom stats pgamma rgamma
 #'
-#' @name dggamma
+#' @aliases dggamma
 #' @rdname ggamma
 #' @title Generalized Gamma distribution
-#' @description NULL
-#' @details NULL
 #' @export
 dggamma <- function(q, alpha=1, scale=1, mu=0, psi=1, log.p=FALSE) {
   if (scale > 0 && alpha > 0 && psi > 0) {
@@ -86,8 +84,6 @@ dggamma <- function(q, alpha=1, scale=1, mu=0, psi=1, log.p=FALSE) {
 #' @name pggamma
 #' @rdname ggamma
 #' @title Generalized Gamma distribution
-#' @description NULL
-#' @details NULL
 #' @importFrom stats pgamma
 #' @export
 pggamma <- function(q, alpha=1, scale=1, mu=0,
@@ -102,8 +98,6 @@ pggamma <- function(q, alpha=1, scale=1, mu=0,
 #' @name qggamma
 #' @rdname ggamma
 #' @title Generalized Gamma distribution
-#' @description NULL
-#' @details NULL
 #' @importFrom stats qgamma
 #' @export
 qggamma <- function(p, alpha=1, scale=1, mu=0,
@@ -118,8 +112,6 @@ qggamma <- function(p, alpha=1, scale=1, mu=0,
 #' @name rggamma
 #' @rdname ggamma
 #' @title Generalized Gamma distribution
-#' @description NULL
-#' @details NULL
 #' @importFrom stats rgamma
 #' @export
 rggamma <- function(n, alpha=1, scale=1, mu=0, psi=1) {

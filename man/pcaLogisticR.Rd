@@ -6,11 +6,22 @@
 \title{Logistic Classification Model using Principal Component
     Analysis (PCA)}
 \usage{
-pcaLogisticR(formula = NULL, data = NULL, n.pc = 1, scale = FALSE,
-  center = FALSE, tol = 1e-04, max.pc = NULL)
+pcaLogisticR(
+  formula = NULL,
+  data = NULL,
+  n.pc = 1,
+  scale = FALSE,
+  center = FALSE,
+  tol = 1e-04,
+  max.pc = NULL
+)
 
-\method{predict}{pcaLogisticR}(object, newdata, type = c("class",
-  "posterior", "pca.ind.coord", "all"), ...)
+\method{predict}{pcaLogisticR}(
+  object,
+  newdata,
+  type = c("class", "posterior", "pca.ind.coord", "all"),
+  ...
+)
 }
 \arguments{
 \item{formula}{Same as in 'glm' from pakage 'stats'.}

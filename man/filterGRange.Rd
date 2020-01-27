@@ -4,9 +4,15 @@
 \alias{filterGRange}
 \title{Filter methylation counts by coverage in a GRange object}
 \usage{
-filterGRange(x, min.coverage = 4, max.coverage = Inf,
-  percentile = 0.999, col.names = c(coverage = NULL, mC = NULL, uC =
-  NULL), sample.name = "", verbose = TRUE)
+filterGRange(
+  x,
+  min.coverage = 4,
+  max.coverage = Inf,
+  percentile = 0.999,
+  col.names = c(coverage = NULL, mC = NULL, uC = NULL),
+  sample.name = "",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{GRanges object}

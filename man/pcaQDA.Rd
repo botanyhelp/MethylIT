@@ -6,12 +6,24 @@
 \title{Quadratic Discriminant Analysis (QDA) using Principal Component
     Analysis (PCA)}
 \usage{
-pcaQDA(formula = NULL, data = NULL, grouping = NULL, n.pc = 1,
-  scale = FALSE, center = FALSE, tol = 1e-04, method = "moment",
-  max.pc = NULL)
+pcaQDA(
+  formula = NULL,
+  data = NULL,
+  grouping = NULL,
+  n.pc = 1,
+  scale = FALSE,
+  center = FALSE,
+  tol = 1e-04,
+  method = "moment",
+  max.pc = NULL
+)
 
-\method{predict}{pcaQDA}(object, newdata, type = c("qda.pred", "class",
-  "posterior", "pca.ind.coord", "all"), ...)
+\method{predict}{pcaQDA}(
+  object,
+  newdata,
+  type = c("qda.pred", "class", "posterior", "pca.ind.coord", "all"),
+  ...
+)
 }
 \arguments{
 \item{formula}{Same as in 'qda'from pakage 'MASS'.}

@@ -4,13 +4,25 @@
 \alias{evaluateDIMPclass}
 \title{Evaluate DMPs Classification}
 \usage{
-evaluateDIMPclass(LR, control.names, treatment.names, column = c(hdiv =
-  FALSE, TV = FALSE, bay.TV = FALSE, wprob = FALSE, pos = FALSE),
-  classifier = c("logistic", "pca.logistic", "lda", "qda", "pca.lda",
-  "pca.qda"), pval.col = NULL, n.pc = 1, center = FALSE,
-  scale = FALSE, interaction = NULL, output = "conf.mat",
-  prop = 0.6, num.boot = 100, num.cores = 1L, tasks = 0L,
-  seed = 1234, verbose = FALSE)
+evaluateDIMPclass(
+  LR,
+  control.names,
+  treatment.names,
+  column = c(hdiv = FALSE, TV = FALSE, bay.TV = FALSE, wprob = FALSE, pos = FALSE),
+  classifier = c("logistic", "pca.logistic", "lda", "qda", "pca.lda", "pca.qda"),
+  pval.col = NULL,
+  n.pc = 1,
+  center = FALSE,
+  scale = FALSE,
+  interaction = NULL,
+  output = "conf.mat",
+  prop = 0.6,
+  num.boot = 100,
+  num.cores = 1L,
+  tasks = 0L,
+  seed = 1234,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{LR}{An object from 'pDMP' class. including control and treatment

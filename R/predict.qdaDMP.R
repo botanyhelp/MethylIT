@@ -4,7 +4,6 @@
 #' @title Predict function for 'qdaDMP' method
 #' @description Predict using a qda model built with function
 #'     \code{\link[MethylIT]{evaluateDIMPclass}}
-#' @details NULL
 #' @param object To use with function 'predict'. An object from class 'qdaDMP'
 #' @param newdata To use with function 'predict'. New data for classification
 #'     prediction

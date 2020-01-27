@@ -123,7 +123,6 @@ pcaLDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
 #' @name predict.pcaLDA
 #' @title Predict function for 'pcaLDA' method
 #' @description Predict using a PCA-LDA model built with function 'pcaLDA'
-#' @details NULL
 #' @param object To use with function 'predict'. A 'pcaLDA' object containing a
 #'     list of two objects: 1) an object of class inheriting from "lda" and 2)
 #'     an object of class inheriting from "prcomp".

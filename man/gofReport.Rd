@@ -4,9 +4,17 @@
 \alias{gofReport}
 \title{Report the Best Fitted Probability Distribution Model}
 \usage{
-gofReport(HD, model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"),
-  column = 9, absolute = FALSE, output = c("best.model", "all"),
-  confl_model = FALSE, num.cores = 1L, verbose = FALSE, ...)
+gofReport(
+  HD,
+  model = c("Weibull2P", "Weibull3P", "Gamma2P", "Gamma3P"),
+  column = 9,
+  absolute = FALSE,
+  output = c("best.model", "all"),
+  confl_model = FALSE,
+  num.cores = 1L,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{HD}{An "InfDiv" object returned by function

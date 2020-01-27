@@ -1,7 +1,8 @@
 #' @rdname Extract
+#' @name Extract
 #' @title Subscript operator for objects from several Methyl-IT classes
 #' @param x A list-like or vector-like object
-#' @param i Index specifying elements to extract or replace. Index can be a
+#' @param i Index specifying elements to Extract or replace. Index can be a
 #'     numeric or a character vector. See ?base::\code{\link[base]{Extract}} for
 #'     a description of these arguments.
 #' @description \eqn{x[i]} returns an object of the length as \eqn{i} preserving
@@ -12,11 +13,8 @@
 #'     the class from the original object \eqn{x}.
 #' @seealso base::\code{\link[base]{Extract}}
 #' @importFrom S4Vectors extractROWS DataFrame
-
-#' @name "[.InfDiv"
-#' @rdname Extract
-#' @export
 #' @keywords internal
+#' @export
 "[.InfDiv" <- function(x, i) {
   cl <- class(x)
   x <- .subset(x, i)
@@ -24,7 +22,6 @@
   return(x)
 }
 
-#' @name "[.pDMP"
 #' @rdname Extract
 #' @export
 #' @keywords internal
@@ -35,7 +32,6 @@
    return(x)
 }
 
-#' @name "[.glmDataSet"
 #' @rdname Extract
 #' @export
 #' @keywords internal
@@ -59,7 +55,6 @@
    return(x)
 }
 
-#' @name "[.RangedGlmDataSet"
 #' @rdname Extract
 #' @export
 #' @keywords internal

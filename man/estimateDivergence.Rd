@@ -4,11 +4,24 @@
 \alias{estimateDivergence}
 \title{Information Divergences of Methylation Levels}
 \usage{
-estimateDivergence(ref, indiv, Bayesian = FALSE, columns = NULL,
-  min.coverage = 4, min.meth = 4, min.umeth = 0,
-  high.coverage = NULL, percentile = 0.999, JD = FALSE,
-  num.cores = 1L, tasks = 0L, meth.level = FALSE, logbase = 2,
-  verbose = TRUE, ...)
+estimateDivergence(
+  ref,
+  indiv,
+  Bayesian = FALSE,
+  columns = NULL,
+  min.coverage = 4,
+  min.meth = 4,
+  min.umeth = 0,
+  high.coverage = NULL,
+  percentile = 0.999,
+  JD = FALSE,
+  num.cores = 1L,
+  tasks = 0L,
+  meth.level = FALSE,
+  logbase = 2,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{ref}{The GRanges object of the reference individual that will be used

@@ -4,11 +4,26 @@
 \alias{nonlinearFitDist}
 \title{Nonlinear fit of Information divergences distribution}
 \usage{
-nonlinearFitDist(LR, column = 9, dist.name = "Weibull",
-  sample.size = 20, location.par = FALSE, absolute = FALSE,
-  npoints = NULL, model = "all", maxiter = 1024, tol = 1e-12,
-  ftol = 1e-12, ptol = 1e-12, minFactor = 10^-6, num.cores = NULL,
-  tasks = 0L, maxfev = 1e+05, verbose = TRUE, ...)
+nonlinearFitDist(
+  LR,
+  column = 9,
+  dist.name = "Weibull",
+  sample.size = 20,
+  location.par = FALSE,
+  absolute = FALSE,
+  npoints = NULL,
+  model = "all",
+  maxiter = 1024,
+  tol = 1e-12,
+  ftol = 1e-12,
+  ptol = 1e-12,
+  minFactor = 10^-6,
+  num.cores = NULL,
+  tasks = 0L,
+  maxfev = 1e+05,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{LR}{A list of GRanges objects with information divergence values in

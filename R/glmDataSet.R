@@ -1,4 +1,5 @@
 #' @rdname glmDataSet
+#' @name glmDataSet
 #' @title Data set constructor for class glmDataSet
 #' @description This function is used to build a object suitable to be used
 #'     with Methyl-IT \code{link{countTest2}} function.
@@ -34,7 +35,6 @@
 #' ## A RangedGlmDataSet is created
 #' ds <- glmDataSet(GR = GR, colData = colData)
 #'
-
 glmDataSet <- function(GR = NULL, counts = NULL, colData = NULL) {
    if (is.null(GR) && is.null(counts)) {
        cat("\n")
