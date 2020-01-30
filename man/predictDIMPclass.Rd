@@ -27,7 +27,7 @@ naturally are added in the downstream analysis of MethylIT.}
 returned (default, FALSE, see below).}
 
 \item{control.names}{Optional. Names/IDs of the control samples, which must
-be include in thr variable LR (default, NULL).}
+be include in the variable LR (default, NULL).}
 
 \item{treatment.names}{Optional. Names/IDs of the treatment samples, which
 must be include in the variable LR (default, NULL).}

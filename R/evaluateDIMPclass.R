@@ -31,7 +31,7 @@
 #'     correspond to a sample. For example, if  a sample is named 's1', then
 #'     this sample can be accessed in the list of GRanges objects as LR$s1.
 #' @param control.names Names/IDs of the control samples, which must be include
-#'     in thr variable LR.
+#'     in the variable LR.
 #' @param treatment.names Names/IDs of the treatment samples, which must be
 #'     included in the variable LR.
 #' @param column a logical vector for column names for the predictor variables

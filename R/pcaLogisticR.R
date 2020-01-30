@@ -4,7 +4,7 @@
 #'     Analysis (PCA)
 #' @description Principal components (PCs) are estimated from the predictor
 #'     variables provided as input data. Next, the individual coordinates in the
-#'     selected PCs are used as predictors in the logistic regresson.
+#'     selected PCs are used as predictors in the logistic regression.
 #' @details The principal components (PCs) are obtained using the function
 #'     \code{\link[stats]{prcomp}}, while the logistic regression is performed
 #'     using function \code{\link[stats]{glm}}, both functions from R package
