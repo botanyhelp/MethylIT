@@ -26,23 +26,24 @@ pcaQDA(
 )
 }
 \arguments{
-\item{formula}{Same as in 'qda'from pakage 'MASS'.}
+\item{formula}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{data}{Same as in 'qda'from pakage 'MASS'.}
+\item{data}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{grouping}{Same as in 'qda'from pakage 'MASS'.}
+\item{grouping}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
 \item{n.pc}{Number of principal components to use in the qda.}
 
-\item{scale}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{scale}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{center}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{center}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{tol}{Same as in 'prcomp' from pakage 'prcomp'v.}
+\item{tol}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{method}{Same as in 'qda'from pakage 'MASS'.}
+\item{method}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{max.pc}{Same as in paramter 'rank.' from prcomp' {prcomp}.}
+\item{max.pc}{Same as in parameter 'rank.' from
+\code{\link[stats]{prcomp}} from package 'stats'.}
 
 \item{object}{To use with function 'predict'. A 'pcaQDA' object containing a
 list of two objects: 1) an object of class inheriting from "qda" and 2)
