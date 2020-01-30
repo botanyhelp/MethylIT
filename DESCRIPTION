@@ -38,6 +38,11 @@ Imports:
   utils,
   XML
 RoxygenNote: 7.0.2
-Suggests: testthat, rmarkdown,
-    knitr
+Suggests:
+    spelling, 
+  testthat, 
+  rmarkdown,
+  knitr
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+Language: en-US

@@ -46,10 +46,10 @@ than CountPerBp. The filter is applied if 'CountPerBp' is given and if
 group.}
 
 \item{maxGrpCV}{A numerical vector. Maximum coefficient of variance for each
-group. Defaul maxGrpCV = NULL. The numbers maxGrpCV[1] and maxGrpCV[2]
+group. Defaul maxGrpCV = NULL. The numbers maxGrpCV\link{1} and maxGrpCV\link{2}
 will be taken as the maximun variances values permitted in control and
-in treatment groups, repectively. If only maxGrpCV[1] is provided, then
-maxGrpCV = c(maxGrpCV[1], maxGrpCV[1]). This parameter is addressed to
+in treatment groups, repectively. If only maxGrpCV\link{1} is provided, then
+maxGrpCV = c(maxGrpCV\link{1}, maxGrpCV\link{1}). This parameter is addressed to
 prevent testing regions where intra-group variations are very large,
 e.g.: control = c(1,0,1,1) and traatment = c(1, 0, 1, 40). The
 coefficient of variance for the treatment group is 1.87, very high. The
@@ -85,7 +85,7 @@ the corresponding suitable test will be applied when test = "LRT".}
 \item{scaling}{integer (default 1). Scaling factor estimate the
 signal density as: scaling x "DMP-Count-Per-Bp". For example,
 if scaling = 1000, then signal density denotes the number of DMPs in
- 1000 bp.}
+1000 bp.}
 
 \item{saveAll}{if TRUE all the temporal results are returned}
 
@@ -93,20 +93,20 @@ if scaling = 1000, then signal density denotes the number of DMPs in
 }
 \value{
 a data frame or GRanges object (if the DS contain the GRanges
-    information for each gene) with the test results and original count
-    matrix, plus control and treatment signal densities and their variation.
+information for each gene) with the test results and original count
+matrix, plus control and treatment signal densities and their variation.
 }
 \description{
 Perform Poisson and Negative Binomial regression analysis to
-    compare the counts from different groups, treatment and control. The
-    difference between functions 'countTest2' and 'countTest' resides in the
-    estimation of the prior weights used in Negative Binomial generalized
-    linear model.
+compare the counts from different groups, treatment and control. The
+difference between functions 'countTest2' and 'countTest' resides in the
+estimation of the prior weights used in Negative Binomial generalized
+linear model.
 }
 \details{
 A pairwise group comparison, control versus treatment, is performed.
-    The experimental design settings must be introduced using function
-    \code{link{glmDataSet}} to provide dataset (DS) object.
+The experimental design settings must be introduced using function
+\code{link{glmDataSet}} to provide dataset (DS) object.
 }
 \examples{
 set.seed(133) # Set a seed

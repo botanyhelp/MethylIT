@@ -14,7 +14,7 @@
 #'     methylated (mC) and unmethylated (uC) counts. The name of each element
 #'     from the list must coincide with a control or a treatment name.
 #' @param count.col 2d-vector of integers with the indexes of the read count
-#'     columns. If not given, then it is asssumed that the methylated and
+#'     columns. If not given, then it is assumed that the methylated and
 #'     unmethylated read counts are located in columns 1 and 2 of each GRanges
 #'     metacolumns. If object LR is the output of Methyl-IT function
 #'     \code{\link[MethylIT]{estimateDivergence}}, then columns 1:4 are the read

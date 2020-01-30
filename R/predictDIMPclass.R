@@ -17,7 +17,7 @@
 #' @param conf.matrix Optional. Logic, whether a confusion matrix should be
 #'     returned (default, FALSE, see below).
 #' @param control.names Optional. Names/IDs of the control samples, which must
-#'     be include in thr variable LR (default, NULL).
+#'     be include in the variable LR (default, NULL).
 #' @param treatment.names Optional. Names/IDs of the treatment samples, which
 #'     must be include in the variable LR (default, NULL).
 #' @return The same LR object with tow new columns named "class" and "posterior"

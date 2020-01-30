@@ -52,62 +52,60 @@ at most how many child processes will be run simultaneously (see
 }
 \value{
 If 'output = "best.model"', a character vector with the name of the
-    best fitted model for each sample and model statistics, which can be used
-    the next step to get the potential DMPs with function
-    \code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
-    table carrying the GoF values and the previously mentioned data.
-
-    The best model selection is based on the lowest AIC. However, if
-    'confl_model = TRUE', then the returned list will contain a sublist named
-    'confl_model' with the best model selected based on the highest
-    R.Cross.val. This sublist is returned only if at least there is one
-    sample where the model with the lowest AIC has not the highest
-    R.Cross.val. This report is useful to analyse any conflict between
-    models. For example, some times the best model selected based on AIC has
-    a R.Cross.val = 0.99945, while the higest R.Cross.val is 0.99950. In such
-    a situation the model with lowest AIC is still fine. However, some times
-    the model with the best AIC has some meaningless paramater value. For
-    example,  scale = 0.0000000001 in 'GGamm3P' or in 'Weibull2P' models.
-    This last situation can result from the numerical algorithm used in
-    the parameter estimation. The numerical algorithms for nonlinear fit
-    estimation are not perfect!
+best fitted model for each sample and model statistics, which can be used
+the next step to get the potential DMPs with function
+\code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
+table carrying the GoF values and the previously mentioned data.\preformatted{The best model selection is based on the lowest AIC. However, if
+'confl_model = TRUE', then the returned list will contain a sublist named
+'confl_model' with the best model selected based on the highest
+R.Cross.val. This sublist is returned only if at least there is one
+sample where the model with the lowest AIC has not the highest
+R.Cross.val. This report is useful to analyse any conflict between
+models. For example, some times the best model selected based on AIC has
+a R.Cross.val = 0.99945, while the higest R.Cross.val is 0.99950. In such
+a situation the model with lowest AIC is still fine. However, some times
+the model with the best AIC has some meaningless paramater value. For
+example,  scale = 0.0000000001 in 'GGamm3P' or in 'Weibull2P' models.
+This last situation can result from the numerical algorithm used in
+the parameter estimation. The numerical algorithms for nonlinear fit
+estimation are not perfect!
+}
 }
 \description{
 In Methyl-IT,  the signal detection step requires for the
-    knowledge of the probability distribution of the methylation noise, which
-    is the null hypothesis used to discriminate the signal from the noise.
-    Both, signal and noise, are expressed in terms of an information
-    divergence of methylation levels, which (currently in Methyl-IT) could be
-    the Hellinger divergence or the total variation distance.
+knowledge of the probability distribution of the methylation noise, which
+is the null hypothesis used to discriminate the signal from the noise.
+Both, signal and noise, are expressed in terms of an information
+divergence of methylation levels, which (currently in Methyl-IT) could be
+the Hellinger divergence or the total variation distance.\preformatted{As shown in reference [1], on statistical physics basis, the probability
+distribution of the noise is a member of the generalized gamma
+distribution. In particular, if the methylation changes on the DNA
+molecule follow a Poisson process, then the noise follows a Weibull
+probability distribution.
 
-    As shown in reference [1], on statistical physics basis, the probability
-    distribution of the noise is a member of the generalized gamma
-    distribution. In particular, if the methylation changes on the DNA
-    molecule follow a Poisson process, then the noise follows a Weibull
-    probability distribution.
+Function 'gofReport' search for the best fitted model betweeen the set
+of models requested by the user. Two goodness-of-fit (GoF) criteria are
+applied to select the best fitted model: Akaike's information criterion
+(AIC) and the correlation coeficient of cross-validations for the
+nonlinear regressions (R.Cross.val) [2]. These criteria evaluate
+different information inferred from the models. AIC deals with the
+trade-off between the goodness of fit of the model and the complexity
+of the model, while R.Cross.val provides information on the prediction
+power/performance of the model when confronted with external dataset.
 
-    Function 'gofReport' search for the best fitted model betweeen the set
-    of models requested by the user. Two goodness-of-fit (GoF) criteria are
-    applied to select the best fitted model: Akaike's information criterion
-    (AIC) and the correlation coeficient of cross-validations for the
-    nonlinear regressions (R.Cross.val) [2]. These criteria evaluate
-    different information inferred from the models. AIC deals with the
-    trade-off between the goodness of fit of the model and the complexity
-    of the model, while R.Cross.val provides information on the prediction
-    power/performance of the model when confronted with external dataset.
-
-    Although the numerical algorithms to accomplish the nonlinear fit are not
-    perfect, in general, the model with the lowest AIC must have the highest
-    R.Cross.val. If the model with the lowest AIC has not the highest
-    R.Cross.val, then further analyses are required. These analyses could
-    include the visualization of the graphics for the density distribution,
-    evaluation of whether the parameter values can be meaningful or not, etc.
-    Nevertheless, the best model will, in general, lead to the identification
-    of the greater amount of potential DMPs and DMPs, as well as, the highest
-    classification accuracy estimated with functions
-    \code{\link{estimateCutPoint}} and \code{\link{evaluateDIMPclass}}. In
-    the worse scenario, these observations can ultimately lead to a post-hoc
-    decision on which the best model is.
+Although the numerical algorithms to accomplish the nonlinear fit are not
+perfect, in general, the model with the lowest AIC must have the highest
+R.Cross.val. If the model with the lowest AIC has not the highest
+R.Cross.val, then further analyses are required. These analyses could
+include the visualization of the graphics for the density distribution,
+evaluation of whether the parameter values can be meaningful or not, etc.
+Nevertheless, the best model will, in general, lead to the identification
+of the greater amount of potential DMPs and DMPs, as well as, the highest
+classification accuracy estimated with functions
+\code{\link{estimateCutPoint}} and \code{\link{evaluateDIMPclass}}. In
+the worse scenario, these observations can ultimately lead to a post-hoc
+decision on which the best model is.
+}
 }
 \examples{
 ## Loading information divergence dataset
@@ -122,17 +120,18 @@ ps_dmp <- getPotentialDIMP(LR = hd, nlms = dt$nlms, div.col = 9L,
                             dist.name = dt$bestModel)
 }
 \references{
-\enumerate{
-        \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-            Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-            Mar. 2016.
-        \item Stevens JP. Applied Multivariate Statistics for the Social
-            Sciences. Fifth Edit. Routledge Academic; 2009.
-    }
+\preformatted{\\enumerate\{
+    \\item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+        Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+        Mar. 2016.
+    \\item Stevens JP. Applied Multivariate Statistics for the Social
+        Sciences. Fifth Edit. Routledge Academic; 2009.
+\}
+}
 }
 \seealso{
 \code{\link{nonlinearFitDist}}
 }
 \author{
-Robersy Sanchez 11/25/2019 <https://github.com/genomaths>
+Robersy Sanchez 11/25/2019 \url{https://github.com/genomaths}
 }

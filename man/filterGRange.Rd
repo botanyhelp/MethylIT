@@ -37,17 +37,17 @@ methylated (mC) and unmethylated counts (uC). Then coverage = mC + uC.}
 }
 \value{
 The input GRanges object or list of GRanges objects after filtering
-    it.
+it.
 }
 \description{
 The function is used to discard the cytosine positions with
-    coverage values less than 'min.coverage' read counts or values greater
-    than the specified 'percentile'.
+coverage values less than 'min.coverage' read counts or values greater
+than the specified 'percentile'.
 }
 \details{
 The input must be a GRanges object with a coverage column in the
-    metacolumn table or the columns with methylated (mC) and unmethylated
-    counts (uC).
+metacolumn table or the columns with methylated (mC) and unmethylated
+counts (uC).
 }
 \examples{
     gr1 <- makeGRangesFromDataFrame(

@@ -4,7 +4,7 @@
 \alias{pcaQDA}
 \alias{predict.pcaQDA}
 \title{Quadratic Discriminant Analysis (QDA) using Principal Component
-    Analysis (PCA)}
+Analysis (PCA)}
 \usage{
 pcaQDA(
   formula = NULL,
@@ -26,23 +26,24 @@ pcaQDA(
 )
 }
 \arguments{
-\item{formula}{Same as in 'qda'from pakage 'MASS'.}
+\item{formula}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{data}{Same as in 'qda'from pakage 'MASS'.}
+\item{data}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{grouping}{Same as in 'qda'from pakage 'MASS'.}
+\item{grouping}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
 \item{n.pc}{Number of principal components to use in the qda.}
 
-\item{scale}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{scale}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{center}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{center}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{tol}{Same as in 'prcomp' from pakage 'prcomp'v.}
+\item{tol}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{method}{Same as in 'qda'from pakage 'MASS'.}
+\item{method}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
 
-\item{max.pc}{Same as in paramter 'rank.' from prcomp' {prcomp}.}
+\item{max.pc}{Same as in parameter 'rank.' from
+\code{\link[stats]{prcomp}} from package 'stats'.}
 
 \item{object}{To use with function 'predict'. A 'pcaQDA' object containing a
 list of two objects: 1) an object of class inheriting from "qda" and 2)
@@ -61,25 +62,26 @@ see \code{\link[MASS]{qda}}.}
 \item{...}{Not in use.}
 }
 \value{
-Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
-    two objects:
-        1) 'qda': an object of class 'qda' from package 'MASS'.
-        2) 'pca': an object of class 'prcomp' from package 'stats'.
-    For information on how to use these objects see ?qda and ?prcomp.
+\preformatted{Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
+two objects:
+    1) 'qda': an object of class 'qda' from package 'MASS'.
+    2) 'pca': an object of class 'prcomp' from package 'stats'.
+For information on how to use these objects see ?qda and ?prcomp.
+}
 }
 \description{
 The principal components (PCs) for predictor variables provided
-    as input data are estimated and then the individual coordinates in the
-    selected PCs are used as predictors in the qda
+as input data are estimated and then the individual coordinates in the
+selected PCs are used as predictors in the qda
 
 Predict using a PCA-LDA model built with function 'pcaLDA'
 }
 \details{
 The principal components (PCs) are obtained using the function
-    'prcomp' from R pacakage 'stats', while the qda is performed using the
-    'qda' function from R package 'MASS'. The current application only uses
-    basic functionalities of mentioned functions. As shown in the example,
-    'pcaQDA' function can be used in general classification problems.
+'prcomp' from R pacakage 'stats', while the qda is performed using the
+'qda' function from R package 'MASS'. The current application only uses
+basic functionalities of mentioned functions. As shown in the example,
+'pcaQDA' function can be used in general classification problems.
 }
 \examples{
 data(iris)
@@ -100,5 +102,5 @@ table(x)
 }
 \seealso{
 \code{\link{pcaLDA}}, \code{\link[MASS]{qda}} and
-    \code{\link[MASS]{predict.lda}}
+\code{\link[MASS]{predict.lda}}
 }

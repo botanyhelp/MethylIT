@@ -61,6 +61,7 @@
 #' @param verbose If TRUE, prints the function log to stdout
 #' @param ... Further arguments to pass to \code{\link{nonlinearFitDist}}.
 #' @importFrom matrixStats rowMins
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @return If 'output = "best.model"', a character vector with the name of the
 #'     best fitted model for each sample and model statistics, which can be used
 #'     the next step to get the potential DMPs with function

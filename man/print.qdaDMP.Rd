@@ -3,7 +3,7 @@
 \name{print.qdaDMP}
 \alias{print.qdaDMP}
 \title{Printing object from \emph{print.qdaDMP} class by simple
-    print methods.}
+print methods.}
 \usage{
 \method{print}{qdaDMP}(x, digits = getOption("digits"))
 }
@@ -15,6 +15,6 @@
 }
 \description{
 Printing object from \emph{print.qdaDMP} class by simple
-    print methods.
+print methods.
 }
 \keyword{internal}

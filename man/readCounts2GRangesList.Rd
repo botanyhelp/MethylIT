@@ -61,13 +61,13 @@ A list of GRanges objects
 }
 \description{
 This function is addressed to read files with methylation count
-    table data commonly generated after the alignment of BS-seq data or found
-    in GEO database
+table data commonly generated after the alignment of BS-seq data or found
+in GEO database
 }
 \details{
 Read tables from files with a table methylation count data using
-    the function fread from the package 'data.table' and and yields a list of
-    GRanges objects with the information provided.
+the function fread from the package 'data.table' and and yields a list of
+GRanges objects with the information provided.
 }
 \examples{
 ## Create a cov file with it's file name including "gz" (tarball extension)

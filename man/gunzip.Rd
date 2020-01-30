@@ -33,7 +33,7 @@ Decompress 'gzip' files.
 }
 \details{
 This function is originally from the R packages 'R.utils'. Herein,
-    the version as given by 'GEOquery' is incorporated.
+the version as given by 'GEOquery' is incorporated.
 }
 \author{
 Original author: Henrik Bengtsson.

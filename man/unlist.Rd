@@ -16,12 +16,12 @@ x?}
 }
 \description{
 Given a list 'x' of R objects from the same class and same
-    format, unlist simplifies it to produce a new R object which contains all
-    the initial components which in 'x' object.
+format, unlist simplifies it to produce a new R object which contains all
+the initial components which in 'x' object.
 }
 \details{
 This is a method to extend unlist generic function to handle
-    any list of objects from the same class.
+any list of objects from the same class.
 }
 \examples{
 gr1 <-GRanges(seqnames = "chr2", ranges = IRanges(3, 6),

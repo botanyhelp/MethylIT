@@ -3,7 +3,7 @@
 \name{estimateCutPoint}
 \alias{estimateCutPoint}
 \title{Estimate cutpoints to distinguish the treatment methylation signal
-    from the control}
+from the control}
 \usage{
 estimateCutPoint(
   LR,
@@ -95,21 +95,21 @@ variable "hdiv", "TV", "wprob", and "pos" can be provided. For example:
 cutpoint will include these values.}
 
 \item{stat}{An integer number indicating the statistic to be used in the
- testing when \emph{simple} = FALSE The mapping for statistic names are:
- \itemize{
-     \item 0 = "Accuracy"
-     \item 1 = "Sensitivity"
-     \item 2 = "Specificity"
-     \item 3 = "Pos Pred Value"
-     \item 4 = "Neg Pred Value"
-     \item 5 = "Precision"
-     \item 6 = "Recall"
-     \item 7 = "F1"
-     \item 8 = "Prevalence"
-     \item 9 = "Detection Rate"
-     \item 10 = "Detection Prevalence"
-     \item 11 = "Balanced Accuracy"
-     \item 12 = FDR
+testing when \emph{simple} = FALSE The mapping for statistic names are:
+\itemize{
+\item 0 = "Accuracy"
+\item 1 = "Sensitivity"
+\item 2 = "Specificity"
+\item 3 = "Pos Pred Value"
+\item 4 = "Neg Pred Value"
+\item 5 = "Precision"
+\item 6 = "Recall"
+\item 7 = "F1"
+\item 8 = "Prevalence"
+\item 9 = "Detection Rate"
+\item 10 = "Detection Prevalence"
+\item 11 = "Balanced Accuracy"
+\item 12 = FDR
 }}
 
 \item{cutp_data}{Logic (optional). If TRUE, and simple = TRUE, then a
@@ -129,67 +129,66 @@ use, i.e. at most how many child processes will be run simultaneously
 }
 \value{
 Depending the parameter setting will return the following list with
-    elements:
-    \enumerate{
-        \item cutpoint: Cutpoint estimated.
-        \item testSetPerformance: Performance evaluation on the test set.
-        \item testSetModel.FDR: False discovery rate on the test set.
-        \item model: Model used in the performance evaluation.
-        \item modelConfMatrix: Confusion matrix for the whole dataset derived
-              applying the model classifier used in the performance
-              evaluation.
-        \item initModel: Initial classifier model applied to estimate
-              posterior classifications used in the cutpoint estimation.
-        \item postProbCut: Posterior probability used to estimate the
-              cutpoint
-        \item classifier: Name of the model classifier used in the
-              performance evaluation.
-        \item statistic: Name of the performance statistic used to find the
-              cutpoint when \emph{simple} =  FALSE
-        \item optStatVal: Value of the performance statistic at the cutpoint.
-    }
+elements:
+\enumerate{
+\item cutpoint: Cutpoint estimated.
+\item testSetPerformance: Performance evaluation on the test set.
+\item testSetModel.FDR: False discovery rate on the test set.
+\item model: Model used in the performance evaluation.
+\item modelConfMatrix: Confusion matrix for the whole dataset derived
+applying the model classifier used in the performance
+evaluation.
+\item initModel: Initial classifier model applied to estimate
+posterior classifications used in the cutpoint estimation.
+\item postProbCut: Posterior probability used to estimate the
+cutpoint
+\item classifier: Name of the model classifier used in the
+performance evaluation.
+\item statistic: Name of the performance statistic used to find the
+cutpoint when \emph{simple} =  FALSE
+\item optStatVal: Value of the performance statistic at the cutpoint.
+}
 }
 \description{
 Given a list of two GRanges objects, control and treatment,
-    carrying the potential signals (prior classification) from controls and
-    treatments in terms of an information divergence
-    (given the metacolumns), the function estimates the cutpoints of the
-    control group versus treatment group.
+carrying the potential signals (prior classification) from controls and
+treatments in terms of an information divergence
+(given the metacolumns), the function estimates the cutpoints of the
+control group versus treatment group.
 }
 \details{
 The function performs an estimation of the optimal cutpoint for the
-    classification of the differentially methylated (cytosines) positions
-    into two classes: DMPs from control and DMPs from treatment. The simplest
-    approach to estimate the cutpoint is based on the application of Youden
-    Index. More complexes approach based in several machine learning model
-    are provided as well.
+classification of the differentially methylated (cytosines) positions
+into two classes: DMPs from control and DMPs from treatment. The simplest
+approach to estimate the cutpoint is based on the application of Youden
+Index. More complexes approach based in several machine learning model
+are provided as well.\preformatted{Results of the classification performance resulting from the estimated
+cutpoint are normally given, with the exception of those extreme
+situations where the statistics to evaluate performance cannot be
+estimated. More than one classifier model can be applied. For example,
+one classifier (logistic model) can be used to estimate the posterior
+classification probabilities of DMP into those from control and those
+from treatment. These probabilities are then used to estimate the
+cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
+classifier can be used to evaluate the classification performance.
+Different classifier models would yield different performances. Models
+are returned and can be used in further prediction with new datasets from
+the same batch experiment. This is a machine learning approach to
+discriminate the biological regulatory signal naturally generated in the
+control from that one induced by the treatment.
 
-    Results of the classification performance resulting from the estimated
-    cutpoint are normally given, with the exception of those extreme
-    situations where the statistics to evaluate performance cannot be
-    estimated. More than one classifier model can be applied. For example,
-    one classifier (logistic model) can be used to estimate the posterior
-    classification probabilities of DMP into those from control and those
-    from treatment. These probabilities are then used to estimate the
-    cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
-    classifier can be used to evaluate the classification performance.
-    Different classifier models would yield different performances. Models
-    are returned and can be used in further prediction with new datasets from
-    the same batch experiment. This is a machine learning approach to
-    discriminate the biological regulatory signal naturally generated in the
-    control from that one induced by the treatment.
+Notice that the estimation of an optimal cutpoint based on the
+application Youden Index (simple = TRUE) only uses the information
+provided by the selected information divergence. As a result,
+classification results based only in one variable can be poor or can
+fail. However, option simple = FALSE, uses the information from several
+variables following a machine-learnig (ML) approach.
 
-    Notice that the estimation of an optimal cutpoint based on the
-    application Youden Index (simple = TRUE) only uses the information
-    provided by the selected information divergence. As a result,
-    classification results based only in one variable can be poor or can
-    fail. However, option simple = FALSE, uses the information from several
-    variables following a machine-learnig (ML) approach.
-
-    Nevertheless, when simple = TRUE, still a ML model classifier can
-    be built using the optimal cutpoint estimated and setting
-    clas.perf = TRUE. Such a ML model can be used for predictions in futher
-    analyses with function \code{\link{predictDIMPclass}}.
+Nevertheless, when simple = TRUE, still a ML model classifier can
+be built using the optimal cutpoint estimated and setting
+clas.perf = TRUE. Such a ML model can be used for predictions in futher
+analyses with function \code{\link{predictDIMPclass}}.
+}
 }
 \examples{
 ## Get a dataset of potential signals and the estimated cutpoint from the

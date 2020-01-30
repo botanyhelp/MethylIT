@@ -37,12 +37,12 @@ GLM model of the group comparison for the given genomic region
 }
 \description{
 This function is called internally by countTest function. You
-    would need to call it directly only in very special cases.
+would need to call it directly only in very special cases.
 
 Perform Poisson and Negative Binomial regression analysis to
-    compare the counts from different groups, treatment and control x:
-    vector of counts groups: factor labeling the members from each group
-    Evaluated models are "Poisson", "Quasipoisson", "Neg.Binomial.W", and
-    "Neg.Binomial"
+compare the counts from different groups, treatment and control x:
+vector of counts groups: factor labeling the members from each group
+Evaluated models are "Poisson", "Quasipoisson", "Neg.Binomial.W", and
+"Neg.Binomial"
 }
 \keyword{internal}

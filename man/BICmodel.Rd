@@ -24,7 +24,7 @@ BIC numerical value
 }
 \description{
 this function permits the estimation of the BIC for models for
-    which the function 'BIC' from 'stats' packages does not work.
+which the function 'BIC' from 'stats' packages does not work.
 }
 \details{
 if for a given model 'm' BIC(m) works, then BICmodel(m) = BIC(m).

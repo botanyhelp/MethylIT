@@ -47,8 +47,8 @@ distribution. These are numerical and strictly positives; default 1.
 \item{log.p}{logical; if TRUE, probabilities/densities p are returned as
 log(p).}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are P[X<=x],
-otherwise, P[X > x]}
+\item{lower.tail}{logical; if TRUE (default), probabilities are P\link{X<=x},
+otherwise, P\link{X > x}}
 
 \item{p}{vector of probabilities.}
 
@@ -56,30 +56,29 @@ otherwise, P[X > x]}
 }
 \value{
 GG PDF values (3-parameters or 4-parameters) for dggamma,
-    GG probability for pggamma, quaniles or GG random generated values for
-    rggamma.
+GG probability for pggamma, quaniles or GG random generated values for
+rggamma.
 }
 \description{
 Probability density function (PDF), cummulative density function
-    (CDF), quantile function and random generation for the Generalized Gamma
-    (GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
-    function is reduced to GGamma distribution with 3 parameters by setting
-    mu = 0.
+(CDF), quantile function and random generation for the Generalized Gamma
+(GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
+function is reduced to GGamma distribution with 3 parameters by setting
+mu = 0.
 }
 \details{
 Details about these function can be found in references 1 to 3. You
-    may also see section Note at ?pgamma or ?rgamma. Herein, we are using
-    Stacy' s formula (references 2 to 3) with the parametrization given in
-    reference 4 (equation 6, page 12). As in the case of gamma distribution
-    function, the cumulative distribution function (as given in equation 12,
-    page 13 from reference 4) is expressed in terms of the lower incomplete
-    gamma function (see ?pgamma).
+may also see section Note at ?pgamma or ?rgamma. Herein, we are using
+Stacy' s formula (references 2 to 3) with the parametrization given in
+reference 4 (equation 6, page 12). As in the case of gamma distribution
+function, the cumulative distribution function (as given in equation 12,
+page 13 from reference 4) is expressed in terms of the lower incomplete
+gamma function (see ?pgamma).\preformatted{The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
+\eqn{\psi}, and \eqn{\mu} has density:
 
-    The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
-    \eqn{\psi}, and \eqn{\mu} has density:
-
-    \deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
+\deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
     \beta)^\alpha) ((x-\mu)/\beta)^(\alpha * \psi - 1)/(\beta Gamma(\psi))}
+}
 }
 \examples{
 q <- (1:9)/10
@@ -93,16 +92,15 @@ fitGGammaDist(x)
 
 }
 \references{
-1. Handbook on  STATISTICAL DISTRIBUTIONS for experimentalists
+\enumerate{
+\item Handbook on  STATISTICAL DISTRIBUTIONS for experimentalists
 (p. 73) by Christian Walck. Particle Physics Group Fysikum. University of
 Stockholm (e-mail: walck@physto.se )
-
-2. Stacy, E. W. A Generalization of the Gamma Distribution. Ann. Math. Stat.
+\item Stacy, E. W. A Generalization of the Gamma Distribution. Ann. Math. Stat.
 33, 1187–1192 (1962).
-
-3. Stacy E, Mihram G (1965) Parameter estimation for a generalized gamma
+\item Stacy E, Mihram G (1965) Parameter estimation for a generalized gamma
 distribution. Technometrics 7: 349-358.
-
-4. Sanchez, R. & Mackenzie, S. A. Information Thermodynamics of Cytosine DNA
+\item Sanchez, R. & Mackenzie, S. A. Information Thermodynamics of Cytosine DNA
 Methylation. PLoS One 11, e0150427 (2016).
+}
 }

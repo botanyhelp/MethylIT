@@ -102,10 +102,10 @@ Build an unique GRanges object from a list of Granges objects.
 }
 \details{
 The metadata of each one of these GRanges must have one or more
-    columns to yield a unique GRanges object with metadata columns from the
-    original GRanges objects. Otherwise, a unique GRanges object will be
-    created  without metadata columns. Additionally, all metadata must be the
-    same class, e.g. all numeric or all characters, or all factor
+columns to yield a unique GRanges object with metadata columns from the
+original GRanges objects. Otherwise, a unique GRanges object will be
+created  without metadata columns. Additionally, all metadata must be the
+same class, e.g. all numeric or all characters, or all factor
 }
 \examples{
 dfChr1 <- data.frame(chr = "chr1", start = 11:15, end = 11:15,

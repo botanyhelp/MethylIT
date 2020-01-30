@@ -29,7 +29,7 @@ see \code{\link[MASS]{qda}}.}
 }
 \description{
 Predict using a qda model built with function
-    \code{\link[MethylIT]{evaluateDIMPclass}}
+\code{\link[MethylIT]{evaluateDIMPclass}}
 }
 \seealso{
 \code{\link[MethylIT]{estimateCutPoint}}, \code{\link[MASS]{qda}}

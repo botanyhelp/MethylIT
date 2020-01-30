@@ -52,7 +52,7 @@ for |TV|, then absolute must be set to TRUE.}
 
 \item{alpha}{A numerical value (usually alpha < 0.05) used to select
 cytosine sites k with information divergence (DIV_k) for which Weibull
-probability P[DIV_k > DIV(alpha)].}
+probability P\link{DIV_k > DIV(alpha)}.}
 
 \item{pval.col}{An integer denoting a column from each GRanges object from
 LR where p-values are provided when \strong{dist.name == "None"} and
@@ -82,21 +82,21 @@ is used (\strong{when nlms is given}), since it makes not sense.}
 }
 \value{
 A list of GRanges objects, each GRanges object carrying the selected
-    cytosine sites and and the Weibull probability P[DIV_k > DIV(alpha)].
+cytosine sites and and the Weibull probability P\link{DIV_k > DIV(alpha)}.
 }
 \description{
 This function perform a selection of the cytosine sites
-    carrying the potential methylation signal. The potential signals from
-    controls and treatments are used as prior classification in further step
-    of signal detection.
+carrying the potential methylation signal. The potential signals from
+controls and treatments are used as prior classification in further step
+of signal detection.
 }
 \details{
 The potential signals are cytosine sites k with information
-    divergence (DIV_k) values greater than the DIV(alpha = 0.05). The value
-    of alpha can be specified. For example, potential signals with
-    DIV_k > DIV(alpha = 0.01) can be selected. For each sample, cytosine
-    sites are selected based on the corresponding nonlinear fitted
-    distribution model that has been supplied.
+divergence (DIV_k) values greater than the DIV(alpha = 0.05). The value
+of alpha can be specified. For example, potential signals with
+DIV_k > DIV(alpha = 0.01) can be selected. For each sample, cytosine
+sites are selected based on the corresponding nonlinear fitted
+distribution model that has been supplied.
 }
 \examples{
 ## Get a dataset of Hellinger divergency of methylation levels and their

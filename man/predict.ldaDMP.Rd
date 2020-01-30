@@ -28,7 +28,7 @@ see \code{link[MASS]{lda}}.}
 }
 \description{
 Predict using a LDA model built with function
-    \code{\link[MethylIT]{evaluateDIMPclass}}
+\code{\link[MethylIT]{evaluateDIMPclass}}
 }
 \seealso{
 \code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}

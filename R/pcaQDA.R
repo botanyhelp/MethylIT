@@ -11,15 +11,16 @@
 #'     basic functionalities of mentioned functions. As shown in the example,
 #'     'pcaQDA' function can be used in general classification problems.
 #'
-#' @param formula Same as in 'qda'from pakage 'MASS'.
-#' @param data Same as in 'qda'from pakage 'MASS'.
-#' @param grouping Same as in 'qda'from pakage 'MASS'.
+#' @param formula Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
+#' @param data Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
+#' @param grouping Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
 #' @param n.pc Number of principal components to use in the qda.
-#' @param scale Same as in 'prcomp' from pakage 'prcomp'.
-#' @param center Same as in 'prcomp' from pakage 'prcomp'.
-#' @param tol Same as in 'prcomp' from pakage 'prcomp'v.
-#' @param method Same as in 'qda'from pakage 'MASS'.
-#' @param max.pc Same as in paramter 'rank.' from prcomp' {prcomp}.
+#' @param scale Same as in \code{\link[stats]{prcomp}} from package 'stats'.
+#' @param center Same as in \code{\link[stats]{prcomp}} from package 'stats'.
+#' @param tol Same as in \code{\link[stats]{prcomp}} from package 'stats'.
+#' @param method Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
+#' @param max.pc Same as in parameter 'rank.' from
+#'     \code{\link[stats]{prcomp}} from package 'stats'.
 #' @return
 #'     Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
 #'     two objects:

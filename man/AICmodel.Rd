@@ -12,8 +12,8 @@ model parameters can be retrieved using resid(model) and coef(model),
 respectively.}
 
 \item{residuals}{if provided, it is numerical vector with the residuals:
-residuals = observed.values - predicted.values, where predicted values 
-are estimated from the model. If the parameter 'model' is not provided, 
+residuals = observed.values - predicted.values, where predicted values
+are estimated from the model. If the parameter 'model' is not provided,
 then this parameter must be provided.}
 
 \item{np}{number of model parameters. If the parameter 'model' is not
@@ -24,7 +24,7 @@ AIC numerical value
 }
 \description{
 this function permits the estimation of the AIC for models for
-    which the function 'AIC' from the 'stats' package does not work.
+which the function 'AIC' from the 'stats' package does not work.
 }
 \details{
 if for a given model 'm' AIC(m) works, then AICmodel(m) = AIC(m).

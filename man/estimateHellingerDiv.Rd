@@ -15,25 +15,24 @@ in the estimation of the methylation levels.}
 }
 \value{
 The Hellinger divergence value for the given methylation levels is
-    returned
+returned
 }
 \description{
 Given a the methylation levels of two individual, the function
-    computes the information divergence between methylation levels.
+computes the information divergence between methylation levels.
 }
 \details{
 Each methylation level j for cytosine site i corresponds to a
-    probability vector p_j = c(p_ij, 1 - p_ij). Then, the information
-    divergence between methylation levels p1 and p2 is the divergence
-    between the vectors p1 = c(p_i1, 1 - p_i1) and p2 = c(p_i2, 1 - p_i2).
-    If the vector of coverage is supplied, then the information divergence
-    is estimated according to the formula:
-
-    hdiv = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
-    p[1]) - sqrt(1 - p[2]))^2)/(n[1] + n[2] + 2) This formula corresponds to
-    Hellinger divergence as given in the first formula from Theorem 1 from
-    reference 1. Otherwise: hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
-    p[1]) - sqrt(1 - p[2]))^2
+probability vector p_j = c(p_ij, 1 - p_ij). Then, the information
+divergence between methylation levels p1 and p2 is the divergence
+between the vectors p1 = c(p_i1, 1 - p_i1) and p2 = c(p_i2, 1 - p_i2).
+If the vector of coverage is supplied, then the information divergence
+is estimated according to the formula:\preformatted{hdiv = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
+p[1]) - sqrt(1 - p[2]))^2)/(n[1] + n[2] + 2) This formula corresponds to
+Hellinger divergence as given in the first formula from Theorem 1 from
+reference 1. Otherwise: hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
+p[1]) - sqrt(1 - p[2]))^2
+}
 }
 \examples{
     p <- c(0.5, 0.5)
@@ -42,6 +41,6 @@ Each methylation level j for cytosine site i corresponds to a
 }
 \references{
 ' 1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
-    two discrete populations based on the Hellinger distance. Stat Probab
-    Lett 80: 206-214.
+two discrete populations based on the Hellinger distance. Stat Probab
+Lett 80: 206-214.
 }

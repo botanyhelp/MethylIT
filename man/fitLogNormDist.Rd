@@ -60,29 +60,28 @@ vector of parameters to be optimized.}
 }
 \value{
 Model table with coefficients and goodness-of-fit results:
-    Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covariance matrix.
+Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
+coefficient covariance matrix.
 }
 \description{
 This function performs the nonlinear fit of GGamma CDF of a
-    variable x
+variable x
 }
 \details{
 The algorithm tries to fit the two-parameter LogNorm CDF
-    using a modification of Levenberg-Marquardt algorithm implemented in
-    function 'nls.lm' from 'minpack.lm' package that is used to perform the
-    nonlinear fit. Cross-validations for the nonlinear regressions
-    (R.Cross.val) were performed in each methylome as described in reference
-    [1]. In addition, Stein's formula for adjusted R squared (rho) was used
-    as an estimator of the average cross-validation predictive power [1].
-
-    If the number of values to fit is >10^6, the fitting to a LogNorm CDF
-    would be a time consuming task. To reduce the computational time, the
-    option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
-    the original variable values are summarized into 'npoint' bins and their
-    midpoints are used as the new predictors. In this case, only the
-    goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-    the original variable x values.
+using a modification of Levenberg-Marquardt algorithm implemented in
+function 'nls.lm' from 'minpack.lm' package that is used to perform the
+nonlinear fit. Cross-validations for the nonlinear regressions
+(R.Cross.val) were performed in each methylome as described in reference
+\link{1}. In addition, Stein's formula for adjusted R squared (rho) was used
+as an estimator of the average cross-validation predictive power \link{1}.\preformatted{If the number of values to fit is >10^6, the fitting to a LogNorm CDF
+would be a time consuming task. To reduce the computational time, the
+option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
+the original variable values are summarized into 'npoint' bins and their
+midpoints are used as the new predictors. In this case, only the
+goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
+the original variable x values.
+}
 }
 \examples{
 set.seed(126)
@@ -91,8 +90,10 @@ fitLogNormDist(x)
 
 }
 \references{
-1. Stevens JP. Applied Multivariate Statistics for the Social
-    Sciences. Fifth Edit. Routledge Academic; 2009.
+\enumerate{
+\item Stevens JP. Applied Multivariate Statistics for the Social
+Sciences. Fifth Edit. Routledge Academic; 2009.
+}
 }
 \author{
 Robersy Sanchez - 04/09/2019

@@ -67,41 +67,46 @@ vector of parameters to be optimized.}
 }
 \value{
 Model table with coefficients and goodness-of-fit results:
-    Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covariance matrix. If \strong{nlms = TRUE}, then a list with
-    nonlinear model object \code{\link[minpack.lm]{nls.lm}} is returned.
+Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
+coefficient covariance matrix. If \strong{nlms = TRUE}, then a list with
+nonlinear model object \code{\link[minpack.lm]{nls.lm}} is returned.
 }
 \description{
 This function performs the nonlinear fit of GGamma CDF of a
-    variable x
+variable x
 }
 \details{
 The script algorithm tries to fit the three-parameter GGamma CDF
-    ("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a
-    modification of Levenberg-Marquardt algorithm implemented in function
-    'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-    fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-    performed in each methylome as described in reference [1]. In addition,
-    Stein's formula for adjusted R squared (rho) was used as an estimator of
-    the average cross-validation predictive power [1].
-
-    If the number of values to fit is >10^6, the fitting to a GGamma CDF
-    would be a time consuming task. To reduce the computational time, the
-    option summarized.data' can be set 'TRUE'. If npoint != NULL, the
-    original variable values are summarized into 'npoint' bins and their
-    midpoints are used as the new predictors. In this case, only the
-    goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-    the original variable x values.
+("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a
+modification of Levenberg-Marquardt algorithm implemented in function
+'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
+fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
+performed in each methylome as described in reference \link{1}. In addition,
+Stein's formula for adjusted R squared (rho) was used as an estimator of
+the average cross-validation predictive power \link{1}.\preformatted{If the number of values to fit is >10^6, the fitting to a GGamma CDF
+would be a time consuming task. To reduce the computational time, the
+option summarized.data' can be set 'TRUE'. If npoint != NULL, the
+original variable values are summarized into 'npoint' bins and their
+midpoints are used as the new predictors. In this case, only the
+goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
+the original variable x values.
+}
 }
 \examples{
 set.seed(123)
-x <- rggamma(2000, alpha = 1.03, psi = 0.75, scale = 1.1)
+## Fitting GGamma3P
+x <- rggamma(3000, alpha = 1.03, psi = 0.75, scale = 1.1)
 fitGGammaDist(x)
+## Fitting GGamma4P
+x <- x + 1
+fitGGammaDist(x, location.par = TRUE)
 
 }
 \references{
-1. Stevens JP. Applied Multivariate Statistics for the Social
-    Sciences. Fifth Edit. Routledge Academic; 2009.
+\enumerate{
+\item Stevens JP. Applied Multivariate Statistics for the Social
+Sciences. Fifth Edit. Routledge Academic; 2009.
+}
 }
 \author{
 Robersy Sanchez - 06/03/2016
