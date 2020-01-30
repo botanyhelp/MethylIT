@@ -5,10 +5,10 @@
 \alias{gof}
 \title{Simulated dataset of nonlinear fits used in the examples}
 \format{gof is a list of best fitted nonlinear probability distribution
-    model estimated for the datset 'HD' (available in MethylIT package)
-    'gof' carries the information on the best fitted probability
-    distribution model for each individual sample. 'gof' was obtained with
-    function \code{\link{gofReport}}.}
+model estimated for the datset 'HD' (available in MethylIT package)
+'gof' carries the information on the best fitted probability
+distribution model for each individual sample. 'gof' was obtained with
+function \code{\link{gofReport}}.}
 \usage{
 gof
 }

@@ -61,38 +61,37 @@ natural logarithm.}
 }
 \value{
 The input matrix or GRanges object with the four columns of counts
-    and additional columns. If Bayessian = TRUE, the results are based on
-    the posterior estimations of methylation levels. 1) p1" and "p2":
-    methylation levels for control and treatment; 2) "hdiv": Hellinger
-    divergence; 3) "bay.TV". "TV": total variation TV = p2 - p1 is based
-    on simple counts
+and additional columns. If Bayessian = TRUE, the results are based on
+the posterior estimations of methylation levels. 1) p1" and "p2":
+methylation levels for control and treatment; 2) "hdiv": Hellinger
+divergence; 3) "bay.TV". "TV": total variation TV = p2 - p1 is based
+on simple counts
 }
 \description{
 The Information divergence of methylation levels is estimated
-    using the direct estimation or a Bayesian approach of the methylation
-    levels. Hellinger divergence is computed as given in reference 1.
+using the direct estimation or a Bayesian approach of the methylation
+levels. Hellinger divergence is computed as given in reference 1.
 }
 \details{
 For the current version, the Information divergence of methylation
-    levels is estimated based on Hellinger divergence. If read counts are
-    provided, then Hellinger divergence is computed as given in the first
-    formula from Theorem 1 from reference 1. In the present case,
+levels is estimated based on Hellinger divergence. If read counts are
+provided, then Hellinger divergence is computed as given in the first
+formula from Theorem 1 from reference 1. In the present case,\preformatted{hdiv = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
+p[1]) - sqrt(1 - p[2]))^2)/(n[1] + n[2] + 2)
 
-    hdiv = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
-    p[1]) - sqrt(1 - p[2]))^2)/(n[1] + n[2] + 2)
+where n[1] and n[2] are the coverage for the control and treatment,
+respectively. Notice that each row from the matrix of counts correspond
+to a single cytosine position and has four values corresponding to "mC1"
+and "uC1" (control), and mC2" and "uC2" for treatment.
 
-    where n[1] and n[2] are the coverage for the control and treatment,
-    respectively. Notice that each row from the matrix of counts correspond
-    to a single cytosine position and has four values corresponding to "mC1"
-    and "uC1" (control), and mC2" and "uC2" for treatment.
+If the methylation levels are provided in place of counts, then
+Hellinger divergence is computed as:
+hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -p[1]) - sqrt(1 - p[2]))^2
 
-    If the methylation levels are provided in place of counts, then
-    Hellinger divergence is computed as:
-    hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -p[1]) - sqrt(1 - p[2]))^2
-
-    This formula assumes that the probability vectors derived from the
-    methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
-    'estimateHellingerDiv') are an unbiased estimation of the expected one.
+This formula assumes that the probability vectors derived from the
+methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
+'estimateHellingerDiv') are an unbiased estimation of the expected one.
+}
 }
 \examples{
 ## The read count data are created
@@ -112,9 +111,11 @@ For the current version, the Information divergence of methylation
 
 }
 \references{
-1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
-    two discrete populations based on the Hellinger distance. Stat Probab
-    Lett 80: 206-214.
+\enumerate{
+\item Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
+two discrete populations based on the Hellinger distance. Stat Probab
+Lett 80: 206-214.
+}
 }
 \author{
 Robersy Sanchez

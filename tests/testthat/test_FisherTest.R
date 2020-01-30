@@ -13,5 +13,5 @@ test_that("FisherTest tests", {
            treatment.names = c("T1", "T2"), tv.cut = NULL,
            pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
            verbose=FALSE)
-   expect_true(length(x$T3) == 1)
+   expect_true(length(x$T3) == 3)
 })

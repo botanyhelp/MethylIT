@@ -41,8 +41,8 @@ A GRanges object
 }
 \description{
 The function counts DMPs overlapping with gene-body. In fact,
-    this function also can be used to count DMPs overlapping with any set of
-    regions given in a GRanges object.
+this function also can be used to count DMPs overlapping with any set of
+regions given in a GRanges object.
 }
 \examples{
 ## Gene annotation

@@ -3,7 +3,7 @@
 \name{poolFromGRlist}
 \alias{poolFromGRlist}
 \title{Methylation pool from a list of GRanges objects with methylation read
-    counts}
+counts}
 \usage{
 poolFromGRlist(
   LR,
@@ -67,13 +67,13 @@ A GRanges object
 }
 \description{
 This function will build a GRanges methylation pool from a list
-    of GRanges objects
+of GRanges objects
 }
 \details{
 The list of GRanges objects (LR) provided to build a virtual
-    methylome should be an output of the function 'readCounts2GRangesList' or
-    at least each GRanges must have the columns named "mC" and "uC", for the
-    read counts of methylated and unmethylated cytosines, respectively.
+methylome should be an output of the function 'readCounts2GRangesList' or
+at least each GRanges must have the columns named "mC" and "uC", for the
+read counts of methylated and unmethylated cytosines, respectively.
 }
 \examples{
 gr1 <- makeGRangesFromDataFrame(

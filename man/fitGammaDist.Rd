@@ -65,27 +65,26 @@ vector of parameters to be optimized.}
 }
 \value{
 Model table with coefficients and goodness-of-fit results:
-    Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covariance matrix.
+Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
+coefficient covariance matrix.
 }
 \description{
 This function performs the nonlinear fit of GGamma CDF of a
-    variable x
+variable x
 }
 \details{
 The algorithm tries to fit the two-parameter Gamma CDF
-    ("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a
-    modification of Levenberg-Marquardt algorithm implemented in function
-    'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-    fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-    performed in each methylome as described in reference [1]. In addition,
-    Stein's formula for adjusted R squared (rho) was used as an estimator of
-    the average cross-validation predictive power [1].
-
-    If the number of values to fit is >10^6, the fitting to a GGamma CDF
-    would be a time consuming task. To reduce the computational time, the
-    data can be 'summarized' into 'npoints' (bins) and used as the new
-    predictors.
+("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a
+modification of Levenberg-Marquardt algorithm implemented in function
+'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
+fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
+performed in each methylome as described in reference \link{1}. In addition,
+Stein's formula for adjusted R squared (rho) was used as an estimator of
+the average cross-validation predictive power \link{1}.\preformatted{If the number of values to fit is >10^6, the fitting to a GGamma CDF
+would be a time consuming task. To reduce the computational time, the
+data can be 'summarized' into 'npoints' (bins) and used as the new
+predictors.
+}
 }
 \examples{
 set.seed(126)
@@ -94,8 +93,10 @@ fitGammaDist(x)
 
 }
 \references{
-1. Stevens JP. Applied Multivariate Statistics for the Social
-    Sciences. Fifth Edit. Routledge Academic; 2009.
+\enumerate{
+\item Stevens JP. Applied Multivariate Statistics for the Social
+Sciences. Fifth Edit. Routledge Academic; 2009.
+}
 }
 \author{
 Robersy Sanchez - 06/03/2016

@@ -4,7 +4,7 @@
 \alias{pcaQDA}
 \alias{predict.pcaQDA}
 \title{Quadratic Discriminant Analysis (QDA) using Principal Component
-    Analysis (PCA)}
+Analysis (PCA)}
 \usage{
 pcaQDA(
   formula = NULL,
@@ -61,25 +61,26 @@ see \code{\link[MASS]{qda}}.}
 \item{...}{Not in use.}
 }
 \value{
-Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
-    two objects:
-        1) 'qda': an object of class 'qda' from package 'MASS'.
-        2) 'pca': an object of class 'prcomp' from package 'stats'.
-    For information on how to use these objects see ?qda and ?prcomp.
+\preformatted{Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
+two objects:
+    1) 'qda': an object of class 'qda' from package 'MASS'.
+    2) 'pca': an object of class 'prcomp' from package 'stats'.
+For information on how to use these objects see ?qda and ?prcomp.
+}
 }
 \description{
 The principal components (PCs) for predictor variables provided
-    as input data are estimated and then the individual coordinates in the
-    selected PCs are used as predictors in the qda
+as input data are estimated and then the individual coordinates in the
+selected PCs are used as predictors in the qda
 
 Predict using a PCA-LDA model built with function 'pcaLDA'
 }
 \details{
 The principal components (PCs) are obtained using the function
-    'prcomp' from R pacakage 'stats', while the qda is performed using the
-    'qda' function from R package 'MASS'. The current application only uses
-    basic functionalities of mentioned functions. As shown in the example,
-    'pcaQDA' function can be used in general classification problems.
+'prcomp' from R pacakage 'stats', while the qda is performed using the
+'qda' function from R package 'MASS'. The current application only uses
+basic functionalities of mentioned functions. As shown in the example,
+'pcaQDA' function can be used in general classification problems.
 }
 \examples{
 data(iris)
@@ -100,5 +101,5 @@ table(x)
 }
 \seealso{
 \code{\link{pcaLDA}}, \code{\link[MASS]{qda}} and
-    \code{\link[MASS]{predict.lda}}
+\code{\link[MASS]{predict.lda}}
 }

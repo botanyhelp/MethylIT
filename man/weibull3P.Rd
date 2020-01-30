@@ -61,22 +61,22 @@ reduced below this limit. Default value: 10^-6}
 }
 \value{
 Model table with coefficients and goodness-of-fit results:
-    Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covarianza matrix.
+Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
+coefficient covarianza matrix.
 }
 \description{
 This function performs the nonlinear fit of Weibull CDF of a
-    variable x
+variable x
 }
 \details{
 The script algorithm first try to fit the two-parameter Weibull CDF
-    (Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
-    Weibull3P. The Levenberg-Marquardt algorithm implemented in 'minpack.lm'
-    R package is used to perform the nonlinear fit. Cross-validations for the
-    nonlinear regressions (R.Cross.val) were performed in each methylome as
-    described in reference [1]. In addition, Stein's formula for adjusted R
-    squared (rho) was used as an estimator of the average cross-validation
-    predictive power [1].
+(Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
+Weibull3P. The Levenberg-Marquardt algorithm implemented in 'minpack.lm'
+R package is used to perform the nonlinear fit. Cross-validations for the
+nonlinear regressions (R.Cross.val) were performed in each methylome as
+described in reference \link{1}. In addition, Stein's formula for adjusted R
+squared (rho) was used as an estimator of the average cross-validation
+predictive power \link{1}.
 }
 \examples{
 x <- rweibull(1000, shape=0.75, scale=1)
@@ -84,9 +84,11 @@ weibull3P(x, sample.size = 100)
 
 }
 \references{
-1. Stevens JP. Applied Multivariate Statistics for the Social
-    Sciences. Fifth Edit. Routledge Academic; 2009.
+\enumerate{
+\item Stevens JP. Applied Multivariate Statistics for the Social
+Sciences. Fifth Edit. Routledge Academic; 2009.
+}
 }
 \author{
-Robersy Sanchez - 06/03/2016 <https://github.com/genomaths>
+Robersy Sanchez - 06/03/2016 \url{https://github.com/genomaths}
 }

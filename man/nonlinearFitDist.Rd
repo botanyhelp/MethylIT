@@ -102,33 +102,32 @@ vector of parameters to be optimized.}
 }
 \value{
 Model table with coeficients and goodness-of-fit results:
-    Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-    coefficient covariance matrix.
+Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
+coefficient covariance matrix.
 }
 \description{
 A wrapper to call functions 'Weibull3P' and
-    'fitGGammaDist' to operate on list of GRanges.
+'fitGGammaDist' to operate on list of GRanges.
 }
 \details{
 The algorithm prepares the information divergence variable
-    to try fitting Weibull or generalized gamma distribution model to the
-    data. If Weibull distribution is selected (default: "Weibull"), function
-    'Weibull2P' first attempts fitting to the two-parameter Weibull CDF
-    (Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
-    Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
-    'minpack.lm' is used to perform the nonlinear fit. Cross-validations for
-    the nonlinear regressions (R.Cross.val) are performed in each methylome
-    as described in reference [1]. In addition, Stein's formula for adjusted
-    R squared (rho) is used as an estimator of the average cross-validation
-    predictive power [1].
-
-    If "GGamma3P" is selected the call to function 'fitGGammaDist' permits
-    the fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to
-    the four-parameter GGamma ("GGamma4P") is also available. GGamma
-    distribution are fitted using a modification of Levenberg-Marquardt
-    algorithm implemented in function 'nls.lm' from the 'minpack.lm' R
-    package. Notice that the fit to GGamma dsitribution is computationally
-    time consuming (see ?fitGGammaDist for additional information).
+to try fitting Weibull or generalized gamma distribution model to the
+data. If Weibull distribution is selected (default: "Weibull"), function
+'Weibull2P' first attempts fitting to the two-parameter Weibull CDF
+(Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
+Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
+'minpack.lm' is used to perform the nonlinear fit. Cross-validations for
+the nonlinear regressions (R.Cross.val) are performed in each methylome
+as described in reference \link{1}. In addition, Stein's formula for adjusted
+R squared (rho) is used as an estimator of the average cross-validation
+predictive power \link{1}.\preformatted{If "GGamma3P" is selected the call to function 'fitGGammaDist' permits
+the fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to
+the four-parameter GGamma ("GGamma4P") is also available. GGamma
+distribution are fitted using a modification of Levenberg-Marquardt
+algorithm implemented in function 'nls.lm' from the 'minpack.lm' R
+package. Notice that the fit to GGamma dsitribution is computationally
+time consuming (see ?fitGGammaDist for additional information).
+}
 }
 \examples{
 ## Load a dataset with Hellinger Divergence of methylation levels on it.
@@ -157,17 +156,18 @@ res
 
 }
 \references{
-\enumerate{
-        \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-            Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-            Mar. 2016.
-        \item Stevens JP. Applied Multivariate Statistics for the Social
-            Sciences. Fifth Edit. Routledge Academic; 2009.
-    }
+\preformatted{\\enumerate\{
+    \\item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+        Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+        Mar. 2016.
+    \\item Stevens JP. Applied Multivariate Statistics for the Social
+        Sciences. Fifth Edit. Routledge Academic; 2009.
+\}
+}
 }
 \seealso{
 \code{\link{gofReport}}
 }
 \author{
-Robersy Sanchez 01/31/2018 <https://github.com/genomaths>
+Robersy Sanchez 01/31/2018 \url{https://github.com/genomaths}
 }

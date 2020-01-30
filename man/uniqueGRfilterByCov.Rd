@@ -52,14 +52,13 @@ removed, where mC and uC stand for the numbers of methylated and
 unmethylated reads. Default is min.umeth = 0.}
 
 \item{percentile}{Threshold to remove the outliers (PCR bias) from each file
-    and all files stacked. If 'high.coverage = NULL', then the threshold
-    \eqn{q} will be computed as:
-    \deqn{q1 = quantile(cov1, probs=percentile)}
-    \deqn{q2 = quantile(cov2, probs=percentile)}
-    \deqn{q = min(q1, q2)}
-
-    where \eqn{cov1} and \eqn{cov2} are the coverage vectors from samples 1
-    and 2, respectively.}
+and all files stacked. If 'high.coverage = NULL', then the threshold
+\eqn{q} will be computed as:
+\deqn{q1 = quantile(cov1, probs=percentile)}
+\deqn{q2 = quantile(cov2, probs=percentile)}
+\deqn{q = min(q1, q2)}\preformatted{where \eqn{cov1} and \eqn{cov2} are the coverage vectors from samples 1
+and 2, respectively.
+}}
 
 \item{high.coverage}{An integer for read counts. Cytosine sites having higher
 coverage than this are discarded. Default is NULL. If
@@ -92,37 +91,35 @@ BiocParallel package).}
 }
 \value{
 A GRanges object with the columns of methylated and unmethylated
-  counts filtered for each cytosine position.
+counts filtered for each cytosine position.
 }
 \description{
 Given two GRanges objects, samples '1' and '2', this function
-    will filter by coverage each cytosine site from each GRanges object.
+will filter by coverage each cytosine site from each GRanges object.
 }
 \details{
 Cytosine sites with 'coverage' > 'min.coverage' in at least one of
-    the samples are preserved. Positions with 'coverage' < 'min.coverage' in
-    both samples, 'x' and 'y', are removed. Positions with 'coverage' >
-    'percentile' (e.g., 99.9 percentile) are removed as well. It is expected
-    that the columns of methylated and unmethylated counts are given.
+the samples are preserved. Positions with 'coverage' < 'min.coverage' in
+both samples, 'x' and 'y', are removed. Positions with 'coverage' >
+'percentile' (e.g., 99.9 percentile) are removed as well. It is expected
+that the columns of methylated and unmethylated counts are given.
 }
 \examples{
+### Create new data
 df1 <- data.frame(chr = "chr1", start = 11:16, end = 11:16,
                   mC = c(2,10,7,9,1,10), uC = c(30,20,4,8,0,10))
 df2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
                   mC2 = 1:7, uC2 = 0:6)
 gr1 <- makeGRangesFromDataFrame(df1, keep.extra.columns = TRUE)
 gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
-
 ## Filtering
 r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
 r1
-## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
+## Cytosine position with coordinate 15 (rows #2) can pass the
 ## filtering conditions of min.coverage = 4 and lead to meaningless
 ## situations with methylation levels p = 1/(1 + 0) = 1
-r1[c(2,5)]
-
+r1[2]
 ## The last situation can be prevent, in this case, by setting min.meth = 1:
 r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
 r1
-
 }

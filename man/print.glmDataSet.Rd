@@ -3,7 +3,7 @@
 \name{print.glmDataSet}
 \alias{print.glmDataSet}
 \title{Printing object from \emph{glmDataSet} and \emph{"RangedGlmDataSet"}
-    classes by simple print methods.}
+classes by simple print methods.}
 \usage{
 \method{print}{glmDataSet}(x, digits = getOption("digits"))
 }
@@ -15,6 +15,6 @@
 }
 \description{
 Printing object from \emph{glmDataSet} and \emph{"RangedGlmDataSet"}
-    classes by simple print methods.
+classes by simple print methods.
 }
 \keyword{internal}

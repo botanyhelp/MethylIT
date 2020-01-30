@@ -36,20 +36,20 @@ use, i.e. at most how many child processes will be run simultaneously
 }
 \value{
 If type is set to 'all', then the original 'newdata' with two columns
-    added, predicted classes and 'posterior' probabilities, in the
-    meta-columns of each GRange object are given. If 'newdata' is null, then
-    the predictions given for the model by function
-    \code{\link[stats]{predict.glm}} are returned. if type is set to 'class'
-    or to "posterior", then the unlisted predited classification or
-    posterior classification probabilities are returned.
+added, predicted classes and 'posterior' probabilities, in the
+meta-columns of each GRange object are given. If 'newdata' is null, then
+the predictions given for the model by function
+\code{\link[stats]{predict.glm}} are returned. if type is set to 'class'
+or to "posterior", then the unlisted predited classification or
+posterior classification probabilities are returned.
 }
 \description{
 Predict using a logistic model obtained from the output of
-    function \code{\link{evaluateDIMPclass}}.
+function \code{\link{evaluateDIMPclass}}.
 }
 \details{
 This function is specific for predictions based on a logistic model
-    given by function \code{\link{evaluateDIMPclass}}. A logistic model is
-    obtained with 'glm' regression can be used directly with function
-    'predict' from 'stats' package.
+given by function \code{\link{evaluateDIMPclass}}. A logistic model is
+obtained with 'glm' regression can be used directly with function
+'predict' from 'stats' package.
 }

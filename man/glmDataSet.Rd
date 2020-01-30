@@ -13,7 +13,7 @@ glmDataSet(GR = NULL, counts = NULL, colData = NULL)
 
 \item{counts}{Count matrix of DMPs with minimal dimmensions 1 (row) x 4
 (columns). Column names must corresponds to the rownames from parameter
- 'colData'.}
+'colData'.}
 
 \item{colData}{A data frame with one columnn named 'condition', which must be
 a factor with exactly two levels. The rownames of \emph{colData}
@@ -22,7 +22,7 @@ th column names of the count matrix.}
 }
 \description{
 This function is used to build a object suitable to be used
-    with Methyl-IT \code{link{countTest2}} function.
+with Methyl-IT \code{link{countTest2}} function.
 }
 \details{
 Data set constructor for class glmDataSet also validate the object

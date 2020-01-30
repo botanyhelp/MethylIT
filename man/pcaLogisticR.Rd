@@ -4,7 +4,7 @@
 \alias{pcaLogisticR}
 \alias{predict.pcaLogisticR}
 \title{Logistic Classification Model using Principal Component
-    Analysis (PCA)}
+Analysis (PCA)}
 \usage{
 pcaLogisticR(
   formula = NULL,
@@ -48,44 +48,45 @@ prediction}
 \item{type}{To use with function 'predict'. The type of prediction required:
 "class", "posterior", "pca.ind.coord", or "all". If type = 'all', function
 'predict.pcaLogisticR' ('predict') returns a list with:
-    1) 'class': individual classification.
-    2) 'posterior': probabilities for the positive class.
-    3) 'pca.ind.coord': PC individual coordinate.
+1) 'class': individual classification.
+2) 'posterior': probabilities for the positive class.
+3) 'pca.ind.coord': PC individual coordinate.
 Each element of this list can be requested independently using parameter
 'type'.}
 
 \item{...}{Not in use.}
 }
 \value{
-Function 'pcaLogisticR' returns an object ('pcaLogisticR' class)
-    containing a list of two objects:
-    \enumerate{
-        \item 'logistic': an object of class 'glm' from package 'stats'.
-        \item 'pca': an object of class 'prcomp' from package 'stats'.
-        \item reference.level: response level used as reference.
-        \item positive.level: response level that corresponds to a "positive"
-            result. When type = "response", the probability vector returned
-            correspond to the probabilities of each individual to be a
-            result, i.e., the probability to belong to the class of positive
-            level.
-    }
-    For information on how to use these objects see ?glm and ?prcomp.
+\preformatted{Function 'pcaLogisticR' returns an object ('pcaLogisticR' class)
+containing a list of two objects:
+\\enumerate\{
+    \\item 'logistic': an object of class 'glm' from package 'stats'.
+    \\item 'pca': an object of class 'prcomp' from package 'stats'.
+    \\item reference.level: response level used as reference.
+    \\item positive.level: response level that corresponds to a "positive"
+        result. When type = "response", the probability vector returned
+        correspond to the probabilities of each individual to be a
+        result, i.e., the probability to belong to the class of positive
+        level.
+\}
+For information on how to use these objects see ?glm and ?prcomp.
+}
 }
 \description{
 Principal components (PCs) are estimated from the predictor
-    variables provided as input data. Next, the individual coordinates in the
-    selected PCs are used as predictors in the logistic regresson.
+variables provided as input data. Next, the individual coordinates in the
+selected PCs are used as predictors in the logistic regresson.
 
 Logistic regression using Principal Components from PCA as
-    predictor variables
+predictor variables
 }
 \details{
 The principal components (PCs) are obtained using the function
-    \code{\link[stats]{prcomp}}, while the logistic regression is performed
-    using function \code{\link[stats]{glm}}, both functions from R package
-    'stats'. The current application only use basic functionalities from the
-    mentioned functions. As shown in the example, 'pcaLogisticR' function can
-    be used in general classification problems.
+\code{\link[stats]{prcomp}}, while the logistic regression is performed
+using function \code{\link[stats]{glm}}, both functions from R package
+'stats'. The current application only use basic functionalities from the
+mentioned functions. As shown in the example, 'pcaLogisticR' function can
+be used in general classification problems.
 }
 \examples{
 data(iris)

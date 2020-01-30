@@ -20,7 +20,7 @@ pweibull3P(q, shape = 1, scale = 1, mu = 0)
 }
 \description{
 Density, distribution function, quantile function and random
-    generation for the Weibull distribution with three parameters
+generation for the Weibull distribution with three parameters
 }
 \examples{
 num.samples <- 10000

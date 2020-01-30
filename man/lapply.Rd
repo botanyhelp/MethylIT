@@ -20,11 +20,11 @@ preserved in the returned list. Derfaul is FALSE.}
 }
 \value{
 Same as in ?base::\code{\link[base]{lapply}} if keep.attr = FALSE.
-    Otherwise same values preserving original attributes from 'x'.
+Otherwise same values preserving original attributes from 'x'.
 }
 \description{
 lapply returns a list of the same length as 'x', each element of
-    which is the result of applying FUN to the corresponding element of 'x'.
+which is the result of applying FUN to the corresponding element of 'x'.
 }
 \examples{
 # Create a list

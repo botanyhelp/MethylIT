@@ -15,42 +15,41 @@ used as default. Use logbase = exp(1) for natural logarithm.}
 }
 \value{
 The J divergence value for the given methylation levels is
-    returned
+returned
 }
 \description{
 Given a the methylation levels from two individuals at a given
-    cytosine site, this function computes the J information divergence
-    (\emph{JD}) between methylation levels. The motivation to introduce
-    \emph{JD} in Methyl-IT is founded on:
-    \enumerate{
-        \item It is a symmetrised form of Kullback–Leibler divergence
-            (\eqn{D_KL}). Kullback and Leibler themselves actually defined
-            the divergence as: \eqn{D_KL(P || Q) + D_KL(Q || P)}, which is
-            symmetric and nonnegative, where the probability distributions
-            \emph{P} and \emph{Q} are defined on the same probability space
-            (see
-            \href{https://is.gd/oS8Bwv}{Wikipedia}).
-        \item In general, \emph{JD} is highly correlated with Hellinger
-            divergence, which is the main divergence currently used in
-            Methyl-IT (see examples for function
-            \code{\link{estimateDivergence}}.
-        \item By construction, the unit of measurement of \emph{JD} is:
-            bit of information, which set the basis for further
-            information-thermodynamics analyses.
-    }
+cytosine site, this function computes the J information divergence
+(\emph{JD}) between methylation levels. The motivation to introduce
+\emph{JD} in Methyl-IT is founded on:
+\enumerate{
+\item It is a symmetrised form of Kullback–Leibler divergence
+(\eqn{D_KL}). Kullback and Leibler themselves actually defined
+the divergence as: \eqn{D_KL(P || Q) + D_KL(Q || P)}, which is
+symmetric and nonnegative, where the probability distributions
+\emph{P} and \emph{Q} are defined on the same probability space
+(see
+\href{https://is.gd/oS8Bwv}{Wikipedia}).
+\item In general, \emph{JD} is highly correlated with Hellinger
+divergence, which is the main divergence currently used in
+Methyl-IT (see examples for function
+\code{\link{estimateDivergence}}.
+\item By construction, the unit of measurement of \emph{JD} is:
+bit of information, which set the basis for further
+information-thermodynamics analyses.
+}
 }
 \details{
 The methylation level \eqn{p_ij} at a given cytosine site \emph{i}
-    from an individual \emph{j} corresponds to a probability vector \eqn{q_ij
+from an individual \emph{j} corresponds to a probability vector \eqn{q_ij
     = c(p_ij, 1 - p_ij)}. Then, the J-information divergence between the
-    methylation levels \emph{p_i1} and \emph{p_i2} is the divergence between
-    the vectors \eqn{q_i1 = (p_i1, 1 - p_i1)} and \eqn{q_i2 = c(p_i2, 1 -
-    p_i2)}. \emph{JD} is computed as [1]:
-
-    \deqn{JD(q_i1, q_i2) = (q_i1[1] * log(q_i1[1]/q_i2[1]) + q_i1[2] *
+methylation levels \emph{p_i1} and \emph{p_i2} is the divergence between
+the vectors \eqn{q_i1 = (p_i1, 1 - p_i1)} and \eqn{q_i2 = c(p_i2, 1 -
+    p_i2)}. \emph{JD} is computed as \link{1}:\preformatted{\deqn{JD(q_i1, q_i2) = (q_i1[1] * log(q_i1[1]/q_i2[1]) + q_i1[2] *
                             log(q_i1[2]/q_i2[2]) +
                 q_i2[1] * log(q_i2[1]/q_i1[1]) + q_i2[2] *
                             log(q_i2[2]/q_i1[2]))/2}.
+}
 }
 \examples{
 p <- c(0.5, 0.5)
@@ -65,18 +64,19 @@ estimateJDiv(p) == estimateJDiv(q)
 
 }
 \references{
-\enumerate{
-        \item Lin J. Divergence Measures Based on the Shannon Entropy. IEEE
-                Trans Inform Theory, 1991, 37:145–51.
-        \item Sanchez R, Mackenzie SA. Information thermodynamics of cytosine
-                DNA methylation. PLoS One, 2016, 11:e0150427.
-    }
+\preformatted{\\enumerate\{
+    \\item Lin J. Divergence Measures Based on the Shannon Entropy. IEEE
+            Trans Inform Theory, 1991, 37:145–51.
+    \\item Sanchez R, Mackenzie SA. Information thermodynamics of cytosine
+            DNA methylation. PLoS One, 2016, 11:e0150427.
+\}
+}
 }
 \seealso{
 \url{https://en.wikipedia.org/wiki/Kullback-Leibler_divergence}
-    for more details, and \code{\link{estimateDivergence}} for an example of
-    using it.
+for more details, and \code{\link{estimateDivergence}} for an example of
+using it.
 }
 \author{
-Robersy Sanchez 11/27/2019 <https://github.com/genomaths>
+Robersy Sanchez 11/27/2019 \url{https://github.com/genomaths}
 }

@@ -6,5 +6,4 @@ README.Rmd
 ^\.gitignore$
 ^\.Rproj.user$
 ^\.git$
-
-
+^MethylIT.pdf

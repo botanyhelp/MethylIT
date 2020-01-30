@@ -4,7 +4,7 @@
 \alias{pcaLDA}
 \alias{predict.pcaLDA}
 \title{Linear Discriminant Analysis (LDA) using Principal Component Analysis
-    (PCA)}
+(PCA)}
 \usage{
 pcaLDA(
   formula = NULL,
@@ -61,25 +61,26 @@ see \code{\link[MASS]{lda}}.}
 \item{...}{Not in use.}
 }
 \value{
-Function 'pcaLDA' returns an object ('pcaLDA' class) consisting of list
-    with two objects:
-      1) 'lda': an object of class 'lda' from package 'MASS'.
-      2) 'pca': an object of class 'prcomp' from package 'stats'.
-    For information on how to use these objects see ?lda and ?prcomp.
+\preformatted{Function 'pcaLDA' returns an object ('pcaLDA' class) consisting of list
+with two objects:
+  1) 'lda': an object of class 'lda' from package 'MASS'.
+  2) 'pca': an object of class 'prcomp' from package 'stats'.
+For information on how to use these objects see ?lda and ?prcomp.
+}
 }
 \description{
 The principal components (PCs) for predictor variables provided
-    as input data are estimated and then the individual coordinates in the
-    selected PCs are used as predictors in the LDA
+as input data are estimated and then the individual coordinates in the
+selected PCs are used as predictors in the LDA
 
 Predict using a PCA-LDA model built with function 'pcaLDA'
 }
 \details{
 The principal components (PCs) are obtained using the function
-    'prcomp' from R pacakage 'stats', while the LDA is performed using the
-    'lda' function from R package 'MASS'. The current application only uses
-     basic functionalities of mentioned functions. As shown in the example,
-     pcaLDA' function can be used in general classification problems.
+'prcomp' from R pacakage 'stats', while the LDA is performed using the
+'lda' function from R package 'MASS'. The current application only uses
+basic functionalities of mentioned functions. As shown in the example,
+pcaLDA' function can be used in general classification problems.
 }
 \examples{
 data(iris)
@@ -100,5 +101,5 @@ table(x)
 }
 \seealso{
 \code{\link{pcaQDA}}, \code{\link[MASS]{lda}} and
-    \code{\link[MASS]{predict.lda}}
+\code{\link[MASS]{predict.lda}}
 }

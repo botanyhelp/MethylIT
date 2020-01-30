@@ -14,3 +14,6 @@
 .Rproj.user
 .directory
 .Rbuildignore
+inst/doc
+vignettes/*.html
+vignettes/*.R

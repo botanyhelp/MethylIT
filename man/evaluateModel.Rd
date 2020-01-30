@@ -25,6 +25,6 @@ AIC value
 }
 \description{
 Evaluate a glm object using the Akaike information criterion
-    (AIC)
+(AIC)
 }
 \keyword{internal}

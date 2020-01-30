@@ -23,14 +23,14 @@ TRUE if object is valid, otherwise warning() and stop() are called
 }
 \description{
 S3 generic used internally by MethylIT to ensure correct object
-    classes are being used.  validateClass() is called by these functions:
-    estimateCutPoint evaluateDIMPclass FisherTest getPotentialDIMP
-    nonlinearFitDist predictDIMPclass predictLogisticR selectDIMP
-    uniqueGRfilterByCov
+classes are being used.  validateClass() is called by these functions:
+estimateCutPoint evaluateDIMPclass FisherTest getPotentialDIMP
+nonlinearFitDist predictDIMPclass predictLogisticR selectDIMP
+uniqueGRfilterByCov
 }
 \examples{
-data(HD, nlms)
-PS <- getPotentialDIMP(LR = HD, nlms = nlms, div.col = 9L, alpha = 0.05)
+data(HD, gof)
+PS <- getPotentialDIMP(LR = HD, nlms = gof$nlms, div.col = 9L, alpha = 0.05)
 validateClass(HD)
 validateClass(PS)
 

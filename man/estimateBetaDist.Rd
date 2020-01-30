@@ -14,17 +14,17 @@ beta = 1, which imply the parsimony pseudo-counts greater than zero.}
 }
 \value{
 the estimated values of the shape parameters of the selected beta
-   distribution.
+distribution.
 }
 \description{
 This function perform a rough estimation of the shape
-    parameters of beta distribution
+parameters of beta distribution
 }
 \details{
 In order to obtain the estimates for shape parameters of beta
-    distribution, the squared of the difference between the empirical
-    cumulative distribution function (ecdf) & the theoretical cdf is
-    minimized using the Non-Linear Minimization function of 'stats'
-    package.
+distribution, the squared of the difference between the empirical
+cumulative distribution function (ecdf) & the theoretical cdf is
+minimized using the Non-Linear Minimization function of 'stats'
+package.
 }
 \keyword{internal}

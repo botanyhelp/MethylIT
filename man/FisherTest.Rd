@@ -64,14 +64,14 @@ provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
 performing the regression analysis. Its value must be NULL or a number
 0 < tv.cut < 1.}
 
-\item{hdiv.cut}{An optional cutoff for the Hellinger divergence (*hdiv*). If
+\item{hdiv.cut}{An optional cutoff for the Hellinger divergence (\emph{hdiv}). If
 the LR object derives from the previous application of function
-\code{\link{estimateDivergence}}, then a column with the *hdiv* values is
+\code{\link{estimateDivergence}}, then a column with the \emph{hdiv} values is
 provided. If combined with tv.cut, this permits a more effective
 filtering of the signal from the noise. Default is NULL.}
 
-\item{hdiv.col}{Optional. Columns where *hdiv* values are located in each
-GRange object from LR. It must be provided if together with *hdiv.cut*.
+\item{hdiv.col}{Optional. Columns where \emph{hdiv} values are located in each
+GRange object from LR. It must be provided if together with \emph{hdiv.cut}.
 Default is NULL.}
 
 \item{pAdjustMethod}{method used to adjust the results; default: BH}
@@ -98,20 +98,20 @@ BiocParallel package).}
 }
 \value{
 The input GRanges object with the columns of Fisher's exact test
-    p-value, total variation (difference of methylation levels), and
-    p-value adjusment.
+p-value, total variation (difference of methylation levels), and
+p-value adjusment.
 }
 \description{
 Given a GRanges object with the methylated and unmethylated
-    read counts for control and treatment in its metacolumn, Fisher's exact
-    test is performed for each cytosine site.
+read counts for control and treatment in its metacolumn, Fisher's exact
+test is performed for each cytosine site.
 }
 \details{
 Samples from each group are pooled according to the statistic
-    selected (see parameter pooling.stat) and a unique GRanges object is
-    created with the methylated and unmethylated read counts for each group
-    (control and treatment) in the metacolumn. So, a contingency table can be
-    built for range from GRanges object.
+selected (see parameter pooling.stat) and a unique GRanges object is
+created with the methylated and unmethylated read counts for each group
+(control and treatment) in the metacolumn. So, a contingency table can be
+built for range from GRanges object.
 }
 \examples{
 ## Get a dataset of Hellinger divergency of methylation levels

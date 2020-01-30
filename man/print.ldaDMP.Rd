@@ -3,7 +3,7 @@
 \name{print.ldaDMP}
 \alias{print.ldaDMP}
 \title{Printing object from \emph{print.ldaDMP} class by simple
-    print methods.}
+print methods.}
 \usage{
 \method{print}{ldaDMP}(x, digits = getOption("digits"))
 }
@@ -15,6 +15,6 @@
 }
 \description{
 Printing object from \emph{print.ldaDMP} class by simple
-    print methods.
+print methods.
 }
 \keyword{internal}
