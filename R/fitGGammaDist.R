@@ -65,8 +65,12 @@
 #'
 #' @examples
 #' set.seed(123)
-#' x <- rggamma(2000, alpha = 1.03, psi = 0.75, scale = 1.1)
+#' ## Fitting GGamma3P
+#' x <- rggamma(3000, alpha = 1.03, psi = 0.75, scale = 1.1)
 #' fitGGammaDist(x)
+#' ## Fitting GGamma4P
+#' x <- x + 1
+#' fitGGammaDist(x, location.par = TRUE)
 #'
 #' @importFrom stats var stepfun as.formula coef AIC pweibull BIC vcov knots
 #'   deviance BIC cor quantile
@@ -75,7 +79,6 @@
 #' @importFrom stats ecdf nls.control coef
 #' @importFrom minpack.lm nlsLM nls.lm nls.lm.control
 #' @export
-
 fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
                           sample.size=20, npoints=NULL, maxiter=1024,
                           ftol=1e-12, ptol=1e-12, maxfev = 1e+5,
@@ -152,14 +155,22 @@ fitGGammaDist <- function(x, parameter.values, location.par = FALSE,
        VAR <- var(X, na.rm = TRUE)
        MIN <- min( X, na.rm = TRUE)
 
-       psi = MEAN^2/VAR
-       mu = MIN
-       scale = VAR/MEAN
-
+       psi <- MEAN^2/VAR
+       scale <-  VAR/MEAN
+       alpha <- 1
        if (location.par) {
-           starts <- c(alpha = 1, scale = scale, mu = mu[1], psi = psi)
-       } else starts <- c(alpha = 1, scale = scale, psi = psi)
-   } else starts = parameter.values
+           mu <- MIN
+           starts <- c(alpha = alpha, scale = scale, mu = mu[1], psi = psi)
+       } else starts <- c(alpha = alpha, scale = scale, psi = psi)
+   } else {
+       alpha <- parameter.values$alpha
+       scale <- parameter.values$scale
+       psi <- parameter.values$psi
+       if (location.par) {
+           mu <- parameter.values$mu
+           starts <- c(alpha = alpha, scale = scale, mu = mu, psi = psi)
+       } else starts <- c(alpha = alpha, scale = scale, psi = psi)
+   }
 
    ## ============ END starting parameter values ========== #
 
