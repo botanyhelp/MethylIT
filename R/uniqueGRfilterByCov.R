@@ -1,5 +1,4 @@
 #' @rdname uniqueGRfilterByCov
-#'
 #' @title  Unique GRanges of methylation read counts filtered by coverages
 #' @description Given two GRanges objects, samples '1' and '2', this function
 #'     will filter by coverage each cytosine site from each GRanges object.
@@ -69,28 +68,24 @@
 #'   counts filtered for each cytosine position.
 #'
 #' @examples
+#' ### Create new data
 #' df1 <- data.frame(chr = "chr1", start = 11:16, end = 11:16,
 #'                   mC = c(2,10,7,9,1,10), uC = c(30,20,4,8,0,10))
 #' df2 <- data.frame(chr = "chr1", start = 12:18, end = 12:18,
 #'                   mC2 = 1:7, uC2 = 0:6)
 #' gr1 <- makeGRangesFromDataFrame(df1, keep.extra.columns = TRUE)
 #' gr2 <- makeGRangesFromDataFrame(df2, keep.extra.columns = TRUE)
-#'
 #' ## Filtering
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, ignore.strand = TRUE)
 #' r1
-#' ## Cytosine position with coordinates 12 & 15 (rows #2 & #5) can pass the
+#' ## Cytosine position with coordinate 15 (rows #2) can pass the
 #' ## filtering conditions of min.coverage = 4 and lead to meaningless
 #' ## situations with methylation levels p = 1/(1 + 0) = 1
-#' r1[c(2,5)]
-#'
+#' r1[2]
 #' ## The last situation can be prevent, in this case, by setting min.meth = 1:
 #' r1 <- uniqueGRfilterByCov(gr1, gr2, min.meth = 1, ignore.strand = TRUE)
 #' r1
-#'
-#' @importFrom GenomicRanges GRanges GRangesList
 #' @export
-#'
 uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
                                min.umeth = 0, percentile = 0.9999,
                                high.coverage = NULL,
