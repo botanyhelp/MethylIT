@@ -38,7 +38,8 @@ Imports:
   utils,
   XML
 RoxygenNote: 7.0.2
-Suggests: 
+Suggests:
+    spelling, 
   testthat, 
   rmarkdown,
   knitr
