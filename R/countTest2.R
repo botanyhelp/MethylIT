@@ -8,9 +8,9 @@
 #'     linear model.
 #' @details A pairwise group comparison, control versus treatment, is performed.
 #'     The experimental design settings must be introduced using function
-#'     \code{\link{glmDataSet}} to provide dataset (DS) object.
+#'     \code{\link[MethylIT]{glmDataSet}} to provide dataset (DS) object.
 #' @param DS A 'glmDataSet' object, which is created with function
-#'     \code{\link{glmDataSet}}.
+#'     \code{\link[MethylIT]{glmDataSet}}.
 #' @param countFilter whether or not to filter the counts according to the
 #'     minimum count per region per each individual/sample, which is setting by
 #'     "minCountPerIndv".
@@ -21,10 +21,10 @@
 #'     'minCountPerIndv' counts (on average) per individual in at least one
 #'     group.
 #' @param maxGrpCV A numerical vector. Maximum coefficient of variance for each
-#'     group. Default maxGrpCV = NULL. The numbers 'maxGrpCV[1]' and
-#'     'maxGrpCV[2]' will be taken as the maximun variances values permitted in
-#'     control and in treatment groups, respectively. If only 'maxGrpCV[1]' is
-#'     provided, then maxGrpCV = c('maxGrpCV[1]', 'maxGrpCV[1]'). This parameter
+#'     group. Default maxGrpCV = NULL. The numbers 'maxGrpCV1' and
+#'     'maxGrpCV2' will be taken as the maximun variances values permitted in
+#'     control and in treatment groups, respectively. If only 'maxGrpCV1' is
+#'     provided, then maxGrpCV = c('maxGrpCV1', 'maxGrpCV1'). This parameter
 #'     is addressed to prevent testing regions where intra-group variations are
 #'     very large, e.g.: control = c(1,0,1,1) and treatment = c(1, 0, 1, 40).
 #'     The coefficient of variance for the treatment group is 1.87, very high.

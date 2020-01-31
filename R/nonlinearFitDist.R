@@ -11,9 +11,9 @@
 #'     Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
 #'     'minpack.lm' is used to perform the nonlinear fit. Cross-validations for
 #'     the nonlinear regressions (R.Cross.val) are performed in each methylome
-#'     as described in reference [1]. In addition, Stein's formula for adjusted
+#'     as described in reference (1). In addition, Stein's formula for adjusted
 #'     R squared (rho) is used as an estimator of the average cross-validation
-#'     predictive power [1].
+#'     predictive power (1).
 #'
 #'     If "GGamma3P" is selected the call to function 'fitGGammaDist' permits
 #'     the fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to
@@ -84,13 +84,13 @@
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
 #'     coefficient covariance matrix.
 #' @references
-#'     \enumerate{
-#'         \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-#'             Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-#'             Mar. 2016.
-#'         \item Stevens JP. Applied Multivariate Statistics for the Social
+#' \enumerate{
+#'     \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+#'           Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+#'           Mar. 2016.
+#'     \item Stevens JP. Applied Multivariate Statistics for the Social
 #'             Sciences. Fifth Edit. Routledge Academic; 2009.
-#'     }
+#' }
 #' @seealso \code{\link{gofReport}}
 #' @author Robersy Sanchez 01/31/2018 <https://github.com/genomaths>
 #'

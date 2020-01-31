@@ -25,7 +25,7 @@ countTest2(
 }
 \arguments{
 \item{DS}{A 'glmDataSet' object, which is created with function
-\code{\link{glmDataSet}}.}
+\code{\link[MethylIT]{glmDataSet}}.}
 
 \item{num.cores, tasks}{Parameters for parallel computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
@@ -46,10 +46,10 @@ than CountPerBp. The filter is applied if 'CountPerBp' is given and if
 group.}
 
 \item{maxGrpCV}{A numerical vector. Maximum coefficient of variance for each
-group. Default maxGrpCV = NULL. The numbers 'maxGrpCV\link{1}' and
-'maxGrpCV\link{2}' will be taken as the maximun variances values permitted in
-control and in treatment groups, respectively. If only 'maxGrpCV\link{1}' is
-provided, then maxGrpCV = c('maxGrpCV\link{1}', 'maxGrpCV\link{1}'). This parameter
+group. Default maxGrpCV = NULL. The numbers 'maxGrpCV1' and
+'maxGrpCV2' will be taken as the maximun variances values permitted in
+control and in treatment groups, respectively. If only 'maxGrpCV1' is
+provided, then maxGrpCV = c('maxGrpCV1', 'maxGrpCV1'). This parameter
 is addressed to prevent testing regions where intra-group variations are
 very large, e.g.: control = c(1,0,1,1) and treatment = c(1, 0, 1, 40).
 The coefficient of variance for the treatment group is 1.87, very high.
@@ -106,7 +106,7 @@ linear model.
 \details{
 A pairwise group comparison, control versus treatment, is performed.
 The experimental design settings must be introduced using function
-\code{\link{glmDataSet}} to provide dataset (DS) object.
+\code{\link[MethylIT]{glmDataSet}} to provide dataset (DS) object.
 }
 \examples{
 set.seed(133) # Set a seed

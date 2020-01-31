@@ -31,10 +31,11 @@
 #'     \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
 #'          (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
 #'
-#'     where n[1] and n[2] are the coverage for the control and treatment,
-#'     respectively. Notice that each row from the matrix of counts correspond
-#'     to a single cytosine position and has four values corresponding to "mC1"
-#'     and "uC1" (control), and mC2" and "uC2" for treatment.
+#'     where \eqn{n[1]} and \eqn{n[2]} are the coverage for the control and
+#'     treatment, respectively. Notice that each row from the matrix of counts
+#'     correspond to a single cytosine position and has four values
+#'     corresponding to "mC1" and "uC1" (control), and mC2" and "uC2" for
+#'     treatment.
 #'
 #'     According with the above equation, to estimate Hellinger divergence, not
 #'     only the methylation levels are considered in the estimation of H,
@@ -103,9 +104,10 @@
 #'     '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 #'     integer vector, then the corresponding min number of reads is applied to
 #'     each sample. Default is min.meth = 4.
-#' @param min.umeth An integer or an integer vector of length 2. Min number of
+#' @param min.umeth An integer or an integer vector of length 2
+#'     (\eqn{min.umeth = c(min.umeth1, min.umeth2)}). Min number of
 #'     reads to consider cytosine position. Specifically cytosine positions
-#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
 #' @param high.coverage An integer for read counts. Cytosine sites having
@@ -127,8 +129,8 @@
 #'@param meth.level Logic. Whether methylation levels are given in place of
 #'     counts. Default is FALSE.
 #' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
-#'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
-#'     natural logarithm.
+#'     Logarithm base 2 is used as default (bit unit). Use
+#'     logbase = \eqn{exp(1)} for natural logarithm.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'uniqueGRanges' function.
 #'

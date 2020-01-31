@@ -8,8 +8,8 @@
 #'     function 'nls.lm' from 'minpack.lm' package that is used to perform the
 #'     nonlinear fit. Cross-validations for the nonlinear regressions
 #'     (R.Cross.val) were performed in each methylome as described in reference
-#'     [1]. In addition, Stein's formula for adjusted R squared (rho) was used
-#'     as an estimator of the average cross-validation predictive power [1].
+#'     (1). In addition, Stein's formula for adjusted R squared (rho) was used
+#'     as an estimator of the average cross-validation predictive power (1).
 #'
 #'     If the number of values to fit is >10^6, the fitting to a LogNorm CDF
 #'     would be a time consuming task. To reduce the computational time, the

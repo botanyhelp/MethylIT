@@ -34,8 +34,8 @@
 #'     distribution. These are numerical and strictly positives; default 1.
 #'     (see ?pgamma).
 #' @param mu location parameter (numerical, default 0).
-#' @param lower.tail logical; if TRUE (default), probabilities are P[X<=x],
-#'     otherwise, P[X > x]
+#' @param lower.tail logical; if TRUE (default), probabilities are
+#'     \eqn{P(X<=x)}, otherwise, \eqn{P(X > x)}
 #' @param log.p logical; if TRUE, probabilities/densities p are returned as
 #'     log(p).
 #'

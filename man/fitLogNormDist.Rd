@@ -73,8 +73,8 @@ using a modification of Levenberg-Marquardt algorithm implemented in
 function 'nls.lm' from 'minpack.lm' package that is used to perform the
 nonlinear fit. Cross-validations for the nonlinear regressions
 (R.Cross.val) were performed in each methylome as described in reference
-\link{1}. In addition, Stein's formula for adjusted R squared (rho) was used
-as an estimator of the average cross-validation predictive power \link{1}.\preformatted{If the number of values to fit is >10^6, the fitting to a LogNorm CDF
+(1). In addition, Stein's formula for adjusted R squared (rho) was used
+as an estimator of the average cross-validation predictive power (1).\preformatted{If the number of values to fit is >10^6, the fitting to a LogNorm CDF
 would be a time consuming task. To reduce the computational time, the
 option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
 the original variable values are summarized into 'npoint' bins and their

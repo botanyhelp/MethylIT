@@ -47,8 +47,8 @@ distribution. These are numerical and strictly positives; default 1.
 \item{log.p}{logical; if TRUE, probabilities/densities p are returned as
 log(p).}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are P\link{X<=x},
-otherwise, P\link{X > x}}
+\item{lower.tail}{logical; if TRUE (default), probabilities are
+\eqn{P(X<=x)}, otherwise, \eqn{P(X > x)}}
 
 \item{p}{vector of probabilities.}
 

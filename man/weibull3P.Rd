@@ -74,9 +74,9 @@ The script algorithm first try to fit the two-parameter Weibull CDF
 Weibull3P. The Levenberg-Marquardt algorithm implemented in 'minpack.lm'
 R package is used to perform the nonlinear fit. Cross-validations for the
 nonlinear regressions (R.Cross.val) were performed in each methylome as
-described in reference \link{1}. In addition, Stein's formula for adjusted R
+described in reference (1). In addition, Stein's formula for adjusted R
 squared (rho) was used as an estimator of the average cross-validation
-predictive power \link{1}.
+predictive power (1).
 }
 \examples{
 x <- rweibull(1000, shape=0.75, scale=1)
