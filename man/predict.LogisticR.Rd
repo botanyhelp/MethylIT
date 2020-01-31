@@ -26,7 +26,7 @@ predict. If omitted, the fitted linear predictors are used.}
 \item{type}{The type of output required. Possible outputs are: 'class',
 "posterior" and "all". The default is "all".}
 
-\item{num.cores, tasks}{Paramaters for parallele computation using package
+\item{num.cores, tasks}{Parameters for parallel computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
@@ -40,7 +40,7 @@ added, predicted classes and 'posterior' probabilities, in the
 meta-columns of each GRange object are given. If 'newdata' is null, then
 the predictions given for the model by function
 \code{\link[stats]{predict.glm}} are returned. if type is set to 'class'
-or to "posterior", then the unlisted predited classification or
+or to "posterior", then the unlisted predicted classification or
 posterior classification probabilities are returned.
 }
 \description{

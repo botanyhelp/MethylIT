@@ -43,7 +43,7 @@ assumed.}
 \item{min.coverage}{An integer or an integer vector of length 2. Cytosine
 sites where the coverage in both samples, 'x' and 'y', are less than
 'min.coverage' are discarded. The cytosine site is preserved, however, if
-the coverage is greater than 'min.coverage'in at least one sample. If
+the coverage is greater than 'min.coverage' in at least one sample. If
 'min.coverage' is an integer vector, then the corresponding min coverage
 is applied to each sample.}
 
@@ -94,7 +94,7 @@ natural logarithm.}
 \value{
 An object from "infDiv" class with the four columns of counts, the
 information divergence, and additional columns: 1) The original matrix
-of methylated (c_i) and unmathylated (t_i) read counts from control
+of methylated (c_i) and unmethylated (t_i) read counts from control
 (i=1) and treatment (i=2) samples. 2) p1" and "p2": methylation levels
 for control and treatment, respectively. 3) "bay.TV": total variation
 TV = p2 - p1. 4) "TV": total variation based on simple counts:

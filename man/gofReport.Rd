@@ -38,7 +38,7 @@ is an information divergence that can be fitted as well.}
 returned in a list together with the best fitted model and the
 corresponding statistics. Default is "best.model"}
 
-\item{confl_model}{Logic. If TRUE, then the best model based on higest
+\item{confl_model}{Logic. If TRUE, then the best model based on highest
 R.Cross.val is returned for those samples where the model(s) with lowest
 AIC has not the highest R.Cross.val.}
 

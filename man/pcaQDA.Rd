@@ -26,11 +26,11 @@ pcaQDA(
 )
 }
 \arguments{
-\item{formula}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
+\item{formula}{Same as in \code{\link[MASS]{qda}} from package 'MASS'.}
 
-\item{data}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
+\item{data}{Same as in \code{\link[MASS]{qda}} from package 'MASS'.}
 
-\item{grouping}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
+\item{grouping}{Same as in \code{\link[MASS]{qda}} from package 'MASS'.}
 
 \item{n.pc}{Number of principal components to use in the qda.}
 
@@ -40,7 +40,7 @@ pcaQDA(
 
 \item{tol}{Same as in \code{\link[stats]{prcomp}} from package 'stats'.}
 
-\item{method}{Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.}
+\item{method}{Same as in \code{\link[MASS]{qda}} from package 'MASS'.}
 
 \item{max.pc}{Same as in parameter 'rank.' from
 \code{\link[stats]{prcomp}} from package 'stats'.}
@@ -78,7 +78,7 @@ Predict using a PCA-LDA model built with function 'pcaLDA'
 }
 \details{
 The principal components (PCs) are obtained using the function
-'prcomp' from R pacakage 'stats', while the qda is performed using the
+'prcomp' from R package 'stats', while the qda is performed using the
 'qda' function from R package 'MASS'. The current application only uses
 basic functionalities of mentioned functions. As shown in the example,
 'pcaQDA' function can be used in general classification problems.

@@ -15,13 +15,13 @@
 #'     previously obtained with function \code{\link{estimateDivergence}} or
 #'     \code{\link{FisherTest}}.
 #' @param nlms A list of distribution fitted models (output of
-#'     'fitNonlinearWeibullDist' function) or NULL. If NULL, then empirical
+#'     \code{\link{gofReport}} function) or NULL. If NULL, then empirical
 #'     cumulative distribution function is used to get the potential DMPs.
 #' @param div.col Column number for divergence variable is located in the
 #'     meta-column.
 #' @param dist.name Name of the fitted distribution. This could be the name of
 #'     one distribution or a characters vector of length(nlms). Default is two
-#'     paramaters Weibull distribution: "Weibull2P". The available options are
+#'     parameters Weibull distribution: "Weibull2P". The available options are
 #'     Weibull three- parameters ("Weibull3P"), gamma with three-parameter
 #'     ("Gamma3P"), gamma with two-parameter ("Gamma2P"), generalized gamma with
 #'     three-parameter ("GGamma3P") or four-parameter ("GGamma4P"), the
@@ -35,9 +35,9 @@
 #'     is an information divergence that can be fitted to Weibull or to
 #'     Generalized Gamma distribution. So, if the nonlinear fit was performed
 #'     for |TV|, then absolute must be set to TRUE.
-#' @param alpha A numerical value (usually alpha < 0.05) used to select
-#'     cytosine sites k with information divergence (DIV_k) for which Weibull
-#'     probability P[DIV_k > DIV(alpha)].
+#' @param alpha A numerical value (usually \eqn{\alpha <= 0.05}) used to select
+#'     cytosine sites \eqn{k} with information divergence (\eqn{DIV_k}) for
+#'     which the the probabilities hold: \eqn{P(DIV_k > DIV(\alpha))}.
 #' @param pval.col An integer denoting a column from each GRanges object from
 #'     LR where p-values are provided when \strong{dist.name == "None"} and
 #'     \strong{nlms == NULL}. Default is NULL. If NUll and
@@ -46,11 +46,11 @@
 #' @param tv.col Column number for the total variation to be used for filtering
 #'     cytosine positions (if provided).
 #' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
-#'     abs(TV_k) < tv.cut are removed before to perform the ROC analysis.
+#'     \eqn{abs(TV_k) < tv.cut} are removed before to perform the ROC analysis.
 #' @param hdiv.col Optional. A column number for the Hellinger distance to be
 #'     used for filtering cytosine positions. Default is NULL.
-#' @param hdiv.cut If hdiv.cut and hdiv.col are provided, then cytosine sites k
-#'     with hdiv < hdiv.cut are removed.
+#' @param hdiv.cut If hdiv.cut and hdiv.col are provided, then cytosine sites
+#'     \eqn{k} with hdiv < hdiv.cut are removed.
 #' @param min.coverage Cytosine sites with coverage less than min.coverage are
 #'     discarded. Default: 0
 #' @param pAdjustMethod method used to adjust the p-values from other
@@ -58,7 +58,9 @@
 #'     Default is NULL. Do not apply it when a probability distribution model
 #'     is used (\strong{when nlms is given}), since it makes not sense.
 #' @return A list of GRanges objects, each GRanges object carrying the selected
-#'     cytosine sites and and the Weibull probability P[DIV_k > DIV(alpha)].
+#'     cytosine sites and the probabilities that the specified divergence values
+#'     can be greater than the critical value specified by \eqn{\alpha}:
+#'     \eqn{P(DIV_k > DIV(\alpha))}.
 #' @importFrom stats p.adjust.methods p.adjust plnorm pweibull pgamma
 #' @importFrom S4Vectors mcols mcols<-
 #'

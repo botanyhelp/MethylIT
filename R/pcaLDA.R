@@ -6,20 +6,20 @@
 #'     as input data are estimated and then the individual coordinates in the
 #'     selected PCs are used as predictors in the LDA
 #' @details The principal components (PCs) are obtained using the function
-#'     'prcomp' from R pacakage 'stats', while the LDA is performed using the
+#'     'prcomp' from R package 'stats', while the LDA is performed using the
 #'     'lda' function from R package 'MASS'. The current application only uses
 #'      basic functionalities of mentioned functions. As shown in the example,
 #'      pcaLDA' function can be used in general classification problems.
 #'
-#' @param formula Same as in 'lda'from pakage 'MASS'.
-#' @param data Same as in 'lda'from pakage 'MASS'.
-#' @param grouping Same as in 'lda' from pakage 'MASS'.
+#' @param formula Same as in 'lda'from package 'MASS'.
+#' @param data Same as in 'lda'from package 'MASS'.
+#' @param grouping Same as in 'lda' from package 'MASS'.
 #' @param n.pc Number of principal components to use in the LDA.
-#' @param scale Same as in 'prcomp' from pakage 'prcomp'.
-#' @param center Same as in 'prcomp' from pakage 'prcomp'.
-#' @param tol Same as in 'prcomp' from pakage 'prcomp'.
-#' @param method Same as in 'lda'from pakage 'MASS'.
-#' @param max.pc Same as in paramter 'rank.' from pakage 'prcomp'.
+#' @param scale Same as in 'prcomp' from package 'prcomp'.
+#' @param center Same as in 'prcomp' from package 'prcomp'.
+#' @param tol Same as in 'prcomp' from package 'prcomp'.
+#' @param method Same as in 'lda'from package 'MASS'.
+#' @param max.pc Same as in parameter 'rank.' from package 'prcomp'.
 #' @return
 #'     Function 'pcaLDA' returns an object ('pcaLDA' class) consisting of list
 #'     with two objects:

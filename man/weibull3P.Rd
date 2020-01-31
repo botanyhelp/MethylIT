@@ -62,7 +62,7 @@ reduced below this limit. Default value: 10^-6}
 \value{
 Model table with coefficients and goodness-of-fit results:
 Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-coefficient covarianza matrix.
+coefficient covariance matrix.
 }
 \description{
 This function performs the nonlinear fit of Weibull CDF of a

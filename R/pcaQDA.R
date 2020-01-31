@@ -6,19 +6,19 @@
 #'     as input data are estimated and then the individual coordinates in the
 #'     selected PCs are used as predictors in the qda
 #' @details The principal components (PCs) are obtained using the function
-#'     'prcomp' from R pacakage 'stats', while the qda is performed using the
+#'     'prcomp' from R package 'stats', while the qda is performed using the
 #'     'qda' function from R package 'MASS'. The current application only uses
 #'     basic functionalities of mentioned functions. As shown in the example,
 #'     'pcaQDA' function can be used in general classification problems.
 #'
-#' @param formula Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
-#' @param data Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
-#' @param grouping Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
+#' @param formula Same as in \code{\link[MASS]{qda}} from package 'MASS'.
+#' @param data Same as in \code{\link[MASS]{qda}} from package 'MASS'.
+#' @param grouping Same as in \code{\link[MASS]{qda}} from package 'MASS'.
 #' @param n.pc Number of principal components to use in the qda.
 #' @param scale Same as in \code{\link[stats]{prcomp}} from package 'stats'.
 #' @param center Same as in \code{\link[stats]{prcomp}} from package 'stats'.
 #' @param tol Same as in \code{\link[stats]{prcomp}} from package 'stats'.
-#' @param method Same as in \code{\link[MASS]{qda}} from pakage 'MASS'.
+#' @param method Same as in \code{\link[MASS]{qda}} from package 'MASS'.
 #' @param max.pc Same as in parameter 'rank.' from
 #'     \code{\link[stats]{prcomp}} from package 'stats'.
 #' @return

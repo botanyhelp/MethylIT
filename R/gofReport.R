@@ -52,7 +52,7 @@
 #' @param output If output == "all", the table with the GoF statistics is
 #'     returned in a list together with the best fitted model and the
 #'     corresponding statistics. Default is "best.model"
-#' @param confl_model Logic. If TRUE, then the best model based on higest
+#' @param confl_model Logic. If TRUE, then the best model based on highest
 #'     R.Cross.val is returned for those samples where the model(s) with lowest
 #'     AIC has not the highest R.Cross.val.
 #' @param num.cores The number of cores to use in the nonlinear fit step, i.e.

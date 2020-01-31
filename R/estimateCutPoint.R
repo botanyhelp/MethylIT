@@ -57,7 +57,7 @@
 #'     position "pos" in respect to the chromosome where it is located. The
 #'     relative position is estimated as (x - x.min)/(x.max - x), where x.min
 #'     and x.max are the maximum and minimum for the corresponding chromosome,
-#'     repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+#'     respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
 #'     be used as predictor in place of "wprob".
 #' @param classifier1,classifier2 Classification model to use. Option "logistic"
 #'     applies a logistic regression model; option "lda" applies a Linear
@@ -78,7 +78,7 @@
 #' @param clas.perf Logic. Whether to evaluate the classification performance
 #'     for the estimated cutpoint using a model classifier when 'simple=TRUE'.
 #'     Default, FALSE.
-#' @param post.cut If 'simple=FALSE', this is posterior probability to dicide
+#' @param post.cut If 'simple=FALSE', this is posterior probability to decide
 #'     whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.
 #' @param prop Proportion to split the dataset used in the logistic regression:
 #'     group versus divergence (at DMPs) into two subsets, training and
@@ -93,7 +93,7 @@
 #'     \emph{div.col} where to check the classification performance
 #'     (0 < \emph{cut.interval} < max ID). If provided, the search for a
 #'     cutpoint will include these values.
-#' @param num.cores,tasks Paramaters for parallele computation using package
+#' @param num.cores,tasks Parameters for parallel computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job

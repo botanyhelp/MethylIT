@@ -12,13 +12,13 @@
 #'     mentioned functions. As shown in the example, 'pcaLogisticR' function can
 #'     be used in general classification problems.
 #'
-#' @param formula Same as in 'glm' from pakage 'stats'.
-#' @param data Same as in 'glm' from pakage 'stats'.
-#' @param scale Same as in 'prcomp' from pakage 'prcomp'.
-#' @param center Same as in 'prcomp' from pakage 'prcomp'.
-#' @param tol Same as in 'prcomp' from pakage 'prcomp'.
+#' @param formula Same as in 'glm' from package 'stats'.
+#' @param data Same as in 'glm' from package 'stats'.
+#' @param scale Same as in 'prcomp' from package 'prcomp'.
+#' @param center Same as in 'prcomp' from package 'prcomp'.
+#' @param tol Same as in 'prcomp' from package 'prcomp'.
 #' @param n.pc Number of principal components to use in the logistic.
-#' @param max.pc Same as in paramter 'rank.' from pakage 'prcomp'.
+#' @param max.pc Same as in parameter 'rank.' from package 'prcomp'.
 #' @return
 #'     Function 'pcaLogisticR' returns an object ('pcaLogisticR' class)
 #'     containing a list of two objects:

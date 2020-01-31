@@ -5,9 +5,9 @@
 #'     with Methyl-IT \code{link{countTest2}} function.
 #' @details Data set constructor for class glmDataSet also validate the object
 #' @param GR A GRanges object with the count matrix of DMPs in the metacolumns
-#'     (see \emph{'counts'}). If provided, then leave paramater
+#'     (see \emph{'counts'}). If provided, then leave parameter
 #'     \emph{'counts = NULL'}.
-#' @param counts Count matrix of DMPs with minimal dimmensions 1 (row) x 4
+#' @param counts Count matrix of DMPs with minimal dimensions 1 (row) x 4
 #'     (columns). Column names must corresponds to the rownames from parameter
 #'      'colData'.
 #' @param colData A data frame with one columnn named 'condition', which must be

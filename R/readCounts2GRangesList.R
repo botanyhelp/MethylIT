@@ -22,8 +22,8 @@
 #'     must be read. The numbers for 'seqnames' (chromosomes), 'start', and
 #'     'end' (if different from 'start') columns must be given. The possible
 #'     fields are: 'seqnames' (chromosomes),'start', 'end', 'strand',
-#'     'fraction', percent' (metylation percentage), 'mC' (methylates cytosine),
-#'     'uC' (non methylated cytosine), 'coverage', and 'context'
+#'     'fraction', percent' (methylation percentage), 'mC' (methylates
+#'     cytosine), 'uC' (non methylated cytosine), 'coverage', and 'context'
 #'     (methylation context). These column headers are not required to be in the
 #'     files.
 #' @param chromosome.names If provided, for each GRanges object, chromosome

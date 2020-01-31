@@ -28,7 +28,7 @@
 #' @param control.names,treatment.names Names/IDs of control and treatment
 #'     samples, which must be included in the variable GR at the metacolumn.
 #'     Default NULL. If provided the Fisher's exact test control versus
-#'     trearment is performed. Default is NULL. If NULL, then it is assumed that
+#'     treatment is performed. Default is NULL. If NULL, then it is assumed that
 #'     each GRanges object in LR has four columns of counts. The first two
 #'     columns correspond to the methylated and unmethylated counts from
 #'     control/reference and the other two columns are the methylated and
@@ -41,9 +41,9 @@
 #' @param tv.cut A cutoff for the total variation distance (TVD; absolute value
 #'     of methylation levels differences) estimated at each site/range as the
 #'     difference of the group means of methylation levels. If tv.cut is
-#'     provided, then sites/ranges k with abs(TV_k) < tv.cut are removed before
-#'     performing the regression analysis. Its value must be NULL or a number
-#'     0 < tv.cut < 1.
+#'     provided, then sites/ranges k with \eqn{|TV_k| < tv.cut} are removed
+#'     before performing the regression analysis. Its value must be NULL or a
+#'     number \eqn{0 < tv.cut < 1}.
 #' @param hdiv.cut An optional cutoff for the Hellinger divergence (*hdiv*). If
 #'     the LR object derives from the previous application of function
 #'     \code{\link{estimateDivergence}}, then a column with the *hdiv* values is
@@ -73,7 +73,7 @@
 #' @importFrom stats fisher.test
 #' @return The input GRanges object with the columns of Fisher's exact test
 #'     p-value, total variation (difference of methylation levels), and
-#'     p-value adjusment.
+#'     p-value adjustment.
 #'
 #' @examples
 #' ## Get a dataset of Hellinger divergency of methylation levels

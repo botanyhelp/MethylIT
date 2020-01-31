@@ -22,14 +22,14 @@
 #'
 #' @param x numerical vector
 #' @param parameter.values initial parameter values for the nonlinear fit. If
-#'     the locator paramter is included (mu != 0), this must be given as
+#'     the locator parameter is included (mu != 0), this must be given as
 #'     parameter.values = list(alpha = 'value', scale = 'value', mu = 'value',
 #'     psi = 'value') or if mu = 0, as: parameter.values =list(alpha = 'value',
 #'     scale = 'value', psi = 'value'). If not provided, then an initial guess
 #'     is provided.
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (GGamma) including the location parameter, i.e., a GGamma
-#'     with four parameters (GGamam4P).
+#'     with four parameters (GGamma4P).
 #' @param sample.size size of the sample.
 #' @param npoints number of points used in the fit. If the number of points if
 #'     greater than 10^6, then the fit is automatically set to npoints = 999999.

@@ -9,7 +9,7 @@
 #' @param LR A list of GRanges objects obtained through the through MethylIT
 #'     downstream analysis. Basically, this object is a list of GRanges
 #'     containing only differentially methylated position (DMPs). The metacolumn
-#'     of each GRanges must contain the columna: Hellinger divergence "hdiv",
+#'     of each GRanges must contain the column: Hellinger divergence "hdiv",
 #'     total variation "TV", the probability of potential DMP "wprob", which
 #'     naturally are added in the downstream analysis of MethylIT.
 #' @param model A classifier model obtained with the function

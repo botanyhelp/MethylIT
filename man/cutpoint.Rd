@@ -4,7 +4,7 @@
 \name{cutpoint}
 \alias{cutpoint}
 \title{Cutpoint of the 'PS' simulated dataset used in the examples}
-\format{A list wiht the cutpoint value and classification performance. The
+\format{A list with the cutpoint value and classification performance. The
 cutpoint values was obtained with function
 \code{\link{estimateCutPoint}}.}
 \usage{

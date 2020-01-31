@@ -27,10 +27,10 @@ parameter values div.col or pval.col must be given.}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
-analysis. If 'absolute = TRUE', then TV is tranformed into |TV|, which is
-an information divergence that can be fitted to Weibull or to Generalized
-Gamma distribution. So, if the nonlinear fit was performed for |TV|, then
-here absolute must be set to TRUE.}
+analysis. If 'absolute = TRUE', then TV is transformed into
+\eqn{|TV|}, which is an information divergence that can be fitted to
+Weibull or to Generalized Gamma distribution. So, if the nonlinear fit
+was performed for \eqn{|TV|}, then here absolute must be set to TRUE.}
 
 \item{cutpoint}{Cutpoint to select DMPs. Cytosine positions with divergence
 greater than 'cutpoint' will selected as DMPs. Cutpoints are estimated
@@ -39,8 +39,8 @@ with the function 'estimateCutPoint'.}
 \item{tv.col}{Column number for the total variation to be used for filtering
 cytosine positions (if provided).}
 
-\item{tv.cut}{If tv.cut and tv.col are provided, then cytosine sites k with
-abs(TV_k) < tv.cut are removed.}
+\item{tv.cut}{If tv.cut and tv.col are provided, then cytosine sites \eqn{k}
+with \eqn{|TV| < tv.cut} are removed.}
 }
 \value{
 An object from "pDMP" class containing only differentially

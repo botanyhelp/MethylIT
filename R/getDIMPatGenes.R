@@ -5,7 +5,7 @@
 #'     this function also can be used to count DMPs overlapping with any set of
 #'     regions given in a GRanges object.
 #'
-#' @param GR An obects object from the any of the classes: 'pDMP', 'InfDiv',
+#' @param GR An objects object from the any of the classes: 'pDMP', 'InfDiv',
 #'     GRangesList, GRanges or a list of GRanges.
 #' @param GENES A GRanges object with gene coordinates and gene IDs. A
 #'     meta-column named 'gene_id' carying the gene ids should be included. If

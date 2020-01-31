@@ -6,7 +6,7 @@
 #' @aliases qggamma
 #'
 #' @title Generalized Gamma distribution
-#' @description Probability density function (PDF), cummulative density function
+#' @description Probability density function (PDF), cumulative density function
 #'     (CDF), quantile function and random generation for the Generalized Gamma
 #'     (GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
 #'     function is reduced to GGamma distribution with 3 parameters by setting
@@ -40,7 +40,7 @@
 #'     log(p).
 #'
 #' @return GG PDF values (3-parameters or 4-parameters) for dggamma,
-#'     GG probability for pggamma, quaniles or GG random generated values for
+#'     GG probability for pggamma, quantiles or GG random generated values for
 #'     rggamma.
 #'
 #' @references 1. Handbook on  STATISTICAL DISTRIBUTIONS for experimentalists

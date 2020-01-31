@@ -26,23 +26,23 @@ pcaLDA(
 )
 }
 \arguments{
-\item{formula}{Same as in 'lda'from pakage 'MASS'.}
+\item{formula}{Same as in 'lda'from package 'MASS'.}
 
-\item{data}{Same as in 'lda'from pakage 'MASS'.}
+\item{data}{Same as in 'lda'from package 'MASS'.}
 
-\item{grouping}{Same as in 'lda' from pakage 'MASS'.}
+\item{grouping}{Same as in 'lda' from package 'MASS'.}
 
 \item{n.pc}{Number of principal components to use in the LDA.}
 
-\item{scale}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{scale}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{center}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{center}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{tol}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{tol}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{method}{Same as in 'lda'from pakage 'MASS'.}
+\item{method}{Same as in 'lda'from package 'MASS'.}
 
-\item{max.pc}{Same as in paramter 'rank.' from pakage 'prcomp'.}
+\item{max.pc}{Same as in parameter 'rank.' from package 'prcomp'.}
 
 \item{object}{To use with function 'predict'. A 'pcaLDA' object containing a
 list of two objects: 1) an object of class inheriting from "lda" and 2)
@@ -77,7 +77,7 @@ Predict using a PCA-LDA model built with function 'pcaLDA'
 }
 \details{
 The principal components (PCs) are obtained using the function
-'prcomp' from R pacakage 'stats', while the LDA is performed using the
+'prcomp' from R package 'stats', while the LDA is performed using the
 'lda' function from R package 'MASS'. The current application only uses
 basic functionalities of mentioned functions. As shown in the example,
 pcaLDA' function can be used in general classification problems.

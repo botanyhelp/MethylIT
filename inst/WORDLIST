@@ -51,6 +51,7 @@ coverages
 CpG
 CutPoint
 cutpoint
+cutpointr
 cytosines
 DataSets
 dataset
@@ -85,7 +86,7 @@ experimentalists
 findOverlaps
 FisherTest
 fitGGammaDist
-fitNonlinearWeibullDist
+physto
 fn
 FoldChanges
 fread
@@ -124,6 +125,7 @@ infDiv
 InfDiv
 InfDIv
 initModel
+intra
 intragroup
 IRanges
 jackmean
@@ -152,6 +154,8 @@ maximun
 maxiter
 mc
 mC
+clas
+frac
 metacolumn
 metacolumns
 methylated
@@ -209,6 +213,8 @@ pred
 Pred
 predictDIMPclass
 predictLogisticR
+Probab
+Plos
 PSU's
 ptol
 pval

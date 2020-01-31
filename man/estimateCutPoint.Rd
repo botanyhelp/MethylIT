@@ -48,7 +48,7 @@ probability of potential DMP "wprob", and the relative cytosine site
 position "pos" in respect to the chromosome where it is located. The
 relative position is estimated as (x - x.min)/(x.max - x), where x.min
 and x.max are the maximum and minimum for the corresponding chromosome,
-repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
 be used as predictor in place of "wprob".}
 
 \item{classifier1, classifier2}{Classification model to use. Option "logistic"
@@ -74,7 +74,7 @@ of the cutpoint will be performed.}
 for the estimated cutpoint using a model classifier when 'simple=TRUE'.
 Default, FALSE.}
 
-\item{post.cut}{If 'simple=FALSE', this is posterior probability to dicide
+\item{post.cut}{If 'simple=FALSE', this is posterior probability to decide
 whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.}
 
 \item{prop}{Proportion to split the dataset used in the logistic regression:
@@ -119,7 +119,7 @@ for the estimation of an “optimal” cutpoints can be accomplish, for
 example with function \code{\link[cutpointr]{cutpointr}} from the R
 package \strong{cutpointr}.}
 
-\item{num.cores, tasks}{Paramaters for parallele computation using package
+\item{num.cores, tasks}{Parameters for parallel computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job

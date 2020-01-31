@@ -637,7 +637,7 @@ gof_1$stats
 It is worthy to observe that although in the current example we successfully
 performed the nonlinear fit for GGamma3P model, this is not the general case
 when the number of cytosine sites goes close or above $10^6$, for which the
-computational cost is very high.  The nonlinear fit of GGamm3P or GGamm4P is, in
+computational cost is very high.  The nonlinear fit of GGamma3P or GGamma4P is, in
 general, difficult since two different set of estimated parameters could produce
 very close distribution curves. Also, it is important to check the value of the
 scaling parameter from each distribution. The numerical algorithms could find
@@ -793,8 +793,8 @@ grid.arrange(p1, p2, p3, p4, ncol = 2)
 
 ```
 
-The graphics show that "Gamm3P" provides more information on the discrimination of 
-treatment potential DMPs from the control.
+The graphics show that "Gamma3P" provides more information on the discrimination
+of treatment potential DMPs from the control.
 
 ## Cutpoint estimation
 Laws of statistical physics can account for background methylation, a response
@@ -961,7 +961,7 @@ do.call(rbind, lapply(methc, function(x) {
 )
 ```
 
-The minimum amount of methylted read counts is observed "Breast_metastasis" (15 reads)
+The minimum amount of methylated read counts is observed "Breast_metastasis" (15 reads)
 and for any the samples the tenth percent of DMPs is 26 or more reads.
 
 ### _Venn Diagram of DMPs_

@@ -42,7 +42,7 @@
 #'
 #' @return Model table with coefficients and goodness-of-fit results:
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-#'     coefficient covarianza matrix.
+#'     coefficient covariance matrix.
 #'
 #' @references 1. Stevens JP. Applied Multivariate Statistics for the Social
 #'     Sciences. Fifth Edit. Routledge Academic; 2009.

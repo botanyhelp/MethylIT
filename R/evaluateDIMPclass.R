@@ -41,8 +41,8 @@
 #'     position "pos" in respect to the chromosome where it is located. The
 #'     relative position is estimated as (x - x.min)/(x.max - x), where x.min
 #'     and x.max are the maximum and minimum for the corresponding chromosome,
-#'     repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will be
-#'     used as predictor in place of "wprob".
+#'     respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+#'     be used as predictor in place of "wprob".
 #' @param classifier Classification model to use. Option "logistic" applies a
 #'     logistic regression model; option "lda" applies a Linear Discriminant
 #'     Analysis (LDA); "qda" applies a Quadratic Discriminant Analysis (QDA),
@@ -73,7 +73,7 @@
 #'     testing.
 #' @param num.boot Number of bootstrap validations to perform in the evaluation
 #'     of the logistic regression: group versus divergence (at DMPs).
-#' @param num.cores,tasks Paramaters for parallele computation using package
+#' @param num.cores,tasks Parameters for parallel computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job

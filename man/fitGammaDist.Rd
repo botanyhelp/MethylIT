@@ -27,14 +27,14 @@ are estimated using the empirical cumulative distribution function
 ('ecdf') from 'stats' R package.}
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
-the locator paramter is included (mu != 0), this must be given as
+the locator parameter is included (mu != 0), this must be given as
 parameter.values = list(shape = 'value', scale = 'value', mu = 'value')
 or if mu = 0, as: parameter.values = list(shape = 'value',
 scale = 'value'). If not provided, then an initial guess is provided.}
 
 \item{location.par}{whether to consider the fitting to generalized gamma
 distribution (Gamma) including the location parameter, i.e., a Gamma
-with four parameters (GGamam3P).}
+with four parameters (GGamma3P).}
 
 \item{sample.size}{size of the sample.}
 

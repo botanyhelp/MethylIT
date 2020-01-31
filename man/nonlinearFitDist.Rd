@@ -41,7 +41,7 @@ two-parameter (Gamma2P), generalized gamma with three-parameter
 
 \item{location.par}{whether to consider the fitting to generalized gamma
 distribution (GGamma) including the location parameter, i.e., a GGamma
-with four parameters (GGamam4P).}
+with four parameters (GGamma4P).}
 
 \item{absolute}{Logic (default, FALSE). Total variation (TV, the difference
 of methylation levels) is normally an output in the downstream MethylIT
