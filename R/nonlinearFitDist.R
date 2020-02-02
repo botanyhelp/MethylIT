@@ -11,9 +11,9 @@
 #' Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
 #' 'minpack.lm' is used to perform the nonlinear fit. Cross-validations for the
 #' nonlinear regressions (R.Cross.val) are performed in each methylome as
-#' described in reference (1). In addition, Stein's formula for adjusted R
+#' described in reference (1-2). In addition, Stein's formula for adjusted R
 #' squared (rho) is used as an estimator of the average cross-validation
-#' predictive power (1).
+#' predictive power (2).
 #'
 #' If "GGamma3P" is selected the call to function 'fitGGammaDist' permits the
 #' fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to the
@@ -70,7 +70,7 @@
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see
 #'     \code{\link[BiocParallel]{bplapply}} function from BiocParallel package).
-#' @param tasks integer(1). The number of tasks per job. value must be a scalar
+#' @param tasks integer. The number of tasks per job. value must be a scalar
 #'     integer >= 0L. In this documentation a job is defined as a single call to
 #'     a function, such as bplapply, bpmapply etc. A task is the division of the
 #'     X argument into chunks. When tasks == 0 (default), X is divided as evenly
