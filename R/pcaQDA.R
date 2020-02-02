@@ -22,11 +22,15 @@
 #' @param max.pc Same as in parameter 'rank.' from
 #'     \code{\link[stats]{prcomp}} from package 'stats'.
 #' @return
-#'     Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
-#'     two objects:
-#'         1) 'qda': an object of class 'qda' from package 'MASS'.
-#'         2) 'pca': an object of class 'prcomp' from package 'stats'.
-#'     For information on how to use these objects see ?qda and ?prcomp.
+#' Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
+#' two objects:
+#' \enumerate{
+#'     \item 'qda': an object of class \code{\link[MASS]{qda}} from package
+#'         'MASS'.
+#'     \item 'pca': an object of class \code{\link[stats]{prcomp}} from package
+#'         'stats'.
+#' }
+#' For information on how to use these objects see ?qda and ?prcomp.
 #'
 #' @examples
 #' data(iris)

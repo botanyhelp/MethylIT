@@ -21,11 +21,15 @@
 #' @param method Same as in 'lda'from package 'MASS'.
 #' @param max.pc Same as in parameter 'rank.' from package 'prcomp'.
 #' @return
-#'     Function 'pcaLDA' returns an object ('pcaLDA' class) consisting of list
-#'     with two objects:
-#'       1) 'lda': an object of class 'lda' from package 'MASS'.
-#'       2) 'pca': an object of class 'prcomp' from package 'stats'.
-#'     For information on how to use these objects see ?lda and ?prcomp.
+#' Function 'pcaLDA' returns an object ('pcaLDA' class) consisting of list
+#' with two objects:
+#' \enumerate{
+#'     \item 'lda': an object of class \code{\link[MASS]{lda}} from package
+#'         'MASS'.
+#'     \item 'pca': an object of class \code{\link[stats]{prcomp}} from package
+#'         'stats'.
+#' }
+#' For information on how to use these objects see ?lda and ?prcomp.
 #'
 #' @examples
 #' data(iris)

@@ -77,20 +77,20 @@ variable x
 }
 \details{
 The script algorithm tries to fit the three-parameter GGamma CDF
-("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a
-modification of Levenberg-Marquardt algorithm implemented in function
-'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-performed in each methylome as described in reference (1). In addition,
-Stein's formula for adjusted R squared (rho) was used as an estimator of
-the average cross-validation predictive power (1).\preformatted{If the number of values to fit is >10^6, the fitting to a GGamma CDF
-would be a time consuming task. To reduce the computational time, the
-option summarized.data' can be set 'TRUE'. If npoint != NULL, the
-original variable values are summarized into 'npoint' bins and their
-midpoints are used as the new predictors. In this case, only the
-goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-the original variable x values.
-}
+("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a modification
+of Levenberg-Marquardt algorithm implemented in function 'nls.lm' from
+'minpack.lm' package that is used to perform the nonlinear fit.
+Cross-validations for the nonlinear regressions (R.Cross.val) were performed
+in each methylome as described in reference (1). In addition, Stein's formula
+for adjusted R squared (rho) was used as an estimator of the average
+cross-validation predictive power (1).
+
+If the number of values to fit is >10^6, the fitting to a GGamma CDF would be
+a time consuming task. To reduce the computational time, the option
+summarized.data' can be set 'TRUE'. If npoint != NULL, the original variable
+values are summarized into 'npoint' bins and their midpoints are used as the
+new predictors. In this case, only the goodness-of-fit indicators AIC and
+R.Cross.val are estimated based on all the original variable x values.
 }
 \examples{
 set.seed(123)

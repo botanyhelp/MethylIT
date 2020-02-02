@@ -68,17 +68,18 @@ mu = 0.
 }
 \details{
 Details about these function can be found in references 1 to 3. You
-may also see section Note at ?pgamma or ?rgamma. Herein, we are using
-Stacy' s formula (references 2 to 3) with the parametrization given in
-reference 4 (equation 6, page 12). As in the case of gamma distribution
-function, the cumulative distribution function (as given in equation 12,
-page 13 from reference 4) is expressed in terms of the lower incomplete
-gamma function (see ?pgamma).\preformatted{The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
+may also see section Note at ?pgamma or ?rgamma. Herein, we are using Stacy'
+s formula (references 2 to 3) with the parametrization given in reference 4
+(equation 6, page 12). As in the case of gamma distribution function, the
+cumulative distribution function (as given in equation 12, page 13 from
+reference 4) is expressed in terms of the lower incomplete gamma function
+(see ?pgamma).
+
+The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
 \eqn{\psi}, and \eqn{\mu} has density:
 
 \deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
     \beta)^\alpha) ((x-\mu)/\beta)^(\alpha * \psi - 1)/(\beta Gamma(\psi))}
-}
 }
 \examples{
 q <- (1:9)/10

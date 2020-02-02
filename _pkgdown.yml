@@ -14,7 +14,7 @@ navbar:
   components:
     home:
       icon: "fas fa-home fa-lg"
-      href: index.html
+      href: /pkgdown/favicon/favicon.ico
     reference:
       text: Reference
       href: reference/index.html

@@ -25,61 +25,57 @@
 #'     help of function \code{\link{estimateJDiv}}.
 #'
 #' @details If read counts are provided, then Hellinger divergence is computed
-#'     as given in the first formula from Theorem 1 from reference 1. In the
-#'     present case:
+#' as given in the first formula from Theorem 1 from reference 1. In the
+#' present case:
 #'
-#'     \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
+#' \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
 #'          (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
 #'
-#'     where \eqn{n[1]} and \eqn{n[2]} are the coverage for the control and
-#'     treatment, respectively. Notice that each row from the matrix of counts
-#'     correspond to a single cytosine position and has four values
-#'     corresponding to "mC1" and "uC1" (control), and mC2" and "uC2" for
-#'     treatment.
+#' where \eqn{n[1]} and \eqn{n[2]} are the coverage for the control and
+#' treatment, respectively. Notice that each row from the matrix of counts
+#' correspond to a single cytosine position and has four values corresponding to
+#' "mC1" and "uC1" (control), and mC2" and "uC2" for treatment.
 #'
-#'     According with the above equation, to estimate Hellinger divergence, not
-#'     only the methylation levels are considered in the estimation of H,
-#'     but also the control and treatment coverage at each given cytosine site.
-#'     At this point, it is worthy to do mention that if the reference sample is
-#'     derived with function \code{\link{poolFromGRlist}} using the 'sum' of
-#'     read counts to conpute a methylation pool, then 'min.coverage' parameter
-#'     value must be used to prevent an over estimation of the divergence for
-#'     low coverage cytosines sites. For example, if a reference sample is
-#'     derived as the methylation pool of read count sum from 3 individuals and
-#'     we want to consider only methylation sites with minimum coverage of 4,
-#'     then we can set min.coverage = c(12, 4), where the number 12 (3 x 4) is
-#'     the minimum coverage requested for the each cytosine site in the
-#'     reference sample.
+#' According with the above equation, to estimate Hellinger divergence, not only
+#' the methylation levels are considered in the estimation of H, but also the
+#' control and treatment coverage at each given cytosine site. At this point, it
+#' is worthy to do mention that if the reference sample is derived with function
+#' \code{\link{poolFromGRlist}} using the 'sum' of read counts to conpute a
+#' methylation pool, then 'min.coverage' parameter value must be used to prevent
+#' an over estimation of the divergence for low coverage cytosines sites. For
+#' example, if a reference sample is derived as the methylation pool of read
+#' count sum from 3 individuals and we want to consider only methylation sites
+#' with minimum coverage of 4, then we can set min.coverage = c(12, 4), where
+#' the number 12 (3 x 4) is the minimum coverage requested for the each cytosine
+#' site in the reference sample.
 #'
-#'     If the methylation levels are provided in place of counts, then the
-#'     Hellinger divergence is computed as:
-#'     \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) -
-#'           sqrt(1 - p[2]))^2}
+#' If the methylation levels are provided in place of counts, then the Hellinger
+#' divergence is computed as:
+#' \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) - sqrt(1 - p[2]))^2}
 #'
-#'     This formula assumes that the probability vectors derived from the
-#'     methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
-#'     'estimateHellingerDiv') are an unbiased estimation of the expected one.
-#'     The function applies a pairwise filtering after building a single GRanges
-#'     from the two GRanges objects. Experimentally available cytosine sites are
-#'     paired using the function 'uniqueGRanges'.
+#' This formula assumes that the probability vectors derived from the
+#' methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
+#' 'estimateHellingerDiv') are an unbiased estimation of the expected one. The
+#' function applies a pairwise filtering after building a single GRanges from
+#' the two GRanges objects. Experimentally available cytosine sites are paired
+#' using the function 'uniqueGRanges'.
 #'
-#'     It is important to observe that several filtering conditions are provided
-#'     to select biological meaningful cytosine positions, which prevent to
-#'     carry experimental errors in the dowstream analyses. By filtering the
-#'     read count we try to remove bad quality data, which would be in the edge
-#'     of the experimental error originated by the BS-seq sequencing. It is
-#'     responsability of the user to check whether cytosine positions used in
-#'     the analysis are biological meaningful. For example, a cytosine position
-#'     with counts mC1 = 10 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 =
-#'     0 in an 'indv' sample will lead to methylation levels p1 = 0.333 and p2 =
-#'     1, respectively, and TV = p2 - p1 = 0.667, which apparently indicates a
-#'     hypermethylated site. However, there are not enough reads supporting p2 =
-#'     1. A Bayesian estimation of TV will reveal that this site would be, in
-#'     fact, hypomethylated. So, the best practice will be the removing of sites
-#'     like that. This particular case is removed under the default settings:
-#'     min.coverage = 4, min.meth = 4, and min.umeth = 0 (see example for
-#'     function \code{\link{uniqueGRfilterByCov}}, called by
-#'     estimateDivergence).
+#' It is important to observe that several filtering conditions are provided to
+#' select biological meaningful cytosine positions, which prevent to carry
+#' experimental errors in the dowstream analyses. By filtering the read count we
+#' try to remove bad quality data, which would be in the edge of the
+#' experimental error originated by the BS-seq sequencing. It is responsability
+#' of the user to check whether cytosine positions used in the analysis are
+#' biological meaningful. For example, a cytosine position with counts mC1 = 10
+#' and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 = 0 in an 'indv' sample
+#' will lead to methylation levels p1 = 0.333 and p2 = 1, respectively, and TV =
+#' p2 - p1 = 0.667, which apparently indicates a hypermethylated site. However,
+#' there are not enough reads supporting p2 = 1. A Bayesian estimation of TV
+#' will reveal that this site would be, in fact, hypomethylated. So, the best
+#' practice will be the removing of sites like that. This particular case is
+#' removed under the default settings: min.coverage = 4, min.meth = 4, and
+#' min.umeth = 0 (see example for function \code{\link{uniqueGRfilterByCov}},
+#' called by estimateDivergence).
 #'
 #' @param ref The GRanges object of the reference individual that will be used
 #'     in the estimation of the information divergence.

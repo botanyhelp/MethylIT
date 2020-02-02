@@ -4,18 +4,17 @@
 #' @description This function performs the nonlinear fit of GGamma CDF of a
 #'     variable x
 #' @details The algorithm tries to fit the two-parameter Gamma CDF
-#'     ("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a
-#'     modification of Levenberg-Marquardt algorithm implemented in function
-#'     'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-#'     fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-#'     performed in each methylome as described in reference (1). In addition,
-#'     Stein's formula for adjusted R squared (rho) was used as an estimator of
-#'     the average cross-validation predictive power (1).
+#' ("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a modification of
+#' Levenberg-Marquardt algorithm implemented in function 'nls.lm' from
+#' 'minpack.lm' package that is used to perform the nonlinear fit.
+#' Cross-validations for the nonlinear regressions (R.Cross.val) were performed
+#' in each methylome as described in reference (1). In addition, Stein's formula
+#' for adjusted R squared (rho) was used as an estimator of the average
+#' cross-validation predictive power (1).
 #'
-#'     If the number of values to fit is >10^6, the fitting to a GGamma CDF
-#'     would be a time consuming task. To reduce the computational time, the
-#'     data can be 'summarized' into 'npoints' (bins) and used as the new
-#'     predictors.
+#' If the number of values to fit is >10^6, the fitting to a GGamma CDF would be
+#' a time consuming task. To reduce the computational time, the data can be
+#' 'summarized' into 'npoints' (bins) and used as the new predictors.
 #' @param x numerical vector
 #' @param probability.x probability vector of x. If not provided, the values
 #'     are estimated using the empirical cumulative distribution function

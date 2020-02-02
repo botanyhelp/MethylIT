@@ -62,12 +62,15 @@ see \code{\link[MASS]{qda}}.}
 \item{...}{Not in use.}
 }
 \value{
-\preformatted{Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
+Function 'pcaQDA' returns an object ("pcaQDA") consisting of a list with
 two objects:
-    1) 'qda': an object of class 'qda' from package 'MASS'.
-    2) 'pca': an object of class 'prcomp' from package 'stats'.
-For information on how to use these objects see ?qda and ?prcomp.
+\enumerate{
+\item 'qda': an object of class \code{\link[MASS]{qda}} from package
+'MASS'.
+\item 'pca': an object of class \code{\link[stats]{prcomp}} from package
+'stats'.
 }
+For information on how to use these objects see ?qda and ?prcomp.
 }
 \description{
 The principal components (PCs) for predictor variables provided

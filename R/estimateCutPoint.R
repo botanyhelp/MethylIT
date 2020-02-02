@@ -8,38 +8,37 @@
 #'     (given the metacolumns), the function estimates the cutpoints of the
 #'     control group versus treatment group.
 #' @details The function performs an estimation of the optimal cutpoint for the
-#'     classification of the differentially methylated (cytosines) positions
-#'     into two classes: DMPs from control and DMPs from treatment. The simplest
-#'     approach to estimate the cutpoint is based on the application of Youden
-#'     Index. More complexes approach based in several machine learning model
-#'     are provided as well.
+#' classification of the differentially methylated (cytosines) positions into
+#' two classes: DMPs from control and DMPs from treatment. The simplest approach
+#' to estimate the cutpoint is based on the application of Youden Index. More
+#' complexes approach based in several machine learning model are provided as
+#' well.
 #'
-#'     Results of the classification performance resulting from the estimated
-#'     cutpoint are normally given, with the exception of those extreme
-#'     situations where the statistics to evaluate performance cannot be
-#'     estimated. More than one classifier model can be applied. For example,
-#'     one classifier (logistic model) can be used to estimate the posterior
-#'     classification probabilities of DMP into those from control and those
-#'     from treatment. These probabilities are then used to estimate the
-#'     cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
-#'     classifier can be used to evaluate the classification performance.
-#'     Different classifier models would yield different performances. Models
-#'     are returned and can be used in further prediction with new datasets from
-#'     the same batch experiment. This is a machine learning approach to
-#'     discriminate the biological regulatory signal naturally generated in the
-#'     control from that one induced by the treatment.
+#' Results of the classification performance resulting from the estimated
+#' cutpoint are normally given, with the exception of those extreme situations
+#' where the statistics to evaluate performance cannot be estimated. More than
+#' one classifier model can be applied. For example, one classifier (logistic
+#' model) can be used to estimate the posterior classification probabilities of
+#' DMP into those from control and those from treatment. These probabilities are
+#' then used to estimate the cutpoint in range of values from, say, 0.5 to 0.8.
+#' Next, a different classifier can be used to evaluate the classification
+#' performance. Different classifier models would yield different performances.
+#' Models are returned and can be used in further prediction with new datasets
+#' from the same batch experiment. This is a machine learning approach to
+#' discriminate the biological regulatory signal naturally generated in the
+#' control from that one induced by the treatment.
 #'
-#'     Notice that the estimation of an optimal cutpoint based on the
-#'     application Youden Index (simple = TRUE) only uses the information
-#'     provided by the selected information divergence. As a result,
-#'     classification results based only in one variable can be poor or can
-#'     fail. However, option simple = FALSE, uses the information from several
-#'     variables following a machine-learnig (ML) approach.
+#' Notice that the estimation of an optimal cutpoint based on the application
+#' Youden Index (simple = TRUE) only uses the information provided by the
+#' selected information divergence. As a result, classification results based
+#' only in one variable can be poor or can fail. However, option simple = FALSE,
+#' uses the information from several variables following a machine-learnig (ML)
+#' approach.
 #'
-#'     Nevertheless, when simple = TRUE, still a ML model classifier can
-#'     be built using the optimal cutpoint estimated and setting
-#'     clas.perf = TRUE. Such a ML model can be used for predictions in futher
-#'     analyses with function \code{\link{predictDIMPclass}}.
+#' Nevertheless, when simple = TRUE, still a ML model classifier can be built
+#' using the optimal cutpoint estimated and setting clas.perf = TRUE. Such a ML
+#' model can be used for predictions in futher analyses with function
+#' \code{\link{predictDIMPclass}}.
 #'
 #' @param LR An object from 'pDMP' class. This object is previously obtained
 #'     with function \code{\link{getPotentialDIMP}}.
