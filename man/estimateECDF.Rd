@@ -30,3 +30,4 @@ The histogram cell midpoints values are used to build estimateECDF.
     estimateECDF(x, npoints = 15)
 
 }
+\keyword{internal}

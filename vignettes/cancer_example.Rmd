@@ -22,13 +22,13 @@ output:
   rmarkdown::html_document: 
     toc: true
     toc_depth: 3
-    toc_float: 
-      collapsed: false
-      smooth_scroll: true
     number_sections: true
     highlight: tango
     theme: united
     geometry: margin=1in
+    df_print: paged
+    mathjax: local
+    self_contained: false
     keep_md: yes
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -648,10 +648,10 @@ meaningless and the fitted models must be discarded [@Sanchez2016].
 # Signal detection
 The information thermodynamics-based approach is postulated to provide greater
 sensitivity for resolving true signal from the thermodynamic background within
-the methylome [@Sanchez2016]. Because the biological signal created within the
-dynamic methylome environment characteristic of plants is not free from
-background noise, the approach, designated Methyl-IT, includes the application
-of signal detection theory [@Greiner2000; @Carter2016; @Harpaz2013;
+the methylome [@Sanchez2016]. Since the biological signal created within the
+dynamic methylome environment characteristic of living organisms is not free
+from background noise, the approach, designated Methyl-IT, includes the
+application of signal detection theory [@Greiner2000; @Carter2016; @Harpaz2013;
 @Kruspe2017]. Signal detection is a critical step to increase sensitivity and
 resolution of methylation signal by reducing the signal-to-noise ratio and
 objectively controlling the false positive rate and prediction accuracy/risk.
