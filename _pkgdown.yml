@@ -7,9 +7,7 @@ navbar:
     - articles
     - tutorials
     - news
-    - twitter
     right:
-    - github
   components:
     home:
       icon: "fas fa-home fa-lg"
@@ -31,11 +29,8 @@ navbar:
     twitter:
       icon: "fab fa-twitter fa-lg"
       href: http://twitter.com/robersysr
-    github:
-    - icon: "fa fa-github fa-lg"
-      href: https://github.com/genomaths/MethylIT
-    - icon: "fab fa-genomaths fa-lg"
-      href: https://genomaths.com
+    links:
+       href: https://github.com/genomaths/MethylIT
 reference:
 - title: Data preprocessing
   desc: ~

@@ -9,6 +9,7 @@ Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
                   role = "ctb"),
               person("Thomas", "Maher", email = "twm118@psu.edu",
                   role = "ctb"))
+URL: https://github.com/genomaths/MethylIT, https://genomaths.com/
 Description: Methyl-IT implements methylation analysis based on signal detection
              theory and machine-learning. Methylation process is a stochastic
              process, particularly, a biochemical-biophysical process which must
