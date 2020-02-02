@@ -3,10 +3,22 @@ Title: Methylation Analysis Based on Signal Detection
 Version: 0.3.2
 Encoding: UTF-8
 Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
-                  role = c("aut", "cre", "cph")),
+                  role = c("aut", "cre", "cph"),
+                  comment = c(ORCID = "0000-0002-5246-1453")),
               person("Jose Raul ", "Barreras", email = "jrb428@psu.edu",
-                  role = c("ctb")))
-Description: Methylation Analysis based on Signal Detection Theory.
+                  role = "ctb"),
+              person("Thomas", "Maher", email = "twm118@psu.edu",
+                  role = "ctb"))
+URL: https://github.com/genomaths/MethylIT, https://genomaths.com/,
+     https://genomaths.github.io/methylit/
+Description: Methyl-IT implements methylation analysis based on signal detection
+             theory and machine-learning. Methylation process is a stochastic
+             process, particularly, a biochemical-biophysical process which must
+             not be reduced to statistic. Methyl-IT includes the information on
+             the statistical biophysics of the methylation process with the 
+             estimation of the probability distribution of the noise 
+             (plus signal), which is expressed in terms of information 
+             divergences. 
 Depends: 
   R (>= 3.6.0),
   rtracklayer
