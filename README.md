@@ -17,7 +17,7 @@ methylation patterning based on the statistical mechanical effect of methylation
 on DNA molecules ([1](#1)-[3](#3)). The information thermodynamics-based
 approach is postulated to
 provide greater sensitivity for resolving true signal from the thermodynamic
-background within the methylome ([1](#1)). This dtheory provides the knowledge
+background within the methylome ([1](#1)). This theory provides the knowledge
 on the family of probability distributions that better fit the methylation
 signals when expressed in terms of information divergences of methylation
 levels. Because the biological signal created within the dynamic methylome

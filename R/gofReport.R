@@ -12,10 +12,10 @@
 #'     molecule follow a Poisson process, then the noise follows a Weibull
 #'     probability distribution.
 #'
-#' Function 'gofReport' search for the best fitted model betweeen the set of
+#' Function 'gofReport' search for the best fitted model between the set of
 #' models requested by the user. Two goodness-of-fit (GoF) criteria are applied
 #' to select the best fitted model: Akaike's information criterion (AIC) and the
-#' correlation coeficient of cross-validations for the nonlinear regressions
+#' correlation coefficient of cross-validations for the nonlinear regressions
 #' (R.Cross.val) (2). These criteria evaluate different information inferred
 #' from the models. AIC deals with the trade-off between the goodness of fit of
 #' the model and the complexity of the model, while R.Cross.val provides

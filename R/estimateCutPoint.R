@@ -32,12 +32,12 @@
 #' Youden Index (simple = TRUE) only uses the information provided by the
 #' selected information divergence. As a result, classification results based
 #' only in one variable can be poor or can fail. However, option simple = FALSE,
-#' uses the information from several variables following a machine-learnig (ML)
+#' uses the information from several variables following a machine-learning (ML)
 #' approach.
 #'
 #' Nevertheless, when simple = TRUE, still a ML model classifier can be built
 #' using the optimal cutpoint estimated and setting clas.perf = TRUE. Such a ML
-#' model can be used for predictions in futher analyses with function
+#' model can be used for predictions in further analyses with function
 #' \code{\link{predictDIMPclass}}.
 #'
 #' @param LR An object from 'pDMP' class. This object is previously obtained

@@ -20,7 +20,7 @@
 #' four-parameter GGamma ("GGamma4P") is also available. GGamma distribution are
 #' fitted using a modification of Levenberg-Marquardt algorithm implemented in
 #' function 'nls.lm' from the 'minpack.lm' R package. Notice that the fit to
-#' GGamma dsitribution is computationally time consuming (see ?fitGGammaDist for
+#' GGamma distribution is computationally time consuming (see ?fitGGammaDist for
 #' additional information).
 #'
 #' @param LR A list of GRanges objects with information divergence values in

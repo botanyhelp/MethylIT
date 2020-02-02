@@ -8,8 +8,8 @@
 * Improvement of the '_countTest_' function applied for DMG identification. The
   new version was named '_countTest2_'
   
-* Added function'gofReport' search for the best fitted model betweeen the set of
-  models requested by the user. 
+* Added function 'gofReport' search for the best fitted model between the set
+  of models requested by the user.
   
 * The functions using machine-learning algorithms were improved
 

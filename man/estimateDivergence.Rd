@@ -111,24 +111,25 @@ downstream analysis, the probability distribution of a given information
 divergence is used in Methyl-IT as the null hypothesis of the noise
 distribution, which permits, in a further signal detection step, the
 discrimination of the methylation regulatory signal from the background
-noise.\preformatted{For the current version, two information divergences of methylation
-levels are computed by default: 1) Hellinger divergence (\\emph\{H\}) and 2)
-the total variation distance (\\emph\{TVD\}). In the context of methylation
-analysis \\emph\{TVD\} corresponds to the absolute difference of methylation
-levels. Here, although the variable reported is the total variation
-(\\emph\{TV\}), the variable actually used for the downstream analysis is
-\\emph\{TVD\}. Once a differentially methylated position (DMP) is identified
-in the downstream analysis, \\emph\{TV\} is the standard indicator of
-whether the cytosine position is hyper- or hypo-methylated.
+noise.
+
+For the current version, two information divergences of methylation levels
+are computed by default: 1) Hellinger divergence (\emph{H}) and 2) the total
+variation distance (\emph{TVD}). In the context of methylation analysis
+\emph{TVD} corresponds to the absolute difference of methylation levels.
+Here, although the variable reported is the total variation (\emph{TV}), the
+variable actually used for the downstream analysis is \emph{TVD}. Once a
+differentially methylated position (DMP) is identified in the downstream
+analysis, \emph{TV} is the standard indicator of whether the cytosine
+position is hyper- or hypo-methylated.
 
 The option to compute the J-information divergence (JD) is currently
-provided. The motivation to introduce this divergence is given in the
-help of function \code{\link{estimateJDiv}}.
-}
+provided. The motivation to introduce this divergence is given in the help of
+function \code{\link{estimateJDiv}}.
 }
 \details{
 If read counts are provided, then Hellinger divergence is computed
-as given in the first formula from Theorem 1 from reference 1. In the
+as given in the first formula from Theorem 1 from reference (1). In the
 present case:
 
 \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
@@ -143,7 +144,7 @@ According with the above equation, to estimate Hellinger divergence, not only
 the methylation levels are considered in the estimation of H, but also the
 control and treatment coverage at each given cytosine site. At this point, it
 is worthy to do mention that if the reference sample is derived with function
-\code{\link{poolFromGRlist}} using the 'sum' of read counts to conpute a
+\code{\link{poolFromGRlist}} using the 'sum' of read counts to compute a
 methylation pool, then 'min.coverage' parameter value must be used to prevent
 an over estimation of the divergence for low coverage cytosines sites. For
 example, if a reference sample is derived as the methylation pool of read
@@ -157,18 +158,18 @@ divergence is computed as:
 \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) - sqrt(1 - p[2]))^2}
 
 This formula assumes that the probability vectors derived from the
-methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
-'estimateHellingerDiv') are an unbiased estimation of the expected one. The
-function applies a pairwise filtering after building a single GRanges from
-the two GRanges objects. Experimentally available cytosine sites are paired
-using the function 'uniqueGRanges'.
+methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see
+\code{\link{estimateHellingerDiv}} are an unbiased estimation of the expected
+one. The function applies a pairwise filtering after building a single
+GRanges from the two GRanges objects. Experimentally available cytosine sites
+are paired using the function 'uniqueGRanges'.
 
 It is important to observe that several filtering conditions are provided to
 select biological meaningful cytosine positions, which prevent to carry
-experimental errors in the dowstream analyses. By filtering the read count we
-try to remove bad quality data, which would be in the edge of the
-experimental error originated by the BS-seq sequencing. It is responsability
-of the user to check whether cytosine positions used in the analysis are
+experimental errors in the downstream analyses. By filtering the read count
+we try to remove bad quality data, which would be in the edge of the
+experimental error originated by the BS-seq sequencing. It is user
+responsibility to check whether cytosine positions used in the analysis are
 biological meaningful. For example, a cytosine position with counts mC1 = 10
 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 = 0 in an 'indv' sample
 will lead to methylation levels p1 = 0.333 and p2 = 1, respectively, and TV =
@@ -178,7 +179,7 @@ will reveal that this site would be, in fact, hypomethylated. So, the best
 practice will be the removing of sites like that. This particular case is
 removed under the default settings: min.coverage = 4, min.meth = 4, and
 min.umeth = 0 (see example for function \code{\link{uniqueGRfilterByCov}},
-called by estimateDivergence).
+called by 'estimateDivergence').
 }
 \examples{
 ## The read count data are created

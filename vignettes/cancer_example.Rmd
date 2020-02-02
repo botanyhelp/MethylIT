@@ -22,6 +22,9 @@ output:
   rmarkdown::html_document: 
     toc: true
     toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
     number_sections: true
     highlight: tango
     theme: united
@@ -123,7 +126,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-# [Methyl-IT](https://github.com/genomaths/MethylIT)
+# [Methyl-IT](https://github.com/genomaths/MethylIT) {.tabset}
 MethylIT is an R package for methylome analysis based on a signal-detection
 machine learning approach (SD-ML). This approach is postulated to provide
 greater sensitivity for resolving true signal from the methylation background
@@ -161,7 +164,7 @@ Gene Expression Omnibus (GEO DataSets). For the current example, datasets from
 breast tissues (normal and cancer) and embryonic stem cells will be downloaded
 from GEO. The data set are downloaded providing the GEO accession numbers for
 each data set to the function 'getGEOSuppFiles' (see the function
-[getGEOSuppFiles](https://genomaths.github.io/MethylIT_HTML_Manual/getGEOSuppFiles.html)
+[getGEOSuppFiles](https://genomaths.github.io/methylit/reference/getGEOSuppFiles.html)
 help). Some times the ftp site is not available and the information must be
 manually downloaded from GEO database.
 
@@ -231,7 +234,7 @@ methylated and unmethylated read counts, respectively. Notice that option
 'remove = TRUE' remove the decompressed files (default: FALSE, see 
 ?readCounts2GRangesList for more details about this function).
 
-# The reference individual
+## The reference individual
 Any two objects can be compared based on some measured variable if, and only if,
 the measurements where taken in the same metric space, the same coordinate
 system, in respect to the same origin of coordinates. Usually, in our daily 3D
@@ -323,7 +326,7 @@ found, for example, in the silencing mutation at the gene of
 cytosine-DNA-methyltransferase in Arabidopsis *thaliana*. Methylation of
 5-methylcytosine at CpG dinucleotides is maintained by MET1 in plants.
 
-# Hellinger divergence estimation
+## Hellinger divergence estimation
 To perform the comparison between the uncertainty of methylation levels
 from each group of individuals, control $(c)$ and treatment $(t)$, the
 divergence between the  methylation levels of each individual is estimated with
@@ -565,7 +568,7 @@ critical.val
 
 ```
 
-# Nonlinear fit of probability distribution models
+## Nonlinear fit of probability distribution models
 A basic requirement for the application of signal detection is the knowledge of
 the probability distribution of the background noise. Probability distribution,
 as a Weibull distribution model, can be deduced on a statistical
@@ -645,7 +648,7 @@ the best fitted model with scaling parameter values close to zero, say e.g.
 $10^{-8}$, and with the highest GOFs. Situations like this are biologically
 meaningless and the fitted models must be discarded [@Sanchez2016].
 
-# Signal detection
+## Signal detection
 The information thermodynamics-based approach is postulated to provide greater
 sensitivity for resolving true signal from the thermodynamic background within
 the methylome [@Sanchez2016]. Since the biological signal created within the
@@ -905,7 +908,7 @@ cutpoint2$testSetModel.FDR
 
 The good DMP classification performance was kept at lower cutpoint value.
 
-# DMPs
+## DMPs
 Cytosine sites carrying a methylation signal are designated differentially
 informative methylated positions (DMPs). The probability that a DMP is not
 induced by the treatment is given by the probability of false alarm (P_FA, false
@@ -1048,7 +1051,7 @@ performance
 ```
 
 
-# Differentially informative methylated genomic regions (DIMRs)
+## Differentially methylated genomic regions (DMRs)
 Our degree of confidence in whether DMP counts in both groups of samples,
 control and treatment, represent true biological signal was determined in the
 signal detection step. To estimate DIMRs, we followed similar steps to those
@@ -1071,7 +1074,7 @@ gene-body regions between control and treatment.  This permits the extension of
 the concept of DMR by considering a differentially methylated gene as a
 particular case of DMRs.
 
-## _Differentially methylated genes (DMGs)_
+### _Differentially methylated genes (DMGs)_
 We shall call DMGs those DIMRs restricted to gene-body regions. DMGs are
 detected using function [countTest2](https://rdrr.io/github/genomaths/MethylIT/man/countTest2.html).
 
@@ -1185,7 +1188,7 @@ _**BRCA2, a breast cancer associated risk gene, is found between the DMG**s_
 DMGs[ grep( "ENSG00000139618", names(DMGs) ) ]
 ```
 
-# Concluding remarks
+## Concluding remarks
 
 Results fundamentally depend on the use of the proper reference samples. If there is
 not enough control samples to create an independent reference virtual individual, then
@@ -1208,13 +1211,13 @@ the mentioned issue and, in consequence, the level of resolution of Methyl-IT
 approach reach the single cytosine site.
 
 
-# Acknowledgments
+## Acknowledgments
 We thank Professor David J Miller for valuable conversations and suggestions on
 our mathematical modeling.
-# Funding The work was supported by funding from NSF-SBIR
+## Funding The work was supported by funding from NSF-SBIR
 (2015-33610-23428-UNL) and the Bill and Melinda Gates Foundation (OPP1088661).
 
-# S2. Session Information
+## S2. Session Information
 
 ```{r, echo=FALSE}
 sessionInfo()
@@ -1222,5 +1225,5 @@ sessionInfo()
 ```
 
 
-# References. 
+## References. 
 

@@ -17,7 +17,7 @@ methylation levels)}
 }
 
 'PS' is an object from class "pDMP" carrying the same meta-columns as 'HD'
-(dataset) plus the probilities: \eqn{wprob = 1 - Weibull probability}. 'PS'
+(dataset) plus the probabilities: \eqn{wprob = 1 - CDF probability}. 'PS'
 was obtained with function \code{\link{getPotentialDIMP}}.}
 \usage{
 PS
