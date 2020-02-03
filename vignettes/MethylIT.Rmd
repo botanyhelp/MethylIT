@@ -88,11 +88,12 @@ file.remove(temp); rm(temp, url)
 ## The reference sample
 To perform the comparison between the uncertainty of methylation levels from
 each group of individuals, control $(c)$ and treatment $(t)$, we should estimate
-the uncertainty variation with respect to the same individual reference on the
+the uncertainty variation with respect to the same reference individual on the
 mentioned metric space. The reason to measure the uncertainty variation with
 respect to the same reference resides in that even sibling individuals follow an
 independent ontogenetic development and, consequently, their developments follow
-independent stochastic processes.
+independent stochastic processes. The reference individual is estimated with 
+function [poolFromGRlist](https://genomaths.github.io/methylit/reference/poolFromGRlist.html):
 ```{r ref}
 ref <- poolFromGRlist(list(meth_samples$W_3_1, meth_samples$W_3_2, meth_samples$W_3_3),
                       stat = "mean", num.cores = 4L
@@ -120,7 +121,7 @@ ml_hd <- estimateDivergence(ref = ref,
 ml_hd$M_3_1
 ```
 
-Function [estimateDivergence](https://genomaths.github.io/MethylIT_HTML_Manual/estimateDivergence.html) returns a list of GRanges objects with the four 
+Function [estimateDivergence](https://genomaths.github.io/methylit/reference/estimateDivergence.html) returns a list of GRanges objects with the four 
 columns of counts, the information divergence, and additional columns: 
 
   1. The original matrix of methylated ($c_i$) and unmethylated ($t_i$) read
@@ -157,7 +158,7 @@ critical.val
 ```
 
 ### Quality checking of the coverage
-After the raw data filtering introduced with [estimateDivergence](https://genomaths.github.io/MethylIT_HTML_Manual/estimateDivergence.html) function, some coverage issue could be detected.  
+After the raw data filtering introduced with [estimateDivergence](https://genomaths.github.io/methylit/reference/estimateDivergence.html) function, some coverage issue could be detected.  
 
 ```{r cov}
 covr <- lapply(ml_hd, function(x) {
@@ -252,7 +253,7 @@ performance can be evaluated for several variables and applying different model
 classifiers. A optimal cutpoint distinguishes disease stages from healthy
 individual. The performance of this classification is given in the output of
 function
-[estimateCutPoint](https://genomaths.github.io/MethylIT_HTML_Manual/estimateCutPoint.html).
+[estimateCutPoint](https://genomaths.github.io/methylit/reference/estimateCutPoint.html).
 
 A model classifier can be requested for further predictions and its
 classification performance is also provided. Below, the selected model
@@ -292,7 +293,7 @@ cutpoint$testSetModel.FDR
 
 
 Differentially methylated positions (DMPs) can be now identified using 
-[selectDIMP](https://rdrr.io/github/genomaths/MethylIT/man/selectDIMP.html) function
+[selectDIMP](https://genomaths.github.io/methylit/reference/selectDIMP.html) function
 
 ```{r dmps}
 dmps <- selectDIMP(ps, div.col = 9, cutpoint = cutpoint$cutpoint)
@@ -305,14 +306,14 @@ Differentially methylated
 genes (DMGs) are estimated from group comparisons for the number of DMPs on
 gene-body regions between control and treatment. 
 
-Function [getDIMPatGenes](https://rdrr.io/github/genomaths/MethylIT/man/getDIMPatGenes.html)
+Function [getDIMPatGenes](https://genomaths.github.io/methylit/reference/getDIMPatGenes.html)
 is used to count the number of DMPs at gene-body. Nevertheless, it can be used
 for any arbitrary specified genomic region as well. The operation of this
 function is based on the '*findOverlaps*' function from the '*GenomicRanges*'
 Bioconductor R package. The '*findOverlaps*' function has several critical
 parameters like, for example, '*maxgap*', '*minoverlap*', and '*ignore.strand*'.
 In our function
-[getDIMPatGenes](https://genomaths.github.io/MethylIT_HTML_Manual/getDIMPatGenes.html),
+[getDIMPatGenes](https://genomaths.github.io/methylit/reference/getDIMPatGenes.html),
 except for setting ignore.strand = TRUE and *type = "within"*, we preserve the rest of default
 'findOverlaps' parameters. In this case, these are important parameter settings
 because the local mechanical effect of methylation changes on a DNA region
@@ -333,7 +334,7 @@ dmps_at_genes
 
 ### _Setting experiment design_
 
-The experimental design is set with [glmDataSet](https://rdrr.io/github/genomaths/MethylIT/man/glmDataSet.html) 
+The experimental design is set with [glmDataSet](https://genomaths.github.io/methylit/reference/glmDataSet.html) 
 function
 ```{r exper}
 colData <- data.frame(condition = factor(c("WT", "WT", "WT",
@@ -346,7 +347,7 @@ ds <- glmDataSet(GR = dmps_at_genes, colData = colData)
 ```
 
 ### Testing for DMGs
-DMGs are detected using function [countTest2](https://rdrr.io/github/genomaths/MethylIT/man/countTest2.html).
+DMGs are detected using function [countTest2](https://genomaths.github.io/methylit/reference/countTest2.html).
 ```{r }
 dmgs <- countTest2(DS = ds, num.cores = 4L,
                    tasks = 2L,

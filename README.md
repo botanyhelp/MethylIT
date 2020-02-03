@@ -102,10 +102,14 @@ Flow diagram
 
 <img src="man/figures/workflow.png" align="center" />
 
+Get Started
+-----------
+[Fast starting here](https://genomaths.github.io/methylit/articles/MethylIT.html)
+
 Some simple examples
 --------
 
-[<img src="man/figures/cancer_example.png" />](https://genomaths.github.io/CancerExample/cancer_example_html_01-23-20.html)
+[<img src="man/figures/cancer_example.png" />](https://genomaths.github.io/methylit/articles/cancer_example.html)
 
 [An example with simulated datasets](https://genomaths.github.io/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.   
 

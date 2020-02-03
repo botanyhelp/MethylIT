@@ -183,7 +183,7 @@ The file path and name of each downloaded dataset is found in the output
 variables 'esc.files' and 'cancer.files'.
 
 ## _Reading datasets_
-Datasets for our example can be read with function [readCounts2GRangesList](https://genomaths.github.io/MethylIT_HTML_Manual/readCounts2GRangesList.html).
+Datasets for our example can be read with function [readCounts2GRangesList](https://genomaths.github.io/methylit/reference/readCounts2GRangesList.html).
 To specify the reading of only chromosome 13, we can specify the parameter
 'chromosomes = "Chr13"'. The symbol chromosome 13, in this case "Chr13", must
 be consistent with the annotation provided in the given GEO dataset. Each file
@@ -269,7 +269,7 @@ cells.
 It should be noticed that the results are sensitive to the reference used. The
 statistics mean, median, or sum of the read counts at each cytosine site of
 some control samples can be used to create a virtual reference sample. A virtual 
-reference individual can be built with function [poolFromGRlist](https://genomaths.github.io/MethylIT_HTML_Manual/poolFromGRlist.html).
+reference individual can be built with function [poolFromGRlist](https://genomaths.github.io/methylit/reference/poolFromGRlist.html).
 It is up to the user whether to apply the 'row sum', 'row mean' or 'row median' of
 methylated and unmethylated read counts at each cytosine site across
 individuals. Notice that when "*mean*" is selected the virtual reference individual
@@ -357,7 +357,7 @@ conjugate of binomial distribution). We consider the parameter $p$ (methylation
 level) in the binomial distribution as randomly drawn from a beta distribution.
 The hyper-parameters $\alpha$ and $\beta$ from the beta-binomial distribution
 are interpreted as pseudo-counts. The information divergence is estimated here
-using the function [estimateDivergence](https://genomaths.github.io/MethylIT_HTML_Manual/estimateDivergence.html):
+using the function [estimateDivergence](https://genomaths.github.io/methylit/reference/estimateDivergence.html):
 
 ```{r HD, include = TRUE}
 HD = estimateDivergence(ref = Ref, indiv = LR, Bayesian = TRUE,  
@@ -414,7 +414,7 @@ metastasis = HD$Breast_metastasis[, "hdiv"]
 ```
 
 Next, a single GRanges object is built from the above set of GRanges objects
-using the function [uniqueGRanges](https://genomaths.github.io/MethylIT_HTML_Manual/uniqueGRanges.html). 
+using the function [uniqueGRanges](https://genomaths.github.io/methylit/reference/uniqueGRanges.html). 
 Notice that the number of cores to use for parallel computation can be specified.
 ```{r hd4graphic, include = TRUE}
 hd = uniqueGRanges(list(normal, normal1, cancer, metastasis), missing = NA,
@@ -494,7 +494,7 @@ must be studied before being incorporated in a future version of Methyl-IT.
 ### _Checking cytosine read counts_
 
 According to the parameter values set for the function 
-[estimateDivergence](https://rdrr.io/github/genomaths/MethylIT/man/estimateDivergence.html),
+[estimateDivergence](https://genomaths.github.io/methylit/reference/estimateDivergence.html),
 for each cytosine site, at least one individual must have a 10 reads or more, and the 
 maximum coverage must be 500 or less.
 ```{r coverage}
@@ -582,7 +582,7 @@ induced by background thermal fluctuations will follow a Weibull distribution
 model, provided that it is proportional to the minimum energy dissipated per
 bit of information associated with the methylation change. The nonlinear fit to
 a Weibull distribution model is performed by the function
-[nonlinearFitDist](https://rdrr.io/github/genomaths/MethylIT/man/nonlinearFitDist.html).
+[nonlinearFitDist](https://genomaths.github.io/methylit/reference/nonlinearFitDist.html).
 
 In general, an information divergence of methylation levels will follow a
 probability distribution from the family of generalized gamma distribution.
@@ -605,7 +605,7 @@ cross-validation predictive power [@Stevens2009].
 In general, the best fitted model yields the best DMP classification performance
 (see below). However, on special dataset, as the used in the current example.
 Function
-[gofReport](https://rdrr.io/github/genomaths/MethylIT/man/gofReport.html) search
+[gofReport](https://genomaths.github.io/methylit/reference/gofReport.html) search
 for the best fitted model between the set of models requested by the user.
 
 The best model including "GGamma3P" model:
@@ -675,7 +675,7 @@ $|TV_{d_k}| < 0.1$ are the most abundant sites, depending on the sample
 $|TV_{d_k}| < 0.1$ can be observed. To prevent the last situation we can select the
 $PS$ with the additional constraint $|TV_{d_k}| > TV_0$, where $TV_0$ ('tv.cut') is
 a user specified value. The $PS$ is detected with the function 
-[getPotentialDIMP](https://rdrr.io/github/genomaths/MethylIT/man/getPotentialDIMP.html):
+[getPotentialDIMP](https://genomaths.github.io/methylit/reference/getPotentialDIMP.html):
 
 ```{r getPotentialDIMP}
 PS1 = getPotentialDIMP(LR = HD, dist.name = gof_1$bestModel, nlms = gof_1$nlms,
@@ -705,7 +705,7 @@ in $H(\hat p_{ij},\hat p_{ir})$.
 
 ## _Histogram and boxplots of methylation potential signals_
 As before, a single GRanges object is built from the above set GRanges objects
-using the function [uniqueGRanges](https://genomaths.github.io/MethylIT_HTML_Manual/uniqueGRanges.html),
+using the function [uniqueGRanges](https://genomaths.github.io/methylit/reference/uniqueGRanges.html),
 and the Hellinger divergences of the cytosine sites carrying $PS$ (for each
 sample) are located in a single matrix on the metacolumn of the GRanges object.
 
@@ -822,7 +822,7 @@ performance can be evaluated for several variables and applying different model
 classifiers. A optimal cutpoint distinguishes disease stages from healthy
 individual. The performance of this classification is given in the output of
 function
-[estimateCutPoint](https://genomaths.github.io/MethylIT_HTML_Manual/estimateCutPoint.html).
+[estimateCutPoint](https://genomaths.github.io/methylit/reference/estimateCutPoint.html).
 A model classifier can be requested for further predictions and its
 classification performance is also provided. Below, the selected model
 classifier is a quadratic discriminant analysis (QDA) (*classifier1* = "qda",
@@ -928,7 +928,7 @@ hypo-methylated in the _*treatment population*_. Observe that it does not mean
 that, for all arbitrary subset of samples, the assumed cytosine position will be
 hypermethylated.
 
-DMPs are selected with the function [selectDIMP](https://genomaths.github.io/MethylIT_HTML_Manual/selectDIMP.html)
+DMPs are selected with the function [selectDIMP](https://genomaths.github.io/methylit/reference/selectDIMP.html)
 ```{r DMPs}
 DMPs = selectDIMP(PS2, div.col = 8, cutpoint = cutpoint2$cutpoint)
 
@@ -1028,8 +1028,8 @@ Therefore, we expect to see methylation signal in natural, ordinary conditions.
 Function 'evaluateDIMPclass' can be used to perform a classification of DMPs
 into two classes: DMPS from control and DMPs from treatment samples, as well
 as an evaluation of the classification performance (for more details see
-[evaluateDIMPclass](https://rdrr.io/github/genomaths/MethylIT/man/evaluateDIMPclass.html)). 
-As a matter of fact this function is called by function [estimateCutPoint](https://genomaths.github.io/MethylIT_HTML_Manual/estimateCutPoint.html).
+[evaluateDIMPclass](https://genomaths.github.io/methylit/reference/evaluateDIMPclass.html)). 
+As a matter of fact this function is called by function [estimateCutPoint](https://genomaths.github.io/methylit/reference/estimateCutPoint.html).
 Additional feature not used before is the possibility to perform Monte Carlo evaluation 
 of the model classifier performance. In above split of the sample into two subsets, 
 training and test datasets, we would be just lucky getting the right proportion 
@@ -1076,7 +1076,7 @@ particular case of DMRs.
 
 ### _Differentially methylated genes (DMGs)_
 We shall call DMGs those DIMRs restricted to gene-body regions. DMGs are
-detected using function [countTest2](https://rdrr.io/github/genomaths/MethylIT/man/countTest2.html).
+detected using function [countTest2](https://genomaths.github.io/methylit/reference/countTest2.html).
 
 Gene annotation is taken from [Ensembl](https://www.ensembl.org/) 
 ```{r AG, eval = FALSE}
@@ -1101,14 +1101,14 @@ seqlevels(genes) <- "chr13"
 genes
 ```
 
-Function [getDIMPatGenes](https://rdrr.io/github/genomaths/MethylIT/man/getDIMPatGenes.html)
+Function [getDIMPatGenes](https://genomaths.github.io/methylit/reference/getDIMPatGenes.html)
 is used to count the number of DMPs at gene-body. Nevertheless, it can be used
 for any arbitrary specified genomic region as well. The operation of this
 function is based on the '*findOverlaps*' function from the '*GenomicRanges*'
 Bioconductor R package. The '*findOverlaps*' function has several critical
 parameters like, for example, '*maxgap*', '*minoverlap*', and '*ignore.strand*'.
 In our function
-[getDIMPatGenes](https://genomaths.github.io/MethylIT_HTML_Manual/getDIMPatGenes.html),
+[getDIMPatGenes](https://genomaths.github.io/methylit/reference/getDIMPatGenes.html),
 except for setting ignore.strand = TRUE and *type = "within"*, we preserve the rest of default
 'findOverlaps' parameters. In this case, these are important parameter settings
 because the local mechanical effect of methylation changes on a DNA region
@@ -1153,7 +1153,7 @@ names( Genes.DMPs ) <- GeneID$gene_id
 Genes.DMPs
 ```
 
-Now, we build a [glmDataSet](https://rdrr.io/github/genomaths/MethylIT/man/glmDataSet.html) 
+Now, we build a [glmDataSet](https://genomaths.github.io/methylit/reference/glmDataSet.html) 
 object.  
 ```{r glmDataSet}
 ## An experiment design is set.
@@ -1166,7 +1166,7 @@ colData <- data.frame(condition = factor(c("BN","BN","BC","BC"),
 ds <- glmDataSet(GR = Genes.DMPs, colData = colData)
 ```
 
-DMG analysis is performed with the function [countTest2](https://rdrr.io/github/genomaths/MethylIT/man/countTest2.html)
+DMG analysis is performed with the function [countTest2](https://genomaths.github.io/methylit/reference/countTest2.html)
 ```{r countTest}
 DMGs = countTest2(DS = ds, num.cores = 4L, minCountPerIndv = 8, 
                   countFilter = TRUE, maxGrpCV = c(1, 1),
@@ -1193,7 +1193,7 @@ DMGs[ grep( "ENSG00000139618", names(DMGs) ) ]
 Results fundamentally depend on the use of the proper reference samples. If there is
 not enough control samples to create an independent reference virtual individual, then
 the centroid from the control group can be used instead, which can be built with function 
-[poolFromGRlist](https://rdrr.io/github/genomaths/MethylIT/man/poolFromGRlist.html).
+[poolFromGRlist](https://genomaths.github.io/methylit/reference/poolFromGRlist.html).
 
 The *reference* is used to put individuals from control and patients in the same
 *system of reference*. The information divergences of methylation levels with
