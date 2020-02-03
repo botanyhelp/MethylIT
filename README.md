@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-Methyl-IT <img src="man/figures/logo.png" align="right" />
+Methyl-IT [<img src="man/figures/logo.png" align="right" />](https://genomaths.github.io/methylit)
 ==========================================================
 
 <br>
