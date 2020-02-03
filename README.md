@@ -125,7 +125,7 @@ MethylIT Package Manual:
 <a href="https://github.com/genomaths/MethylIT/blob/master/MethylIT.pdf" target="_blank">MethylIT PDF manual</a>
 
 
-<a href="https://genomaths.github.io/MethylIT_HTML_Manual/MethylIT_Manual.html" target="_blank">MethylIT browser manual</a>
+<a href="https://genomaths.github.io/methylit/reference/index.html" target="_blank">MethylIT browser manual</a>
 
 --------
 
