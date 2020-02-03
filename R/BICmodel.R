@@ -38,6 +38,7 @@
 #'
 #' @importFrom stats resid coef
 #'
+#' @keywords internal
 #' @export
 BICmodel <- function(model=NULL, residuals=NULL, np=NULL) {
    if (is.null(model) && is.null(residuals)) {

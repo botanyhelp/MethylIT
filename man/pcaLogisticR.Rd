@@ -24,19 +24,19 @@ pcaLogisticR(
 )
 }
 \arguments{
-\item{formula}{Same as in 'glm' from pakage 'stats'.}
+\item{formula}{Same as in 'glm' from package 'stats'.}
 
-\item{data}{Same as in 'glm' from pakage 'stats'.}
+\item{data}{Same as in 'glm' from package 'stats'.}
 
 \item{n.pc}{Number of principal components to use in the logistic.}
 
-\item{scale}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{scale}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{center}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{center}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{tol}{Same as in 'prcomp' from pakage 'prcomp'.}
+\item{tol}{Same as in 'prcomp' from package 'prcomp'.}
 
-\item{max.pc}{Same as in paramter 'rank.' from pakage 'prcomp'.}
+\item{max.pc}{Same as in parameter 'rank.' from package 'prcomp'.}
 
 \item{object}{To use with function 'predict'. A 'pcaLogisticR' object
 containing a list of two objects: 1) an object of class inheriting from

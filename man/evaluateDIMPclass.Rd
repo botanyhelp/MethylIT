@@ -44,8 +44,8 @@ probability of potential DMP "wprob", and the relative cytosine site
 position "pos" in respect to the chromosome where it is located. The
 relative position is estimated as (x - x.min)/(x.max - x), where x.min
 and x.max are the maximum and minimum for the corresponding chromosome,
-repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will be
-used as predictor in place of "wprob".}
+respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+be used as predictor in place of "wprob".}
 
 \item{classifier}{Classification model to use. Option "logistic" applies a
 logistic regression model; option "lda" applies a Linear Discriminant
@@ -86,7 +86,7 @@ testing.}
 \item{num.boot}{Number of bootstrap validations to perform in the evaluation
 of the logistic regression: group versus divergence (at DMPs).}
 
-\item{num.cores, tasks}{Paramaters for parallele computation using package
+\item{num.cores, tasks}{Parameters for parallel computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
@@ -97,19 +97,18 @@ use, i.e. at most how many child processes will be run simultaneously
 \item{verbose}{if TRUE, prints the function log to stdout}
 }
 \value{
-output = "conf.mat" will perform a logistic regression group versus
-divergence (at DMPs) to evaluate the discrimination between
-control-DMPs and treatment-DMPs. The evaluation of this classification
-is provided through the function 'confusionMatrix' from R package
-'caret'. "mc.val" will perform a 'num.boot'-times Monte Carlo
-(bootstrap) validation and return a summary. By default function
-'confusionMatrix' from R package caret' randomly splits the sample into
-two subsets, training and testing, according to the supplied proportion
-'prop' (i.e., prop = 0.6). After selecting output = "mc.val", the
-function 'confusionMatrix' will be executed 'num.boot'-times, each time
-performing a different random split of the sample. "boot.all" same as
-"mc.val" plus a matrix with statistcs reported by 'confusionMatrix'.
-"all" return a list with all the mentioned outputs.
+Setting output = "conf.mat" will perform a logistic regression group
+versus divergence (at DMPs) to evaluate the discrimination between
+control-DMPs and treatment-DMPs. The evaluation of this classification is
+provided through the function 'confusionMatrix' from R package 'caret'.
+"mc.val" will perform a 'num.boot'-times Monte Carlo (bootstrap) validation
+and return a summary. By default function 'confusionMatrix' from R package
+caret' randomly splits the sample into two subsets, training and testing,
+according to the supplied proportion 'prop' (i.e., prop = 0.6). After
+selecting output = "mc.val", the function 'confusionMatrix' will be executed
+'num.boot'-times, each time performing a different random split of the
+sample. "boot.all" same as "mc.val" plus a matrix with statistcs reported by
+'confusionMatrix'. "all" return a list with all the mentioned outputs.
 }
 \description{
 For a given cutpoint (previously estimated with the function
@@ -119,23 +118,22 @@ from treatment samples.
 }
 \details{
 The regulatory methylation signal is also an output from a natural
-process that continuously takes place across the ontogenetic development
-of the organisms. So, we expect to see methylation signal on natural
-ordinary conditions. Here, to distinguish a control methylation signal
-from a treatment, three classification models are provided: 1) logistic,
-2) Linear Discriminant Analysis (LDA) and 3) Quadratic Discriminant
-Analysis (QDA). In particular, four predictor variables can be used:
-Hellinger divergence "hdiv", total variation "TV", probability of
-potential DMP "wprob" and DMP genomic coordinated "pos". Principal
-component analysis (PCA) is used to convert a set of observations of
-possibly correlated predictor variables into a set of values of linearly
-uncorrelated variables (principal components, PCs). The PCs are used as
-new, uncorrelated predictor variables for LDA, QDA, and logistic
-classifiers.\preformatted{A classification result with low accuracy and compromising values from
-other classification performance indicators (see below) suggest that the
-treatment does not induce a significant regulatory signal different
-from control.
-}
+process that continuously takes place across the ontogenetic development of
+the organisms. So, we expect to see methylation signal on natural ordinary
+conditions. Here, to distinguish a control methylation signal from a
+treatment, three classification models are provided: 1) logistic, 2) Linear
+Discriminant Analysis (LDA) and 3) Quadratic Discriminant Analysis (QDA). In
+particular, four predictor variables can be used: Hellinger divergence
+"hdiv", total variation "TV", probability of potential DMP "wprob" and DMP
+genomic coordinated "pos". Principal component analysis (PCA) is used to
+convert a set of observations of possibly correlated predictor variables into
+a set of values of linearly uncorrelated variables (principal components,
+PCs). The PCs are used as new, uncorrelated predictor variables for LDA, QDA,
+and logistic classifiers.
+
+A classification result with low accuracy and compromising values from other
+classification performance indicators (see below) suggest that the treatment
+does not induce a significant regulatory signal different from control.
 }
 \examples{
 data(cutpoint, PS, package = "MethylIT")

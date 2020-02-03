@@ -8,10 +8,10 @@ glmDataSet(GR = NULL, counts = NULL, colData = NULL)
 }
 \arguments{
 \item{GR}{A GRanges object with the count matrix of DMPs in the metacolumns
-(see \emph{'counts'}). If provided, then leave paramater
+(see \emph{'counts'}). If provided, then leave parameter
 \emph{'counts = NULL'}.}
 
-\item{counts}{Count matrix of DMPs with minimal dimmensions 1 (row) x 4
+\item{counts}{Count matrix of DMPs with minimal dimensions 1 (row) x 4
 (columns). Column names must corresponds to the rownames from parameter
 'colData'.}
 

@@ -2,83 +2,80 @@
 #'
 #' @title Information Divergences of Methylation Levels
 #' @description This function prepares the data for the estimation of
-#'     information divergences and works as a wrapper calling the functions that
-#'     compute selected information divergences of methylation levels. In the
-#'     downstream analysis, the probability distribution of a given information
-#'     divergence is used in Methyl-IT as the null hypothesis of the noise
-#'     distribution, which permits, in a further signal detection step, the
-#'     discrimination of the methylation regulatory signal from the background
-#'     noise.
+#' information divergences and works as a wrapper calling the functions that
+#' compute selected information divergences of methylation levels. In the
+#' downstream analysis, the probability distribution of a given information
+#' divergence is used in Methyl-IT as the null hypothesis of the noise
+#' distribution, which permits, in a further signal detection step, the
+#' discrimination of the methylation regulatory signal from the background
+#' noise.
 #'
-#'     For the current version, two information divergences of methylation
-#'     levels are computed by default: 1) Hellinger divergence (\emph{H}) and 2)
-#'     the total variation distance (\emph{TVD}). In the context of methylation
-#'     analysis \emph{TVD} corresponds to the absolute difference of methylation
-#'     levels. Here, although the variable reported is the total variation
-#'     (\emph{TV}), the variable actually used for the downstream analysis is
-#'     \emph{TVD}. Once a differentially methylated position (DMP) is identified
-#'     in the downstream analysis, \emph{TV} is the standard indicator of
-#'     whether the cytosine position is hyper- or hypo-methylated.
+#' For the current version, two information divergences of methylation levels
+#' are computed by default: 1) Hellinger divergence (\emph{H}) and 2) the total
+#' variation distance (\emph{TVD}). In the context of methylation analysis
+#' \emph{TVD} corresponds to the absolute difference of methylation levels.
+#' Here, although the variable reported is the total variation (\emph{TV}), the
+#' variable actually used for the downstream analysis is \emph{TVD}. Once a
+#' differentially methylated position (DMP) is identified in the downstream
+#' analysis, \emph{TV} is the standard indicator of whether the cytosine
+#' position is hyper- or hypo-methylated.
 #'
-#'     The option to compute the J-information divergence (JD) is currently
-#'     provided. The motivation to introduce this divergence is given in the
-#'     help of function \code{\link{estimateJDiv}}.
+#' The option to compute the J-information divergence (JD) is currently
+#' provided. The motivation to introduce this divergence is given in the help of
+#' function \code{\link{estimateJDiv}}.
 #'
 #' @details If read counts are provided, then Hellinger divergence is computed
-#'     as given in the first formula from Theorem 1 from reference 1. In the
-#'     present case:
+#' as given in the first formula from Theorem 1 from reference (1). In the
+#' present case:
 #'
-#'     \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
+#' \deqn{H = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 +
 #'          (sqrt(1-p[1]) - sqrt(1-p[2]))^2)/(n[1] + n[2] + 2)}
 #'
-#'     where n[1] and n[2] are the coverage for the control and treatment,
-#'     respectively. Notice that each row from the matrix of counts correspond
-#'     to a single cytosine position and has four values corresponding to "mC1"
-#'     and "uC1" (control), and mC2" and "uC2" for treatment.
+#' where \eqn{n[1]} and \eqn{n[2]} are the coverage for the control and
+#' treatment, respectively. Notice that each row from the matrix of counts
+#' correspond to a single cytosine position and has four values corresponding to
+#' "mC1" and "uC1" (control), and mC2" and "uC2" for treatment.
 #'
-#'     According with the above equation, to estimate Hellinger divergence, not
-#'     only the methylation levels are considered in the estimation of H,
-#'     but also the control and treatment coverage at each given cytosine site.
-#'     At this point, it is worthy to do mention that if the reference sample is
-#'     derived with function \code{\link{poolFromGRlist}} using the 'sum' of
-#'     read counts to conpute a methylation pool, then 'min.coverage' parameter
-#'     value must be used to prevent an over estimation of the divergence for
-#'     low coverage cytosines sites. For example, if a reference sample is
-#'     derived as the methylation pool of read count sum from 3 individuals and
-#'     we want to consider only methylation sites with minimum coverage of 4,
-#'     then we can set min.coverage = c(12, 4), where the number 12 (3 x 4) is
-#'     the minimum coverage requested for the each cytosine site in the
-#'     reference sample.
+#' According with the above equation, to estimate Hellinger divergence, not only
+#' the methylation levels are considered in the estimation of H, but also the
+#' control and treatment coverage at each given cytosine site. At this point, it
+#' is worthy to do mention that if the reference sample is derived with function
+#' \code{\link{poolFromGRlist}} using the 'sum' of read counts to compute a
+#' methylation pool, then 'min.coverage' parameter value must be used to prevent
+#' an over estimation of the divergence for low coverage cytosines sites. For
+#' example, if a reference sample is derived as the methylation pool of read
+#' count sum from 3 individuals and we want to consider only methylation sites
+#' with minimum coverage of 4, then we can set min.coverage = c(12, 4), where
+#' the number 12 (3 x 4) is the minimum coverage requested for the each cytosine
+#' site in the reference sample.
 #'
-#'     If the methylation levels are provided in place of counts, then the
-#'     Hellinger divergence is computed as:
-#'     \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) -
-#'           sqrt(1 - p[2]))^2}
+#' If the methylation levels are provided in place of counts, then the Hellinger
+#' divergence is computed as:
+#' \deqn{H = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 - p[1]) - sqrt(1 - p[2]))^2}
 #'
-#'     This formula assumes that the probability vectors derived from the
-#'     methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
-#'     'estimateHellingerDiv') are an unbiased estimation of the expected one.
-#'     The function applies a pairwise filtering after building a single GRanges
-#'     from the two GRanges objects. Experimentally available cytosine sites are
-#'     paired using the function 'uniqueGRanges'.
+#' This formula assumes that the probability vectors derived from the
+#' methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see
+#' \code{\link{estimateHellingerDiv}} are an unbiased estimation of the expected
+#' one. The function applies a pairwise filtering after building a single
+#' GRanges from the two GRanges objects. Experimentally available cytosine sites
+#' are paired using the function 'uniqueGRanges'.
 #'
-#'     It is important to observe that several filtering conditions are provided
-#'     to select biological meaningful cytosine positions, which prevent to
-#'     carry experimental errors in the dowstream analyses. By filtering the
-#'     read count we try to remove bad quality data, which would be in the edge
-#'     of the experimental error originated by the BS-seq sequencing. It is
-#'     responsability of the user to check whether cytosine positions used in
-#'     the analysis are biological meaningful. For example, a cytosine position
-#'     with counts mC1 = 10 and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 =
-#'     0 in an 'indv' sample will lead to methylation levels p1 = 0.333 and p2 =
-#'     1, respectively, and TV = p2 - p1 = 0.667, which apparently indicates a
-#'     hypermethylated site. However, there are not enough reads supporting p2 =
-#'     1. A Bayesian estimation of TV will reveal that this site would be, in
-#'     fact, hypomethylated. So, the best practice will be the removing of sites
-#'     like that. This particular case is removed under the default settings:
-#'     min.coverage = 4, min.meth = 4, and min.umeth = 0 (see example for
-#'     function \code{\link{uniqueGRfilterByCov}}, called by
-#'     estimateDivergence).
+#' It is important to observe that several filtering conditions are provided to
+#' select biological meaningful cytosine positions, which prevent to carry
+#' experimental errors in the downstream analyses. By filtering the read count
+#' we try to remove bad quality data, which would be in the edge of the
+#' experimental error originated by the BS-seq sequencing. It is user
+#' responsibility to check whether cytosine positions used in the analysis are
+#' biological meaningful. For example, a cytosine position with counts mC1 = 10
+#' and uC1 = 20 in the 'ref' sample and mC2 = 1 & uC2 = 0 in an 'indv' sample
+#' will lead to methylation levels p1 = 0.333 and p2 = 1, respectively, and TV =
+#' p2 - p1 = 0.667, which apparently indicates a hypermethylated site. However,
+#' there are not enough reads supporting p2 = 1. A Bayesian estimation of TV
+#' will reveal that this site would be, in fact, hypomethylated. So, the best
+#' practice will be the removing of sites like that. This particular case is
+#' removed under the default settings: min.coverage = 4, min.meth = 4, and
+#' min.umeth = 0 (see example for function \code{\link{uniqueGRfilterByCov}},
+#' called by 'estimateDivergence').
 #'
 #' @param ref The GRanges object of the reference individual that will be used
 #'     in the estimation of the information divergence.
@@ -95,7 +92,7 @@
 #' @param min.coverage An integer or an integer vector of length 2. Cytosine
 #'     sites where the coverage in both samples, 'x' and 'y', are less than
 #'     'min.coverage' are discarded. The cytosine site is preserved, however, if
-#'     the coverage is greater than 'min.coverage'in at least one sample. If
+#'     the coverage is greater than 'min.coverage' in at least one sample. If
 #'     'min.coverage' is an integer vector, then the corresponding min coverage
 #'     is applied to each sample.
 #' @param min.meth An integer or an integer vector of length 2. Cytosine sites
@@ -103,9 +100,10 @@
 #'     '1' and '2', are less than 'min.meth' are discarded. If 'min.meth' is an
 #'     integer vector, then the corresponding min number of reads is applied to
 #'     each sample. Default is min.meth = 4.
-#' @param min.umeth An integer or an integer vector of length 2. Min number of
+#' @param min.umeth An integer or an integer vector of length 2
+#'     (\eqn{min.umeth = c(min.umeth1, min.umeth2)}). Min number of
 #'     reads to consider cytosine position. Specifically cytosine positions
-#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth[1]) hold will be
+#'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
 #' @param high.coverage An integer for read counts. Cytosine sites having
@@ -127,14 +125,14 @@
 #'@param meth.level Logic. Whether methylation levels are given in place of
 #'     counts. Default is FALSE.
 #' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
-#'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
-#'     natural logarithm.
+#'     Logarithm base 2 is used as default (bit unit). Use
+#'     logbase = \eqn{exp(1)} for natural logarithm.
 #' @param verbose if TRUE, prints the function log to stdout
 #' @param ... Additional parameters for 'uniqueGRanges' function.
 #'
 #' @return An object from "infDiv" class with the four columns of counts, the
 #'     information divergence, and additional columns: 1) The original matrix
-#'     of methylated (c_i) and unmathylated (t_i) read counts from control
+#'     of methylated (c_i) and unmethylated (t_i) read counts from control
 #'     (i=1) and treatment (i=2) samples. 2) p1" and "p2": methylation levels
 #'     for control and treatment, respectively. 3) "bay.TV": total variation
 #'     TV = p2 - p1. 4) "TV": total variation based on simple counts:

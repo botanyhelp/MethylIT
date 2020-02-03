@@ -12,12 +12,13 @@ following variables:
 \item{TV}{the total variation distance (difference of
 methylation levels)}
 \item{hdiv}{Hellinger divergence}
-\\item{wprob}{the probilities: \eqn{wprob = 1 - Weibull probability}}
-}\preformatted{'PS' is an object from class "pDMP" carrying the same meta-columns as
-'HD' (dataset) plus the probilities: \eqn{wprob = 1 - Weibull
-    probability}. 'PS' was obtained with function
-\code{\link{getPotentialDIMP}}.
-}}
+\item{wprob}{the probabilities:
+\eqn{wprob = 1 - CDF probability}}
+}
+
+'PS' is an object from class "pDMP" carrying the same meta-columns as 'HD'
+(dataset) plus the probabilities: \eqn{wprob = 1 - CDF probability}. 'PS'
+was obtained with function \code{\link{getPotentialDIMP}}.}
 \usage{
 PS
 }

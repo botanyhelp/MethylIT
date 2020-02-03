@@ -38,3 +38,4 @@ grl <- list("gr1" = gr1, "gr2" = gr2, "gr3" = gr3)
 base::unlist(grl) # The default unlist does not work
 unlist(grl)
 }
+\keyword{internal}

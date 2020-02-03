@@ -25,8 +25,8 @@ pool)}
 "median", row "sum", or Jacknife row mean ("jackmean") of methylated and
 unmethylated read counts across individuals. Notice that, for only two
 samples, "jackmean" makes not sense. Since the centrality statistics are
-sensitive to extreme values, stat = 'sum' is an atractive option.
-However, in this last case, a further correction for the minimun coverage
+sensitive to extreme values, stat = 'sum' is an attractive option.
+However, in this last case, a further correction for the minimum coverage
 for the reference sample must be taken into account in a furhter
 estimation of the Hellinger divergence of methylation levels, which is
 explained in the detail section from the help of function

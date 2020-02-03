@@ -8,38 +8,37 @@
 #'     (given the metacolumns), the function estimates the cutpoints of the
 #'     control group versus treatment group.
 #' @details The function performs an estimation of the optimal cutpoint for the
-#'     classification of the differentially methylated (cytosines) positions
-#'     into two classes: DMPs from control and DMPs from treatment. The simplest
-#'     approach to estimate the cutpoint is based on the application of Youden
-#'     Index. More complexes approach based in several machine learning model
-#'     are provided as well.
+#' classification of the differentially methylated (cytosines) positions into
+#' two classes: DMPs from control and DMPs from treatment. The simplest approach
+#' to estimate the cutpoint is based on the application of Youden Index. More
+#' complexes approach based in several machine learning model are provided as
+#' well.
 #'
-#'     Results of the classification performance resulting from the estimated
-#'     cutpoint are normally given, with the exception of those extreme
-#'     situations where the statistics to evaluate performance cannot be
-#'     estimated. More than one classifier model can be applied. For example,
-#'     one classifier (logistic model) can be used to estimate the posterior
-#'     classification probabilities of DMP into those from control and those
-#'     from treatment. These probabilities are then used to estimate the
-#'     cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
-#'     classifier can be used to evaluate the classification performance.
-#'     Different classifier models would yield different performances. Models
-#'     are returned and can be used in further prediction with new datasets from
-#'     the same batch experiment. This is a machine learning approach to
-#'     discriminate the biological regulatory signal naturally generated in the
-#'     control from that one induced by the treatment.
+#' Results of the classification performance resulting from the estimated
+#' cutpoint are normally given, with the exception of those extreme situations
+#' where the statistics to evaluate performance cannot be estimated. More than
+#' one classifier model can be applied. For example, one classifier (logistic
+#' model) can be used to estimate the posterior classification probabilities of
+#' DMP into those from control and those from treatment. These probabilities are
+#' then used to estimate the cutpoint in range of values from, say, 0.5 to 0.8.
+#' Next, a different classifier can be used to evaluate the classification
+#' performance. Different classifier models would yield different performances.
+#' Models are returned and can be used in further prediction with new datasets
+#' from the same batch experiment. This is a machine learning approach to
+#' discriminate the biological regulatory signal naturally generated in the
+#' control from that one induced by the treatment.
 #'
-#'     Notice that the estimation of an optimal cutpoint based on the
-#'     application Youden Index (simple = TRUE) only uses the information
-#'     provided by the selected information divergence. As a result,
-#'     classification results based only in one variable can be poor or can
-#'     fail. However, option simple = FALSE, uses the information from several
-#'     variables following a machine-learnig (ML) approach.
+#' Notice that the estimation of an optimal cutpoint based on the application
+#' Youden Index (simple = TRUE) only uses the information provided by the
+#' selected information divergence. As a result, classification results based
+#' only in one variable can be poor or can fail. However, option simple = FALSE,
+#' uses the information from several variables following a machine-learning (ML)
+#' approach.
 #'
-#'     Nevertheless, when simple = TRUE, still a ML model classifier can
-#'     be built using the optimal cutpoint estimated and setting
-#'     clas.perf = TRUE. Such a ML model can be used for predictions in futher
-#'     analyses with function \code{\link{predictDIMPclass}}.
+#' Nevertheless, when simple = TRUE, still a ML model classifier can be built
+#' using the optimal cutpoint estimated and setting clas.perf = TRUE. Such a ML
+#' model can be used for predictions in further analyses with function
+#' \code{\link{predictDIMPclass}}.
 #'
 #' @param LR An object from 'pDMP' class. This object is previously obtained
 #'     with function \code{\link{getPotentialDIMP}}.
@@ -57,7 +56,7 @@
 #'     position "pos" in respect to the chromosome where it is located. The
 #'     relative position is estimated as (x - x.min)/(x.max - x), where x.min
 #'     and x.max are the maximum and minimum for the corresponding chromosome,
-#'     repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+#'     respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
 #'     be used as predictor in place of "wprob".
 #' @param classifier1,classifier2 Classification model to use. Option "logistic"
 #'     applies a logistic regression model; option "lda" applies a Linear
@@ -78,7 +77,7 @@
 #' @param clas.perf Logic. Whether to evaluate the classification performance
 #'     for the estimated cutpoint using a model classifier when 'simple=TRUE'.
 #'     Default, FALSE.
-#' @param post.cut If 'simple=FALSE', this is posterior probability to dicide
+#' @param post.cut If 'simple=FALSE', this is posterior probability to decide
 #'     whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.
 #' @param prop Proportion to split the dataset used in the logistic regression:
 #'     group versus divergence (at DMPs) into two subsets, training and
@@ -93,7 +92,7 @@
 #'     \emph{div.col} where to check the classification performance
 #'     (0 < \emph{cut.interval} < max ID). If provided, the search for a
 #'     cutpoint will include these values.
-#' @param num.cores,tasks Paramaters for parallele computation using package
+#' @param num.cores,tasks Parameters for parallel computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job

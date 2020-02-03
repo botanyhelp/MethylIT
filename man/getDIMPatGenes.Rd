@@ -23,7 +23,7 @@ getDIMPatGenes(GR, GENES, ignore.strand = TRUE)
 \method{getDIMPatGenes}{list}(GR, GENES, ignore.strand = TRUE)
 }
 \arguments{
-\item{GR}{An obects object from the any of the classes: 'pDMP', 'InfDiv',
+\item{GR}{An objects object from the any of the classes: 'pDMP', 'InfDiv',
 GRangesList, GRanges or a list of GRanges.}
 
 \item{GENES}{A GRanges object with gene coordinates and gene IDs. A

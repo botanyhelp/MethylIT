@@ -48,7 +48,7 @@ probability of potential DMP "wprob", and the relative cytosine site
 position "pos" in respect to the chromosome where it is located. The
 relative position is estimated as (x - x.min)/(x.max - x), where x.min
 and x.max are the maximum and minimum for the corresponding chromosome,
-repectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
+respectively. If "wprob = TRUE", then Logarithm base-10 of "wprob" will
 be used as predictor in place of "wprob".}
 
 \item{classifier1, classifier2}{Classification model to use. Option "logistic"
@@ -74,7 +74,7 @@ of the cutpoint will be performed.}
 for the estimated cutpoint using a model classifier when 'simple=TRUE'.
 Default, FALSE.}
 
-\item{post.cut}{If 'simple=FALSE', this is posterior probability to dicide
+\item{post.cut}{If 'simple=FALSE', this is posterior probability to decide
 whether a DMPs belong to treatment group. Default \emph{post.cut} = 0.5.}
 
 \item{prop}{Proportion to split the dataset used in the logistic regression:
@@ -119,7 +119,7 @@ for the estimation of an “optimal” cutpoints can be accomplish, for
 example with function \code{\link[cutpointr]{cutpointr}} from the R
 package \strong{cutpointr}.}
 
-\item{num.cores, tasks}{Paramaters for parallele computation using package
+\item{num.cores, tasks}{Parameters for parallel computation using package
 \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 use, i.e. at most how many child processes will be run simultaneously
 (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job
@@ -158,37 +158,37 @@ control group versus treatment group.
 }
 \details{
 The function performs an estimation of the optimal cutpoint for the
-classification of the differentially methylated (cytosines) positions
-into two classes: DMPs from control and DMPs from treatment. The simplest
-approach to estimate the cutpoint is based on the application of Youden
-Index. More complexes approach based in several machine learning model
-are provided as well.\preformatted{Results of the classification performance resulting from the estimated
-cutpoint are normally given, with the exception of those extreme
-situations where the statistics to evaluate performance cannot be
-estimated. More than one classifier model can be applied. For example,
-one classifier (logistic model) can be used to estimate the posterior
-classification probabilities of DMP into those from control and those
-from treatment. These probabilities are then used to estimate the
-cutpoint in range of values from, say, 0.5 to 0.8. Next, a different
-classifier can be used to evaluate the classification performance.
-Different classifier models would yield different performances. Models
-are returned and can be used in further prediction with new datasets from
-the same batch experiment. This is a machine learning approach to
+classification of the differentially methylated (cytosines) positions into
+two classes: DMPs from control and DMPs from treatment. The simplest approach
+to estimate the cutpoint is based on the application of Youden Index. More
+complexes approach based in several machine learning model are provided as
+well.
+
+Results of the classification performance resulting from the estimated
+cutpoint are normally given, with the exception of those extreme situations
+where the statistics to evaluate performance cannot be estimated. More than
+one classifier model can be applied. For example, one classifier (logistic
+model) can be used to estimate the posterior classification probabilities of
+DMP into those from control and those from treatment. These probabilities are
+then used to estimate the cutpoint in range of values from, say, 0.5 to 0.8.
+Next, a different classifier can be used to evaluate the classification
+performance. Different classifier models would yield different performances.
+Models are returned and can be used in further prediction with new datasets
+from the same batch experiment. This is a machine learning approach to
 discriminate the biological regulatory signal naturally generated in the
 control from that one induced by the treatment.
 
-Notice that the estimation of an optimal cutpoint based on the
-application Youden Index (simple = TRUE) only uses the information
-provided by the selected information divergence. As a result,
-classification results based only in one variable can be poor or can
-fail. However, option simple = FALSE, uses the information from several
-variables following a machine-learnig (ML) approach.
+Notice that the estimation of an optimal cutpoint based on the application
+Youden Index (simple = TRUE) only uses the information provided by the
+selected information divergence. As a result, classification results based
+only in one variable can be poor or can fail. However, option simple = FALSE,
+uses the information from several variables following a machine-learning (ML)
+approach.
 
-Nevertheless, when simple = TRUE, still a ML model classifier can
-be built using the optimal cutpoint estimated and setting
-clas.perf = TRUE. Such a ML model can be used for predictions in futher
-analyses with function \code{\link{predictDIMPclass}}.
-}
+Nevertheless, when simple = TRUE, still a ML model classifier can be built
+using the optimal cutpoint estimated and setting clas.perf = TRUE. Such a ML
+model can be used for predictions in further analyses with function
+\code{\link{predictDIMPclass}}.
 }
 \examples{
 ## Get a dataset of potential signals and the estimated cutpoint from the

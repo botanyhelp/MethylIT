@@ -6,23 +6,23 @@
 #' @aliases qggamma
 #'
 #' @title Generalized Gamma distribution
-#' @description Probability density function (PDF), cummulative density function
+#' @description Probability density function (PDF), cumulative density function
 #'     (CDF), quantile function and random generation for the Generalized Gamma
 #'     (GG) distribution with 3 or 4 parameters: alpha, scale, mu, and psi. The
 #'     function is reduced to GGamma distribution with 3 parameters by setting
 #'     mu = 0.
 #' @details Details about these function can be found in references 1 to 3. You
-#'     may also see section Note at ?pgamma or ?rgamma. Herein, we are using
-#'     Stacy' s formula (references 2 to 3) with the parametrization given in
-#'     reference 4 (equation 6, page 12). As in the case of gamma distribution
-#'     function, the cumulative distribution function (as given in equation 12,
-#'     page 13 from reference 4) is expressed in terms of the lower incomplete
-#'     gamma function (see ?pgamma).
+#' may also see section Note at ?pgamma or ?rgamma. Herein, we are using Stacy'
+#' s formula (references 2 to 3) with the parametrization given in reference 4
+#' (equation 6, page 12). As in the case of gamma distribution function, the
+#' cumulative distribution function (as given in equation 12, page 13 from
+#' reference 4) is expressed in terms of the lower incomplete gamma function
+#' (see ?pgamma).
 #'
-#'     The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
-#'     \eqn{\psi}, and \eqn{\mu} has density:
+#' The GG distribution with parameters \eqn{\alpha}, \eqn{\beta} (scale),
+#' \eqn{\psi}, and \eqn{\mu} has density:
 #'
-#'     \deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
+#' \deqn{f(x | \alpha, \beta, \mu, \psi) = \alpha exp(-((x-\mu)/
 #'     \beta)^\alpha) ((x-\mu)/\beta)^(\alpha * \psi - 1)/(\beta Gamma(\psi))}
 #'
 #' @param q numeric vector.
@@ -34,13 +34,13 @@
 #'     distribution. These are numerical and strictly positives; default 1.
 #'     (see ?pgamma).
 #' @param mu location parameter (numerical, default 0).
-#' @param lower.tail logical; if TRUE (default), probabilities are P[X<=x],
-#'     otherwise, P[X > x]
+#' @param lower.tail logical; if TRUE (default), probabilities are
+#'     \eqn{P(X<=x)}, otherwise, \eqn{P(X > x)}
 #' @param log.p logical; if TRUE, probabilities/densities p are returned as
 #'     log(p).
 #'
 #' @return GG PDF values (3-parameters or 4-parameters) for dggamma,
-#'     GG probability for pggamma, quaniles or GG random generated values for
+#'     GG probability for pggamma, quantiles or GG random generated values for
 #'     rggamma.
 #'
 #' @references 1. Handbook on  STATISTICAL DISTRIBUTIONS for experimentalists

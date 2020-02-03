@@ -9,6 +9,7 @@
 #' @param use.names Logical. Should names be preserved?
 #' @details This is a method to extend unlist generic function to handle
 #'     any list of objects from the same class.
+#' @keywords internal
 #' @export
 #' @examples
 #' gr1 <-GRanges(seqnames = "chr2", ranges = IRanges(3, 6),

@@ -2,8 +2,14 @@
 % Please edit documentation in R/MethylIT.R
 \name{MethylIT}
 \alias{MethylIT}
-\title{MethylIT: A package for methylation analysis}
+\title{MethylIT: Methylation Analysis Based on Signal Detection and Machine
+Learning}
 \description{
-This package helps to do methylation analysis based on
-information thermodynamics and signal detection
+Methyl-IT implements methylation analysis based on signal
+detection theory and machine-learning. Methylation process is a
+stochastic process, particularly, a biochemical-biophysical process which
+must not be reduced to statistic. Methyl-IT includes the information on
+the statistical biophysics of the methylation process with the estimation
+of the probability distribution of the noise (plus signal), which is
+expressed in terms of information divergences.
 }

@@ -8,9 +8,9 @@
 #'     linear model.
 #' @details A pairwise group comparison, control versus treatment, is performed.
 #'     The experimental design settings must be introduced using function
-#'     \code{link{glmDataSet}} to provide dataset (DS) object.
+#'     \code{\link[MethylIT]{glmDataSet}} to provide dataset (DS) object.
 #' @param DS A 'glmDataSet' object, which is created with function
-#'     \code{link{glmDataSet}}.
+#'     \code{\link[MethylIT]{glmDataSet}}.
 #' @param countFilter whether or not to filter the counts according to the
 #'     minimum count per region per each individual/sample, which is setting by
 #'     "minCountPerIndv".
@@ -21,19 +21,19 @@
 #'     'minCountPerIndv' counts (on average) per individual in at least one
 #'     group.
 #' @param maxGrpCV A numerical vector. Maximum coefficient of variance for each
-#'     group. Defaul maxGrpCV = NULL. The numbers maxGrpCV[1] and maxGrpCV[2]
-#'     will be taken as the maximun variances values permitted in control and
-#'     in treatment groups, repectively. If only maxGrpCV[1] is provided, then
-#'     maxGrpCV = c(maxGrpCV[1], maxGrpCV[1]). This parameter is addressed to
-#'     prevent testing regions where intra-group variations are very large,
-#'     e.g.: control = c(1,0,1,1) and traatment = c(1, 0, 1, 40). The
-#'     coefficient of variance for the treatment group is 1.87, very high. The
-#'     generalized linear regression analysis would yield statistical
+#'     group. Default maxGrpCV = NULL. The numbers 'maxGrpCV1' and
+#'     'maxGrpCV2' will be taken as the maximun variances values permitted in
+#'     control and in treatment groups, respectively. If only 'maxGrpCV1' is
+#'     provided, then maxGrpCV = c('maxGrpCV1', 'maxGrpCV1'). This parameter
+#'     is addressed to prevent testing regions where intra-group variations are
+#'     very large, e.g.: control = c(1,0,1,1) and treatment = c(1, 0, 1, 40).
+#'     The coefficient of variance for the treatment group is 1.87, very high.
+#'     The generalized linear regression analysis would yield statistical
 #'     significant group differences, but evidently there is something wrong in
 #'     one of the treatment samples. We would try the application of further
 #'     statistical smoothing approach, but we prefer to leave the user decide
 #'     which regions to test.
-#' @param FilterLog2FC if TRUE, the results are filtered using the minimun
+#' @param FilterLog2FC if TRUE, the results are filtered using the minimum
 #'     absolute value of log2FoldChanges observed to accept that a gene in the
 #'     treatment is differentially expressed in respect to the control
 #' @param pAdjustMethod method used to adjust the results; default: BH
@@ -55,7 +55,7 @@
 #'     signal density as: scaling x "DMP-Count-Per-Bp". For example,
 #'     if scaling = 1000, then signal density denotes the number of DMPs in
 #'      1000 bp.
-#' @param num.cores,tasks Paramaters for parallele computation using package
+#' @param num.cores,tasks Parameters for parallel computation using package
 #'     \code{\link[BiocParallel]{BiocParallel-package}}: the number of cores to
 #'     use, i.e. at most how many child processes will be run simultaneously
 #'     (see \code{\link[BiocParallel]{bplapply}} and the number of tasks per job

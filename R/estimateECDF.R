@@ -20,7 +20,7 @@
 #'
 #' @importFrom graphics hist
 #' @importFrom stats approxfun
-#'
+#' @keywords internal
 #' @export
 estimateECDF <- function(x, npoints = 10) {
    x <- sort(x)

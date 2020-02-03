@@ -13,7 +13,7 @@
 #'     GRanges object. Default value: NULL. If NULL, all the columns (from
 #'     column 1 to ncols) from each GRanges will be present in the uniqueGRanges
 #'     output.
-#' @param columns interger number(s) corresponding to the specific column(s) to
+#' @param columns integer number(s) corresponding to the specific column(s) to
 #'     use from the meta-column of each GRanges. Default value: NULL. if
 #'     provided, the metacolumn from the uniqueGRanges output will contain the
 #'     specified columns.
@@ -25,8 +25,8 @@
 #' @param missing A numerical value (default 0) or NA to write in ranges with
 #'     missing values. For example, suppose that we want to build a
 #'     uniqueGRanges object from the GRanges objects X and Y. If a given range
-#'     k from the GRanges object X with metacolum value x is missing in the
-#'     GRanges object Y, then the metacolum of range k from
+#'     k from the GRanges object X with metacolumn value x is missing in the
+#'     GRanges object Y, then the metacolumn of range k from
 #'     uniqueGRanges(list(X,Y)) object will be the row vector (x,0) or (x,NA)
 #'     if missing = NA.
 #' @param type By default, any overlap is accepted. By specifying the type

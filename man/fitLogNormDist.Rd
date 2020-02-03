@@ -26,7 +26,7 @@ are estimated using the empirical cumulative distribution function
 ('ecdf') from 'stats' R package.}
 
 \item{parameter.values}{initial parameter values for the nonlinear fit. If
-the locator paramter is included (mu != 0), this must be given as
+the locator parameter is included (mu != 0), this must be given as
 parameter.values = list(alpha = 'value', scale = 'value', mu = 'value')
 or if mu = 0, as: parameter.values = list(alpha = 'value',
 scale = 'value'). If not provided, then an initial guess is provided.}
@@ -69,19 +69,20 @@ variable x
 }
 \details{
 The algorithm tries to fit the two-parameter LogNorm CDF
-using a modification of Levenberg-Marquardt algorithm implemented in
-function 'nls.lm' from 'minpack.lm' package that is used to perform the
-nonlinear fit. Cross-validations for the nonlinear regressions
-(R.Cross.val) were performed in each methylome as described in reference
-\link{1}. In addition, Stein's formula for adjusted R squared (rho) was used
-as an estimator of the average cross-validation predictive power \link{1}.\preformatted{If the number of values to fit is >10^6, the fitting to a LogNorm CDF
-would be a time consuming task. To reduce the computational time, the
-option 'summarized.data' can be set 'TRUE'. If summarized.data = TRUE,
-the original variable values are summarized into 'npoint' bins and their
-midpoints are used as the new predictors. In this case, only the
-goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-the original variable x values.
-}
+using a modification of Levenberg-Marquardt algorithm implemented in function
+'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear fit.
+Cross-validations for the nonlinear regressions (R.Cross.val) were performed
+in each methylome as described in reference (1). In addition, Stein's formula
+for adjusted R squared (rho) was used as an estimator of the average
+cross-validation predictive power (1).
+
+If the number of values to fit is >10^6, the fitting to a LogNorm CDF would
+be a time consuming task. To reduce the computational time, the option
+'summarized.data' can be set 'TRUE'. If summarized.data = TRUE, the original
+variable values are summarized into 'npoint' bins and their midpoints are
+used as the new predictors. In this case, only the goodness-of-fit indicators
+AIC and R.Cross.val are estimated based on all the original variable x
+values.
 }
 \examples{
 set.seed(126)

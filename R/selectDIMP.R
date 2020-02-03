@@ -6,27 +6,25 @@
 #'     informative methylated positions (DMPs). DMPs are cytosine positions
 #'     for which the divergence is greater than the cutpoint.
 #' @details Theoretically a DMP denotes a cytosine position with high
-#'     probability to be differentially methylated. That is, in the statistical
-#'     molecular-biophysics context, a DMP must be considered only in a
-#'     probabilistic term and not as an absolute deterministic experimental
-#'     output.
+#' probability to be differentially methylated. That is, in the statistical
+#' molecular-biophysics context, a DMP must be considered only in a
+#' probabilistic term and not as an absolute deterministic experimental output.
 #'
-#'     The uncertainty and dynamics of the DNA methylation process, the
-#'     continuous action of the omnipresent thermal fluctuations, as well as,
-#'     the inherent stochasticity of the biochemical reactions make it
-#'     impossible to ensure whether a specific cytosine position is methylated
-#'     in an absolutely deterministic sense. Notice that the concept of DMP is
-#'     not applicable to a single cell (if we use an instrumentation/protocol
-#'     to directly measure methylation at the molecular level, and not via PCR),
-#'     since a concrete, single DNA cytosine position in a single cell is
-#'     methylated or not methylated.
+#' The uncertainty and dynamics of the DNA methylation process, the continuous
+#' action of the omnipresent thermal fluctuations, as well as, the inherent
+#' stochasticity of the biochemical reactions make it impossible to ensure
+#' whether a specific cytosine position is methylated in an absolutely
+#' deterministic sense. Notice that the concept of DMP is not applicable to a
+#' single cell (if we use an instrumentation/protocol to directly measure
+#' methylation at the molecular level, and not via PCR), since a concrete,
+#' single DNA cytosine position in a single cell is methylated or not
+#' methylated.
 #'
-#'     However, when pooling DNA extracted from a tissue, the previous
-#'     reasonings about uncertainty hold plus an additional uncertainty factor:
-#'     cells from the same tissue are not synchronized but are found in
-#'     different stages of their ontogenetic developments. Hence, the DMP
-#'     concept holds in the mentioned circumstances where the uncertainty of
-#'     methylation is present.
+#' However, when pooling DNA extracted from a tissue, the previous reasonings
+#' about uncertainty hold plus an additional uncertainty factor: cells from the
+#' same tissue are not synchronized but are found in different stages of their
+#' ontogenetic developments. Hence, the DMP concept holds in the mentioned
+#' circumstances where the uncertainty of methylation is present.
 #'
 #' @param LR An object from "pDMP" class.
 #' @param div.col Number of the column where the divergence variable (i.e.,
@@ -37,17 +35,17 @@
 #'     parameter values div.col or pval.col must be given.
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
-#'     analysis. If 'absolute = TRUE', then TV is tranformed into |TV|, which is
-#'     an information divergence that can be fitted to Weibull or to Generalized
-#'     Gamma distribution. So, if the nonlinear fit was performed for |TV|, then
-#'     here absolute must be set to TRUE.
+#'     analysis. If 'absolute = TRUE', then TV is transformed into
+#'     \eqn{|TV|}, which is an information divergence that can be fitted to
+#'     Weibull or to Generalized Gamma distribution. So, if the nonlinear fit
+#'     was performed for \eqn{|TV|}, then here absolute must be set to TRUE.
 #' @param cutpoint Cutpoint to select DMPs. Cytosine positions with divergence
 #'     greater than 'cutpoint' will selected as DMPs. Cutpoints are estimated
 #'     with the function 'estimateCutPoint'.
 #' @param tv.col Column number for the total variation to be used for filtering
 #'     cytosine positions (if provided).
-#' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites k with
-#'     abs(TV_k) < tv.cut are removed.
+#' @param tv.cut If tv.cut and tv.col are provided, then cytosine sites \eqn{k}
+#'     with \eqn{|TV| < tv.cut} are removed.
 #'
 #' @return An object from "pDMP" class containing only differentially
 #'     informative position (DMPs).

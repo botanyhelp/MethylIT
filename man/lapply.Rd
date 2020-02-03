@@ -16,7 +16,7 @@ lapply(x, FUN, ...)
 these arguments.}
 
 \item{keep.attr}{Logic. If TRUE, then the original attributes from 'x' are
-preserved in the returned list. Derfaul is FALSE.}
+preserved in the returned list. Default is FALSE.}
 }
 \value{
 Same as in ?base::\code{\link[base]{lapply}} if keep.attr = FALSE.
@@ -36,8 +36,8 @@ class(lapply(x, mean))
 
 # To preserve attributes
 class(lapply(x, mean, keep.attr = TRUE))
-
 }
 \seealso{
 base::\code{\link[base]{lapply}}
 }
+\keyword{internal}

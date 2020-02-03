@@ -4,24 +4,24 @@
 #' @description A wrapper to call functions 'Weibull3P' and
 #'     'fitGGammaDist' to operate on list of GRanges.
 #' @details The algorithm prepares the information divergence variable
-#'     to try fitting Weibull or generalized gamma distribution model to the
-#'     data. If Weibull distribution is selected (default: "Weibull"), function
-#'     'Weibull2P' first attempts fitting to the two-parameter Weibull CDF
-#'     (Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
-#'     Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
-#'     'minpack.lm' is used to perform the nonlinear fit. Cross-validations for
-#'     the nonlinear regressions (R.Cross.val) are performed in each methylome
-#'     as described in reference [1]. In addition, Stein's formula for adjusted
-#'     R squared (rho) is used as an estimator of the average cross-validation
-#'     predictive power [1].
+#' to try fitting Weibull or generalized gamma distribution model to the data.
+#' If Weibull distribution is selected (default: "Weibull"), function
+#' 'Weibull2P' first attempts fitting to the two-parameter Weibull CDF
+#' (Weibull2P). If Weibull2P did not fit, then the algorithm will try to fit
+#' Weibull3P. The Levenberg-Marquardt algorithm implemented in R package
+#' 'minpack.lm' is used to perform the nonlinear fit. Cross-validations for the
+#' nonlinear regressions (R.Cross.val) are performed in each methylome as
+#' described in reference (1-2). In addition, Stein's formula for adjusted R
+#' squared (rho) is used as an estimator of the average cross-validation
+#' predictive power (2).
 #'
-#'     If "GGamma3P" is selected the call to function 'fitGGammaDist' permits
-#'     the fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to
-#'     the four-parameter GGamma ("GGamma4P") is also available. GGamma
-#'     distribution are fitted using a modification of Levenberg-Marquardt
-#'     algorithm implemented in function 'nls.lm' from the 'minpack.lm' R
-#'     package. Notice that the fit to GGamma dsitribution is computationally
-#'     time consuming (see ?fitGGammaDist for additional information).
+#' If "GGamma3P" is selected the call to function 'fitGGammaDist' permits the
+#' fitting to the three-parameter GGamma CDF ("GGamma3P"). The fit to the
+#' four-parameter GGamma ("GGamma4P") is also available. GGamma distribution are
+#' fitted using a modification of Levenberg-Marquardt algorithm implemented in
+#' function 'nls.lm' from the 'minpack.lm' R package. Notice that the fit to
+#' GGamma distribution is computationally time consuming (see ?fitGGammaDist for
+#' additional information).
 #'
 #' @param LR A list of GRanges objects with information divergence values in
 #'     their meta-columns.
@@ -34,7 +34,7 @@
 #' @param sample.size size of the sample
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (GGamma) including the location parameter, i.e., a GGamma
-#'     with four parameters (GGamam4P).
+#'     with four parameters (GGamma4P).
 #' @param absolute Logic (default, FALSE). Total variation (TV, the difference
 #'     of methylation levels) is normally an output in the downstream MethylIT
 #'     analysis. If 'absolute = TRUE', then TV is transformed into |TV|, which
@@ -70,7 +70,7 @@
 #' @param num.cores The number of cores to use, i.e. at most how many child
 #'     processes will be run simultaneously (see
 #'     \code{\link[BiocParallel]{bplapply}} function from BiocParallel package).
-#' @param tasks integer(1). The number of tasks per job. value must be a scalar
+#' @param tasks integer. The number of tasks per job. value must be a scalar
 #'     integer >= 0L. In this documentation a job is defined as a single call to
 #'     a function, such as bplapply, bpmapply etc. A task is the division of the
 #'     X argument into chunks. When tasks == 0 (default), X is divided as evenly
@@ -84,13 +84,13 @@
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
 #'     coefficient covariance matrix.
 #' @references
-#'     \enumerate{
-#'         \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
-#'             Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
-#'             Mar. 2016.
-#'         \item Stevens JP. Applied Multivariate Statistics for the Social
+#' \enumerate{
+#'     \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+#'           Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
+#'           Mar. 2016.
+#'     \item Stevens JP. Applied Multivariate Statistics for the Social
 #'             Sciences. Fifth Edit. Routledge Academic; 2009.
-#'     }
+#' }
 #' @seealso \code{\link{gofReport}}
 #' @author Robersy Sanchez 01/31/2018 <https://github.com/genomaths>
 #'

@@ -27,10 +27,10 @@
 #'     = c(p_ij, 1 - p_ij)}. Then, the J-information divergence between the
 #'     methylation levels \emph{p_i1} and \emph{p_i2} is the divergence between
 #'     the vectors \eqn{q_i1 = (p_i1, 1 - p_i1)} and \eqn{q_i2 = c(p_i2, 1 -
-#'     p_i2)}. \emph{JD} is computed as [1]:
+#'     p_i2)}. \emph{JD} is computed as in reference (1):
 #'
-#'     \deqn{JD(q_i1, q_i2) = (q_i1[1] * log(q_i1[1]/q_i2[1]) + q_i1[2] *
-#'                             log(q_i1[2]/q_i2[2]) +
+#' \deqn{JD(q_i1, q_i2) = (q_i1[1] * log(q_i1[1]/q_i2[1]) + q_i1[2] *
+#'                         log(q_i1[2]/q_i2[2]) +
 #'                 q_i2[1] * log(q_i2[1]/q_i1[1]) + q_i2[2] *
 #'                             log(q_i2[2]/q_i1[2]))/2}.
 #'
@@ -58,12 +58,12 @@
 #'     using it.
 #'
 #' @references
-#'     \enumerate{
-#'         \item Lin J. Divergence Measures Based on the Shannon Entropy. IEEE
-#'                 Trans Inform Theory, 1991, 37:145–51.
-#'         \item Sanchez R, Mackenzie SA. Information thermodynamics of cytosine
-#'                 DNA methylation. PLoS One, 2016, 11:e0150427.
-#'     }
+#' \enumerate{
+#'     \item Lin J. Divergence Measures Based on the Shannon Entropy. IEEE
+#'           Trans Inform Theory, 1991, 37:145–51.
+#'     \item Sanchez R, Mackenzie SA. Information thermodynamics of cytosine
+#'           DNA methylation. PLoS One, 2016, 11:e0150427.
+#' }
 #'
 #' @export
 estimateJDiv <- function(p, logbase = 2) {

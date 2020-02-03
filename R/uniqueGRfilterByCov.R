@@ -19,7 +19,7 @@
 #' @param min.coverage An integer or an integer vector of length 2. Cytosine
 #'     sites where the coverage in both samples, 'x' and 'y', are less than
 #'     'min.coverage' are discarded. The cytosine site is preserved, however, if
-#'     the coverage is greater than 'min.coverage'in at least one sample. If
+#'     the coverage is greater than 'min.coverage' in at least one sample. If
 #'     'min.coverage' is an integer vector, then the corresponding min coverage
 #'     is applied to each sample.
 #' @param min.meth An integer or an integer vector of length 2. Cytosine sites

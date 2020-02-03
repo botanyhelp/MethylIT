@@ -8,9 +8,9 @@
 #'     Weibull3P. The Levenberg-Marquardt algorithm implemented in 'minpack.lm'
 #'     R package is used to perform the nonlinear fit. Cross-validations for the
 #'     nonlinear regressions (R.Cross.val) were performed in each methylome as
-#'     described in reference [1]. In addition, Stein's formula for adjusted R
+#'     described in reference (1). In addition, Stein's formula for adjusted R
 #'     squared (rho) was used as an estimator of the average cross-validation
-#'     predictive power [1].
+#'     predictive power (1).
 #'
 #' @param X numerical vector
 #' @param sample.size size of the sample
@@ -42,7 +42,7 @@
 #'
 #' @return Model table with coefficients and goodness-of-fit results:
 #'     Adj.R.Square, deviance, AIC, R.Cross.val, and rho, as well as, the
-#'     coefficient covarianza matrix.
+#'     coefficient covariance matrix.
 #'
 #' @references 1. Stevens JP. Applied Multivariate Statistics for the Social
 #'     Sciences. Fifth Edit. Routledge Academic; 2009.

@@ -6,35 +6,33 @@
 #'     Both, signal and noise, are expressed in terms of an information
 #'     divergence of methylation levels, which (currently in Methyl-IT) could be
 #'     the Hellinger divergence or the total variation distance.
-#'
-#'     As shown in reference [1], on statistical physics basis, the probability
+#'     As shown in reference (1), on statistical physics basis, the probability
 #'     distribution of the noise is a member of the generalized gamma
 #'     distribution. In particular, if the methylation changes on the DNA
 #'     molecule follow a Poisson process, then the noise follows a Weibull
 #'     probability distribution.
 #'
-#'     Function 'gofReport' search for the best fitted model betweeen the set
-#'     of models requested by the user. Two goodness-of-fit (GoF) criteria are
-#'     applied to select the best fitted model: Akaike's information criterion
-#'     (AIC) and the correlation coeficient of cross-validations for the
-#'     nonlinear regressions (R.Cross.val) [2]. These criteria evaluate
-#'     different information inferred from the models. AIC deals with the
-#'     trade-off between the goodness of fit of the model and the complexity
-#'     of the model, while R.Cross.val provides information on the prediction
-#'     power/performance of the model when confronted with external dataset.
+#' Function 'gofReport' search for the best fitted model between the set of
+#' models requested by the user. Two goodness-of-fit (GoF) criteria are applied
+#' to select the best fitted model: Akaike's information criterion (AIC) and the
+#' correlation coefficient of cross-validations for the nonlinear regressions
+#' (R.Cross.val) (2). These criteria evaluate different information inferred
+#' from the models. AIC deals with the trade-off between the goodness of fit of
+#' the model and the complexity of the model, while R.Cross.val provides
+#' information on the prediction power/performance of the model when confronted
+#' with external dataset.
 #'
-#'     Although the numerical algorithms to accomplish the nonlinear fit are not
-#'     perfect, in general, the model with the lowest AIC must have the highest
-#'     R.Cross.val. If the model with the lowest AIC has not the highest
-#'     R.Cross.val, then further analyses are required. These analyses could
-#'     include the visualization of the graphics for the density distribution,
-#'     evaluation of whether the parameter values can be meaningful or not, etc.
-#'     Nevertheless, the best model will, in general, lead to the identification
-#'     of the greater amount of potential DMPs and DMPs, as well as, the highest
-#'     classification accuracy estimated with functions
-#'     \code{\link{estimateCutPoint}} and \code{\link{evaluateDIMPclass}}. In
-#'     the worse scenario, these observations can ultimately lead to a post-hoc
-#'     decision on which the best model is.
+#' Although the numerical algorithms to accomplish the nonlinear fit are not
+#' perfect, in general, the model with the lowest AIC must have the highest
+#' R.Cross.val. If the model with the lowest AIC has not the highest
+#' R.Cross.val, then further analyses are required. These analyses could include
+#' the visualization of the graphics for the density distribution, evaluation of
+#' whether the parameter values can be meaningful or not, etc. Nevertheless, the
+#' best model will, in general, lead to the identification of the greater amount
+#' of potential DMPs and DMPs, as well as, the highest classification accuracy
+#' estimated with functions \code{\link{estimateCutPoint}} and
+#' \code{\link{evaluateDIMPclass}}. In the worse scenario, these observations
+#' can ultimately lead to a post-hoc decision on which the best model is.
 #'
 #' @param HD An "InfDiv" object returned by function
 #'     \code{\link{estimateDivergence}}.
@@ -52,7 +50,7 @@
 #' @param output If output == "all", the table with the GoF statistics is
 #'     returned in a list together with the best fitted model and the
 #'     corresponding statistics. Default is "best.model"
-#' @param confl_model Logic. If TRUE, then the best model based on higest
+#' @param confl_model Logic. If TRUE, then the best model based on highest
 #'     R.Cross.val is returned for those samples where the model(s) with lowest
 #'     AIC has not the highest R.Cross.val.
 #' @param num.cores The number of cores to use in the nonlinear fit step, i.e.

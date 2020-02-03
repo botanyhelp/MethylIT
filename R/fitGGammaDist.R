@@ -4,32 +4,31 @@
 #' @description This function performs the nonlinear fit of GGamma CDF of a
 #'     variable x
 #' @details The script algorithm tries to fit the three-parameter GGamma CDF
-#'     ("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a
-#'     modification of Levenberg-Marquardt algorithm implemented in function
-#'     'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-#'     fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-#'     performed in each methylome as described in reference [1]. In addition,
-#'     Stein's formula for adjusted R squared (rho) was used as an estimator of
-#'     the average cross-validation predictive power [1].
+#' ("GGamma3P") or the four-parameter GGamma ("GGamma4P") using a modification
+#' of Levenberg-Marquardt algorithm implemented in function 'nls.lm' from
+#' 'minpack.lm' package that is used to perform the nonlinear fit.
+#' Cross-validations for the nonlinear regressions (R.Cross.val) were performed
+#' in each methylome as described in reference (1). In addition, Stein's formula
+#' for adjusted R squared (rho) was used as an estimator of the average
+#' cross-validation predictive power (1).
 #'
-#'     If the number of values to fit is >10^6, the fitting to a GGamma CDF
-#'     would be a time consuming task. To reduce the computational time, the
-#'     option summarized.data' can be set 'TRUE'. If npoint != NULL, the
-#'     original variable values are summarized into 'npoint' bins and their
-#'     midpoints are used as the new predictors. In this case, only the
-#'     goodness-of-fit indicators AIC and R.Cross.val are estimated based on all
-#'     the original variable x values.
+#' If the number of values to fit is >10^6, the fitting to a GGamma CDF would be
+#' a time consuming task. To reduce the computational time, the option
+#' summarized.data' can be set 'TRUE'. If npoint != NULL, the original variable
+#' values are summarized into 'npoint' bins and their midpoints are used as the
+#' new predictors. In this case, only the goodness-of-fit indicators AIC and
+#' R.Cross.val are estimated based on all the original variable x values.
 #'
 #' @param x numerical vector
 #' @param parameter.values initial parameter values for the nonlinear fit. If
-#'     the locator paramter is included (mu != 0), this must be given as
+#'     the locator parameter is included (mu != 0), this must be given as
 #'     parameter.values = list(alpha = 'value', scale = 'value', mu = 'value',
 #'     psi = 'value') or if mu = 0, as: parameter.values =list(alpha = 'value',
 #'     scale = 'value', psi = 'value'). If not provided, then an initial guess
 #'     is provided.
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (GGamma) including the location parameter, i.e., a GGamma
-#'     with four parameters (GGamam4P).
+#'     with four parameters (GGamma4P).
 #' @param sample.size size of the sample.
 #' @param npoints number of points used in the fit. If the number of points if
 #'     greater than 10^6, then the fit is automatically set to npoints = 999999.

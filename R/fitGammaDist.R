@@ -4,30 +4,29 @@
 #' @description This function performs the nonlinear fit of GGamma CDF of a
 #'     variable x
 #' @details The algorithm tries to fit the two-parameter Gamma CDF
-#'     ("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a
-#'     modification of Levenberg-Marquardt algorithm implemented in function
-#'     'nls.lm' from 'minpack.lm' package that is used to perform the nonlinear
-#'     fit. Cross-validations for the nonlinear regressions (R.Cross.val) were
-#'     performed in each methylome as described in reference [1]. In addition,
-#'     Stein's formula for adjusted R squared (rho) was used as an estimator of
-#'     the average cross-validation predictive power [1].
+#' ("Gamma2P") or the three-parameter Gamma ("Gamma3P") using a modification of
+#' Levenberg-Marquardt algorithm implemented in function 'nls.lm' from
+#' 'minpack.lm' package that is used to perform the nonlinear fit.
+#' Cross-validations for the nonlinear regressions (R.Cross.val) were performed
+#' in each methylome as described in reference (1). In addition, Stein's formula
+#' for adjusted R squared (rho) was used as an estimator of the average
+#' cross-validation predictive power (1).
 #'
-#'     If the number of values to fit is >10^6, the fitting to a GGamma CDF
-#'     would be a time consuming task. To reduce the computational time, the
-#'     data can be 'summarized' into 'npoints' (bins) and used as the new
-#'     predictors.
+#' If the number of values to fit is >10^6, the fitting to a GGamma CDF would be
+#' a time consuming task. To reduce the computational time, the data can be
+#' 'summarized' into 'npoints' (bins) and used as the new predictors.
 #' @param x numerical vector
 #' @param probability.x probability vector of x. If not provided, the values
 #'     are estimated using the empirical cumulative distribution function
 #'     ('ecdf') from 'stats' R package.
 #' @param parameter.values initial parameter values for the nonlinear fit. If
-#'     the locator paramter is included (mu != 0), this must be given as
+#'     the locator parameter is included (mu != 0), this must be given as
 #'     parameter.values = list(shape = 'value', scale = 'value', mu = 'value')
 #'     or if mu = 0, as: parameter.values = list(shape = 'value',
 #'     scale = 'value'). If not provided, then an initial guess is provided.
 #' @param location.par whether to consider the fitting to generalized gamma
 #'     distribution (Gamma) including the location parameter, i.e., a Gamma
-#'     with four parameters (GGamam3P).
+#'     with four parameters (GGamma3P).
 #' @param sample.size size of the sample.
 #' @param npoints number of points used in the fit.
 #' @param maxiter positive integer. Termination occurs when the number of
