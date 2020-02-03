@@ -3,7 +3,7 @@ Title: Methylation Analysis Based on Signal Detection
 Version: 0.3.2
 Encoding: UTF-8
 Authors@R: c(person("Robersy", "Sanchez", email = "rus547@psu.edu",
-                  role = c("aut", "cre", "cph"),
+                  role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0002-5246-1453")),
               person("Jose Raul ", "Barreras", email = "jrb428@psu.edu",
                   role = "ctb"),
