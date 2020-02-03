@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-Methyl-IT <img src="man/figures/logo.png" align="right" />
+Methyl-IT [<img src="man/figures/logo.png" align="right" />](https://genomaths.github.io/methylit)
 ==========================================================
 
 <br>
@@ -17,7 +17,7 @@ methylation patterning based on the statistical mechanical effect of methylation
 on DNA molecules ([1](#1)-[3](#3)). The information thermodynamics-based
 approach is postulated to
 provide greater sensitivity for resolving true signal from the thermodynamic
-background within the methylome ([1](#1)). This dtheory provides the knowledge
+background within the methylome ([1](#1)). This theory provides the knowledge
 on the family of probability distributions that better fit the methylation
 signals when expressed in terms of information divergences of methylation
 levels. Because the biological signal created within the dynamic methylome
@@ -102,10 +102,14 @@ Flow diagram
 
 <img src="man/figures/workflow.png" align="center" />
 
+Get Started
+-----------
+[Fast starting here](https://genomaths.github.io/methylit/articles/MethylIT.html)
+
 Some simple examples
 --------
 
-[<img src="man/figures/cancer_example.png" />](https://genomaths.github.io/CancerExample/cancer_example_html_01-23-20.html)
+[<img src="man/figures/cancer_example.png" />](https://genomaths.github.io/methylit/articles/cancer_example.html)
 
 [An example with simulated datasets](https://genomaths.github.io/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.   
 
