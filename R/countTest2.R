@@ -141,7 +141,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
 
        # ---------------------------- CountPerBp ----------------------------- #
        if (!is.null(res) &&
-           !is.null(CountPerBp) && class(DS$GR) == "GRanges") {
+           !is.null(CountPerBp) && is(DS$GR, "GRanges")) {
            ## For each group the count per bp must be equal or greater
            ## than CountPerBp
            size <- width(DS$GR)
@@ -292,7 +292,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
        }
 
        # ============================= Output Block ========================== #
-       if (class(DS$GR) == "GRanges") {
+       if (is(DS$GR, "GRanges")) {
            GR <- DS$GR
            dc <- DS$counts
            g1 <- which(lev[1] ==  group)
@@ -312,7 +312,7 @@ countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
    } else {
        # ------ If not individual sample passed the filtering conditions ----- #
        # An empty GRanges object will be returned
-       if (class(DS$GR) == "GRanges") {
+       if (is(DS$GR, "GRanges")) {
            res <- GRanges()
            x <- matrix(integer(), nrow = 1, ncol = length(sample.names))
            colnames(x) <- sample.names
