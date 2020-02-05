@@ -95,7 +95,7 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
                        pvalCutOff=0.05, saveAll=FALSE, num.cores=1L, tasks=0L,
                        verbose=FALSE, ...) {
 
-   if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges"))))
+   if (any(!unlist(lapply(LR, function(GR) is(GR, "GRanges")))))
        stop("At least one element from 'LR' is not a 'GRanges' object")
 
    if (inherits(LR, c('InfDiv', "pDMP"))) {
