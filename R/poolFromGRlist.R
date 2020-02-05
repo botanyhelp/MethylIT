@@ -129,7 +129,7 @@ jackstat <- function(x, stat = mean){
    ## x is a vector
    n <- length(x)
    vls <- numeric(length = 1)
-   return(vapply(1:length(x), function(k) stat(x[-k], na.rm = TRUE), vls))
+   return(vapply(seq_len(length(x)), function(k) stat(x[-k], na.rm = TRUE), vls))
 }
 
 # --- x is a matrix
