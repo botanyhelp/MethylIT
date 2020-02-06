@@ -51,7 +51,7 @@
 #'     the counts are used.
 #' @param meth.level methylation levels can be provided in place of counts.
 #' @param preserve.gr Logic (Default:FALSE). Option of whether to preserve all
-#'     the metadata from the original GRange object.
+#'     the metadata from the original GRanges object.
 #' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
 #'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
 #'     natural logarithm.
