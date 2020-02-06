@@ -10,7 +10,6 @@ navbar:
     - articles
     - tutorials
     - news
-    right:
   components:
     home:
       icon: "fas fa-home fa-lg"
@@ -23,8 +22,12 @@ navbar:
       href: articles/MethylIT.html
     articles:
       text: Articles
+      href: articles/index.html
       menu:
-      - text: Example of Methylome Analysis with MethylIT using Cancer Datasets
+      - text: "Methylation analysis with Methyl-IT"
+      - href: articles/Methylation_analysis_with_Methyl-IT.html
+      - text: ------
+      - text: "Example of Methylome Analysis with MethylIT using Cancer Datasets"
         href: articles/cancer_example.html
     news:
       text: News
@@ -92,10 +95,10 @@ reference:
   - '`gof`'
 
 articles:
-- title: All vignettes
+- title: Vignettes
   desc: ~
   contents:
   - '`MethylIT`'
   - '`cancer_example`'
-
+  - '`Methylation_analysis_with_Methyl-IT`'
 

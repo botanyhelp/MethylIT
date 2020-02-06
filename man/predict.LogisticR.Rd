@@ -37,7 +37,7 @@ use, i.e. at most how many child processes will be run simultaneously
 \value{
 If type is set to 'all', then the original 'newdata' with two columns
 added, predicted classes and 'posterior' probabilities, in the
-meta-columns of each GRange object are given. If 'newdata' is null, then
+meta-columns of each GRanges object are given. If 'newdata' is null, then
 the predictions given for the model by function
 \code{\link[stats]{predict.glm}} are returned. if type is set to 'class'
 or to "posterior", then the unlisted predicted classification or

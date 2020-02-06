@@ -91,6 +91,7 @@ fn
 FoldChanges
 fread
 ftol
+FT's
 furhter
 Fysikum
 GenomeInfoDb
@@ -99,6 +100,7 @@ GEOquery
 getDIMPatGenes
 getGEOSuppFiles
 getPotentialDIMP
+geq
 gg
 GG
 GGamma
@@ -109,7 +111,7 @@ GoF
 GOF
 gofReport
 GOFs
-GRange
+GRanges
 GRangesList
 gz
 gzip
@@ -117,6 +119,7 @@ HD
 hdiv
 Hebestreit
 Hellinger
+HDT
 http
 https
 hypermethylated
@@ -143,6 +146,7 @@ Leibler
 Lett
 Levenberg
 lm
+leq
 logbase
 LogisticR
 LogNorm
@@ -218,6 +222,7 @@ predictDIMPclass
 predictLogisticR
 Probab
 Plos
+PSs
 PSU's
 ptol
 pval
@@ -234,11 +239,13 @@ rgamma
 rggamma
 Routledge
 rowRanges
+RMST
 se
 selectDIMP
 seqlevels
 seqname
 seqnames
+simulateCounts
 sizeFactors
 statistcs
 stdout

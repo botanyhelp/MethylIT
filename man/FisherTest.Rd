@@ -71,7 +71,7 @@ provided. If combined with tv.cut, this permits a more effective
 filtering of the signal from the noise. Default is NULL.}
 
 \item{hdiv.col}{Optional. Columns where \emph{hdiv} values are located in each
-GRange object from LR. It must be provided if together with \emph{hdiv.cut}.
+GRanges object from LR. It must be provided if together with \emph{hdiv.cut}.
 Default is NULL.}
 
 \item{pAdjustMethod}{method used to adjust the results; default: BH}

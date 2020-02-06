@@ -126,7 +126,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-# [Methyl-IT](https://github.com/genomaths/MethylIT) {.tabset}
+# [Methyl-IT](https://github.com/genomaths/MethylIT)
 MethylIT is an R package for methylome analysis based on a signal-detection
 machine learning approach (SD-ML). This approach is postulated to provide
 greater sensitivity for resolving true signal from the methylation background

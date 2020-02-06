@@ -2,7 +2,7 @@
 % Please edit documentation in R/filterGRange.R
 \name{filterGRange}
 \alias{filterGRange}
-\title{Filter methylation counts by coverage in a GRange object}
+\title{Filter methylation counts by coverage in a GRanges object}
 \usage{
 filterGRange(
   x,

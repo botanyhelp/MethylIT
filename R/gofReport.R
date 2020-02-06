@@ -196,6 +196,7 @@ gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",
    modelkey <- paste(names(bestAIC), bestAIC, sep = "_")
    nlms <- nlms[match(modelkey, names(nlms))]
    names(nlms) <- sn
+   nlms <- structure(nlms, class=c("ProbDistrList", "list"))
 
    bestModel <- model[match(bestAIC, nams)]
    names(bestModel) <- names(HD)

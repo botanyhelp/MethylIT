@@ -1,6 +1,6 @@
 #' @rdname filterGRange
 #'
-#' @title Filter methylation counts by coverage in a GRange object
+#' @title Filter methylation counts by coverage in a GRanges object
 #' @description The function is used to discard the cytosine positions with
 #'     coverage values less than 'min.coverage' read counts or values greater
 #'     than the specified 'percentile'.
