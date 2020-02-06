@@ -97,6 +97,7 @@
 #' @importFrom S4Vectors DataFrame mcols
 #' @importFrom IRanges width
 #' @importFrom stats var
+#' @importFrom methods is
 #'
 #' @export
 countTest2 <- function(DS, num.cores=1, countFilter=TRUE, CountPerBp=NULL,
