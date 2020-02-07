@@ -41,7 +41,7 @@ filterGRange <- function(x, min.coverage=4, max.coverage=Inf,
                          col.names=c(coverage=NULL, mC=NULL, uC=NULL ),
                          sample.name='', verbose=TRUE) {
 
-   if (!(class(x) == 'GRanges')) {
+   if (!is(x, 'GRanges')) {
        stop("* Unable to process a non-GRanges object!")
    }
    if (verbose)
