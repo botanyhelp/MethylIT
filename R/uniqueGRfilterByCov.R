@@ -99,7 +99,7 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
        x <- uniqueGRanges(list(x, y), num.cores=num.cores, tasks=tasks,
                            ignore.strand = ignore.strand, verbose=verbose, ...)
    } else {
-       if (class(x) != "GRanges") {
+       if (!is(x, "GRanges")) {
            # --------------------valid "pDMP" or "InfDiv" object ---------------
            validateClass(x)
            # ----------------------------------------------------------------- #

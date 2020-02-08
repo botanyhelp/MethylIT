@@ -55,12 +55,12 @@ pcaQDA <- function(formula=NULL, data=NULL, grouping=NULL, n.pc=1, scale=FALSE,
                    center=FALSE, tol=1.0e-4, method="moment", max.pc=NULL) {
 
    Check <- ArgumentCheck::newArgCheck()
-   if (!is.null(formula) && class(formula) != "formula") {
+   if (!is.null(formula) && !is(formula, "formula")) {
        ans <- paste("A formula of the form groups ~ x1 + x2 + ...",
                        "(see ?pcaQDA or ?qda).")
        ArgumentCheck::addError(msg=ans, argcheck=Check)
    }
-   if (!is.null(formula) && class(formula) == "formula") {
+   if (!is.null(formula) && is(formula, "formula")) {
        vn <- try(attr(terms(formula), "term.labels"), silent=TRUE)
        if (inherits(vn, "try-error")) {
           vn <-  try(setdiff(colnames(data), as.character(formula)[2]),

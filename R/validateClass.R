@@ -34,7 +34,7 @@ validateClass.default <- function(LR){
 #' @export
 validateClass.pDMP <- function(LR) {
    vn <- c("hdiv", "TV", "wprob")
-   if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges")))) {
+   if (any(!unlist(lapply(LR, function(GR) is(GR, "GRanges"))))) {
        warning("At least one element from 'LR' is not a 'GRanges' object.")
        cat("\n")
        stop("LR is not a valid 'pDMP' object")
@@ -59,7 +59,7 @@ validateClass.pDMP <- function(LR) {
 #' @export
 validateClass.InfDiv <- function(LR) {
    vn <- c("hdiv", "TV")
-   if (any(!unlist(lapply(LR, function(GR) class(GR) == "GRanges")))) {
+   if (any(!unlist(lapply(LR, function(GR) is(GR, "GRanges"))))) {
        warning("At least one element from 'LR' is not a 'GRanges' object")
        cat("\n")
        stop("LR is not a valid 'InfDiv' object")

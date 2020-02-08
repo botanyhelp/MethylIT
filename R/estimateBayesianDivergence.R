@@ -104,7 +104,7 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
        bpparam <- SnowParam(workers = num.cores, type = "SOCK")
    }
    ismatrix <- TRUE
-   if (class(x) != "matrix") {
+   if (!is(x, "matrix")) {
        HDiv <- x
        x <- as.matrix(mcols(x))
        ismatrix <- FALSE

@@ -100,13 +100,13 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
                        ignore.strand=FALSE, keep.strand=!ignore.strand,
                        num.cores=1, tasks=0L, verbose=TRUE) {
 
-   if (class(ListOfGranges) == "list" && class(ListOfGranges) != "GRangesList")
+   if (is(ListOfGranges, "list") && !is(ListOfGranges, "GRangesList"))
    {
        GR <- try(as(ListOfGranges, "GRangesList"), silent=TRUE)
 
        if (inherits(ListOfGranges, "try-error")) {
          numgr <- sum(unlist(lapply(ListOfGranges, function(l)
-                                               class(l) == "GRanges")))
+                                               is(l, "GRanges"))))
            if (numgr != length(ListOfGranges)) {stop(
                "Not all the elements from the list are valid GRanges objects")
            } else {ListOfGranges <- GR; rm(GR); gc()}
@@ -130,7 +130,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
        } else{
            m <- rep(missing, l)
            seq <- as.vector(mcols(seq)[queryHits(hits), 1])
-           if (class(seq) == "factor" || class(seq) == "character") {
+           if (is(seq, "factor") || is(seq, "character")) {
                m[subjectHits(hits)] <- as.character(seq)
            } else m[subjectHits(hits)] <- as.numeric(seq)
        }

@@ -44,7 +44,7 @@ glmDataSet <- function(GR = NULL, counts = NULL, colData = NULL) {
       cat("\n")
       stop("In 'colData', 'condition' must be provided")
    }
-    if (class(colData$condition) != "factor") {
+    if (!is(colData$condition, "factor")) {
        cat("\n")
        stop("In 'colData','condition' must be a 'factor'")
    }
@@ -54,11 +54,11 @@ glmDataSet <- function(GR = NULL, counts = NULL, colData = NULL) {
          stop("In 'colData', factor 'condition' must have only two levels")
       }
    }
-   if (!is.null(GR) && class(GR) != "GRanges") {
+   if (!is.null(GR) && !is(GR, "GRanges")) {
        cat("\n")
        stop("'GR' must be a GRanges")
    }
-   if (!is.null(counts) && class(counts) != "matrix") {
+   if (!is.null(counts) && !is(counts, "matrix")) {
        counts <- try(as.matrix(counts), silent = TRUE)
        if (inherits(counts, "try-error")) {
            cat("\n")
