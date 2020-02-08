@@ -1,6 +1,7 @@
 destination: ~/methylit/
 url: https://genomaths.github.io/methylit/
 
+
 navbar:
   structure:
     left:
@@ -24,8 +25,11 @@ navbar:
       text: Articles
       href: articles/index.html
       menu:
+      - text: "MethylIT"
+        href: articles/MethylIT.html
+      - text: ------
       - text: "Methylation analysis with Methyl-IT"
-      - href: articles/Methylation_analysis_with_Methyl-IT.html
+        href: articles/Methylation_analysis_with_Methyl-IT.html
       - text: ------
       - text: "Example of Methylome Analysis with MethylIT using Cancer Datasets"
         href: articles/cancer_example.html
@@ -35,8 +39,17 @@ navbar:
     twitter:
       icon: "fab fa-twitter fa-lg"
       href: http://twitter.com/robersysr
-    links:
-       href: https://github.com/genomaths/MethylIT
+
+navbar-links:
+        href: https://github.com/genomaths/MethylIT
+
+home:
+  links:
+  - text: Author's website
+    href: https://genomaths.com
+  - text: Affiliation (<img src="https://git.psu.edu/genomath/MethylIT_data/raw/master/penn-state-lion.png" height="24" /> PennState)
+    href: https://bio.psu.edu/directory/rus547
+
 reference:
 - title: Data preprocessing
   desc: ~
@@ -99,6 +112,6 @@ articles:
   desc: ~
   contents:
   - '`MethylIT`'
-  - '`cancer_example`'
   - '`Methylation_analysis_with_Methyl-IT`'
+  - '`cancer_example`'
 
