@@ -50,6 +50,11 @@ animal methylomes in the framework of a communication system ([3](#3)), where
 cytosine DNA methylation has the dual roles of stabilizing the DNA molecule and
 to carry the regulatory signals.
 
+The application of Methyl-T signal detection-machine learning approach to
+methylation analysis of whole genome bisulfite sequencing (WGBS) data permits
+a high level of methylation signal resolution in cancer-associated genes and
+pathways ([4](#4)).
+
 Status
 ------
 Currently, the package is actively used in methylation analyses. Nevertheless,
@@ -130,14 +135,19 @@ MethylIT Package Manual:
 --------
 
 Scripts and examples at:
-------------
+---------
 
 https://git.psu.edu/genomath/MethylIT_examples
 
-<a href="https://drive.google.com/open?id=12D0vasaptB2IpA_HFxe6lzP5kxNEJqPF" target="_blank">R script and data for testing after installation</a>
+[R script and data for testing after installation](https://drive.google.com/open?id=12D0vasaptB2IpA_HFxe6lzP5kxNEJqPF)
+
+---------
+
+Report issues (bugs):
+---------
+[Here](https://github.com/genomaths/MethylIT/issues)
 
 ------------
-
 
 References
 ----------
@@ -147,6 +157,8 @@ References
 <br> <a name="2">2</a>. Sanchez R, Mackenzie SA: Genome-Wide Discriminatory Information Patterns of Cytosine DNA Methylation. [Int. J. Mol. Sci. 2016, 17(6), 938](https://dx.doi.org/10.3390%2Fijms17060938). 
 
 <br><a name="3">3</a>. Sanchez R, Mackenzie SA: Information Thermodynamics of Cytosine DNA Methylation. [Plos One 2016, 11](https://doi.org/10.1371/journal.pone.0150427).<br>
+
+<br><a name="4">4</a>. Sanchez R, Mackenzie SA: Integrative Network Analysis of Differentially Methylated and Expressed Genes for Biomarker Identification in Leukemia. [Sci Rep 2020, 10(1), 2123](https://doi.org/10.1038/s41598-020-58123-2).<br>
 
 License
 -------
