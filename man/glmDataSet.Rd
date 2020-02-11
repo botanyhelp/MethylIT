@@ -20,6 +20,14 @@ a factor with exactly two levels. The rownames of \emph{colData}
 individual samples. The row names of \emph{colData} must correspond to
 th column names of the count matrix.}
 }
+\value{
+An object from "RangedGlmDataSet" class containing these attributes:
+"GR": the GRanges of the object, "counts": the counts for each sample
+at that genomic position, "colData": the condition of each sample,
+treatment or control, "sampleNames": the names of the samples, "levels":
+the values (perhaps TT and CT for treatment and control)  permitted in
+the "colData" attribute, optionData: additional metadata or NULL
+}
 \description{
 This function is used to build a object suitable to be used
 with Methyl-IT \code{link{countTest2}} function.
@@ -47,4 +55,7 @@ colData <- data.frame(condition = factor(c("A","A","B","B")),
 ## A RangedGlmDataSet is created
 ds <- glmDataSet(GR = GR, colData = colData)
 
+}
+\author{
+Robersy Sanchez
 }
