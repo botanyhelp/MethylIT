@@ -570,7 +570,7 @@ in biotechnology industry.
 
 Methyl-IT function
 [evaluateDIMPclass](https://genomaths.github.io/methylit/reference/evaluateDIMPclass.html)
-is used here, to evaluate the classification of DMPs into one of the two
+is used here to evaluate the classification of DMPs into one of the two
 classes, control and treatment. Several classifiers are available to be used
 with this function (see the help/manual for this function or type
 ?evaluateDIMPclass in command line).
@@ -580,8 +580,9 @@ setting "clas.perf = TRUE" in function
 [estimateCutPoint](https://genomaths.github.io/methylit/reference/estimateCutPoint.html).
 However, this performance derives just from randomly split the set of sample
 into two subsets: training (60%) and testing (40%). A good classification
-performance report would be just the result of a lucky split of the sample! Hence,
-what would happen if the random split and further analysis are repeated 300 times?
+performance report would be just the result from a lucky split of the set of
+samples! Hence, what would happen if the random split and further analysis are
+repeated 300 times?
 
  
 ```{r g2p.class, include = TRUE}
