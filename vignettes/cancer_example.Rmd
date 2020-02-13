@@ -34,7 +34,7 @@ output:
     self_contained: false
     keep_md: yes
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Cancer Example}
   %\VignetteEngine{knitr::knitr}
   \usepackage[utf8]{inputenc}
   

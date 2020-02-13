@@ -2,7 +2,7 @@
 #' @name glmDataSet
 #' @title Data set constructor for class glmDataSet
 #' @description This function is used to build a object suitable to be used
-#'     with Methyl-IT \code{link{countTest2}} function.
+#'     with Methyl-IT \code{\link{countTest2}} function.
 #' @details Data set constructor for class glmDataSet also validate the object
 #' @param GR A GRanges object with the count matrix of DMPs in the metacolumns
 #'     (see \emph{'counts'}). If provided, then leave parameter
@@ -14,6 +14,13 @@
 #'     a factor with exactly two levels. The rownames of \emph{colData}
 #'     individual samples. The row names of \emph{colData} must correspond to
 #'     th column names of the count matrix.
+#' @return An object from "RangedGlmDataSet" class containing these attributes:
+#'     "GR": the GRanges of the object, "counts": the counts for each sample 
+#'     at that genomic position, "colData": the condition of each sample, 
+#'     treatment or control, "sampleNames": the names of the samples, "levels": 
+#'     the values (perhaps TT and CT for treatment and control)  permitted in 
+#'     the "colData" attribute, optionData: additional metadata or NULL
+#' @author Robersy Sanchez
 #' @export
 #' @examples
 #' set.seed(133) # Set a seed
