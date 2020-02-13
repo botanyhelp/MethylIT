@@ -2,7 +2,7 @@
 #' @name glmDataSet
 #' @title Data set constructor for class glmDataSet
 #' @description This function is used to build a object suitable to be used
-#'     with Methyl-IT \code{link{countTest2}} function.
+#'     with Methyl-IT \code{\link{countTest2}} function.
 #' @details Data set constructor for class glmDataSet also validate the object
 #' @param GR A GRanges object with the count matrix of DMPs in the metacolumns
 #'     (see \emph{'counts'}). If provided, then leave parameter

@@ -30,7 +30,7 @@ the "colData" attribute, optionData: additional metadata or NULL
 }
 \description{
 This function is used to build a object suitable to be used
-with Methyl-IT \code{link{countTest2}} function.
+with Methyl-IT \code{\link{countTest2}} function.
 }
 \details{
 Data set constructor for class glmDataSet also validate the object
