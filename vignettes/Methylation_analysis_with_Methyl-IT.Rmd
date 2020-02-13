@@ -32,6 +32,10 @@ abstract: |
   control and treatment groups, respectively. The main Methyl-IT downstream
   analysis is presented alongside the application of Fisher's exact test. The
   importance of a signal detection step is shown.
+vignette: >
+  %\VignetteIndexEntry{Methylation analysis with Methyl-IT}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 <style type="text/css">
