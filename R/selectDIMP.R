@@ -76,7 +76,7 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
            or 'pval.col' must be not NULL")
    if (is.null(div.col)) target.col = pval.col else target.col = div.col
 
-   for (k in seq_len(length(LR))) {
+   for (k in seq_along(LR)) {
        x <- LR[[k]]
        if (!is.null(tv.cut) && !is.null(tv.col))
            x <- x[abs(mcols(x[, tv.col])[, 1]) > tv.cut]
