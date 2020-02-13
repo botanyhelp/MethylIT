@@ -22,7 +22,7 @@ required.  The default is "all" basic predictions: classes and posterior
 classification probabilities. Option "lda.pred" returns the
 object given by function 'predict.lda' from MASS package: 'class',
 'posterior', 'scores' (cases scores on discriminant variables,
-see \code{link[MASS]{lda}}.}
+see \code{\link[MASS]{lda}}.}
 
 \item{...}{arguments passed to or from other methods.}
 }
@@ -31,6 +31,6 @@ Predict using a LDA model built with function
 \code{\link[MethylIT]{evaluateDIMPclass}}
 }
 \seealso{
-\code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}
+\code{\link[MethylIT]{estimateCutPoint}}, \code{\link[MASS]{lda}}
 }
 \keyword{internal}

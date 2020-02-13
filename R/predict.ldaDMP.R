@@ -10,9 +10,9 @@
 #'     classification probabilities. Option "lda.pred" returns the
 #'     object given by function 'predict.lda' from MASS package: 'class',
 #'     'posterior', 'scores' (cases scores on discriminant variables,
-#'     see \code{link[MASS]{lda}}.
+#'     see \code{\link[MASS]{lda}}.
 #' @param ... arguments passed to or from other methods.
-#' @seealso \code{link[MethylIT]{estimateCutPoint}}, \code{link[MASS]{lda}}
+#' @seealso \code{\link[MethylIT]{estimateCutPoint}}, \code{\link[MASS]{lda}}
 #' @keywords internal
 #' @exportMethod predict.ldaDMP
 predict.ldaDMP <- function(object, newdata,
