@@ -14,6 +14,7 @@ estimateCutPoint(
   classifier1 = c("logistic", "pca.logistic", "lda", "qda", "pca.lda", "pca.qda"),
   classifier2 = NULL,
   tv.cut = 0.25,
+  tv.col = NULL,
   div.col = NULL,
   clas.perf = FALSE,
   post.cut = 0.5,
@@ -66,6 +67,9 @@ and the corresponding best fitted model will be returned.}
 site/range. Only sites/ranges \emph{k} with \eqn{TVD_{k} > tv.cut} are
 are used in the analysis. Its value must be a number.
 \eqn{0 < tv.cut < 1}. Default is \eqn{tv.cut = 0.25}.}
+
+\item{tv.col}{Column number for the total variation to be used for filtering
+cytosine positions (if provided).}
 
 \item{div.col}{Column number for divergence variable for which the estimation
 of the cutpoint will be performed.}

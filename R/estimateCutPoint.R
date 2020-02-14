@@ -72,6 +72,8 @@
 #'     site/range. Only sites/ranges \emph{k} with \eqn{TVD_{k} > tv.cut} are
 #'     are used in the analysis. Its value must be a number.
 #'     \eqn{0 < tv.cut < 1}. Default is \eqn{tv.cut = 0.25}.
+#' @param tv.col Column number for the total variation to be used for filtering
+#'     cytosine positions (if provided).
 #' @param div.col Column number for divergence variable for which the estimation
 #'     of the cutpoint will be performed.
 #' @param clas.perf Logic. Whether to evaluate the classification performance
@@ -163,9 +165,9 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
                                wprob=TRUE, pos=TRUE),
                        classifier1 = c("logistic", "pca.logistic", "lda",
                                        "qda","pca.lda", "pca.qda"),
-                       classifier2 = NULL, tv.cut = 0.25, div.col = NULL,
-                       clas.perf = FALSE, post.cut = 0.5, prop=0.6,
-                       n.pc=1, interaction = NULL, cut.values = NULL,
+                       classifier2 = NULL, tv.cut = 0.25, tv.col = NULL,
+                       div.col = NULL, clas.perf = FALSE, post.cut = 0.5,
+                       prop=0.6, n.pc=1, interaction = NULL, cut.values = NULL,
                        stat = 1, cutp_data = FALSE,
                        num.cores=1L, tasks=0L, ...) {
 
@@ -307,7 +309,7 @@ estimateCutPoint <- function(LR, control.names, treatment.names, simple = TRUE,
        LR = list(unlist(LR[control.names]), unlist(LR[treatment.names]))
        names(LR) <- c("ctrl", "treat")
        LR <- structure(LR, class = 'pDMP')
-       tv.col = match("TV", colnames(mcols(LR[[1]])))
+       if (is.null(tv.col)) tv.col = match("TV", colnames(mcols(LR[[1]])))
        classes <- c(rep("CT", length(LR$ctrl)),
                     rep("TT", length(LR$treat)))
        classes <- factor(classes, levels = c("CT", "TT"))
