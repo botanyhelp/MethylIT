@@ -9,8 +9,8 @@
 ^\.git$
 ^MethylIT\.pdf$
 ^vignettes/cancer_example\.Rmd$
-^vignettes/MethylIT.Rmd\.Rmd$
-^vignettes/Methylation_analysis_with_Methyl-IT.Rmd\.Rmd$
+^vignettes/MethylIT\.Rmd$
+^vignettes/Methylation_analysis_with_Methyl-IT\.Rmd$
 ^vignettes/bibliography\.bib$
 ^vignettes/_navbar\.yml$
 ^_pkgdown\.yml$
