@@ -186,7 +186,8 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
 
    # This tests each sample against the reference
    if (is.null(control.names) || is.null(treatment.names)) {
-       res <- lapply(LR, function(GR) ftest(GR) )
+       res <- lapply(LR, function(GR) ftest(GR, num.cores = num.cores,
+                                            tasks = tasks, verbose = verbose) )
    }
 
    if (!is.null(control.names)&&!is.null(treatment.names)) {
@@ -223,7 +224,8 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
                    if (verbose)
                        cat("*** Testing", paste0(control.names[k], " versus ",
                            treatment.names[j]), "\n")
-                   res[[i]]=ftest(GR, verbose = verbose, ...)
+                   res[[i]]=ftest(GR, num.cores = num.cores,
+                                  tasks = tasks, verbose = verbose)
                    i = i + 1
                }
                names(res) <- test.name
