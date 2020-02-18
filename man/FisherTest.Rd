@@ -19,6 +19,7 @@ FisherTest(
   num.cores = 1L,
   tasks = 0L,
   verbose = FALSE,
+  progressbar = TRUE,
   ...
 )
 }
@@ -93,6 +94,8 @@ BiocParallel package).}
 
 \item{verbose}{if TRUE, prints the function log to stdout}
 
+\item{progressbar}{logical(1). Enable progress bar}
+
 \item{...}{Additional parameters for function
 \code{\link[MethylIT]{uniqueGRanges}}.}
 }
@@ -117,12 +120,20 @@ built for range from GRanges object.
 ## Get a dataset of Hellinger divergency of methylation levels
 ## from the package
 data(HD)
-## Only the first four cytosine sites from each sample are tested
-hd <- lapply(HD, function(hd) hd[1:4])
+### --- To get the read counts
+hd <- lapply(HD, function(hd) {
+   hd = hd[1:10,3:4]
+   colnames(mcols(hd)) <- c("mC", "uC")
+   return(hd)
+})
 
-FisherTest(LR = hd, pooling.stat = "sum",
-        treatment.names = c("T1", "T2"), tv.cut = NULL,
-        pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
+FisherTest(LR = hd,
+       pooling.stat = NULL,
+        control.names = "C1",
+        treatment.names = "T1",
+        pAdjustMethod="BH",
+        pvalCutOff = 0.05,
+        num.cores = 1L,
         verbose=FALSE)
 
 }
