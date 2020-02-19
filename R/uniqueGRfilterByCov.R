@@ -32,6 +32,10 @@
 #'     where (uC <= min.umeth) & (mC > 0) & (mC < min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
+#' @param min.sitecov An integer. The minimum total coverage. Only sites where
+#'     the total coverage (cov1 + cov2) is greater than 'min.sitecov' are
+#'     considered for downstream analysis, where cov1 and cov2 are the coverages
+#'     for samples 1 and 2, respectively.
 #' @param percentile Threshold to remove the outliers (PCR bias) from each file
 #'     and all files stacked. If 'high.coverage = NULL', then the threshold
 #'     \eqn{q} will be computed as:
@@ -87,8 +91,8 @@
 #' r1
 #' @export
 uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
-                               min.umeth = 0, percentile = 0.9999,
-                               high.coverage = NULL,
+                               min.umeth = 0, min.sitecov = 4,
+                               percentile = 0.9999, high.coverage = NULL,
                                columns = c(mC = 1, uC = 2), num.cores = 1L,
                                ignore.strand = FALSE, tasks = 0L,
                                verbose = TRUE, ...) {
@@ -112,6 +116,7 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
 
    cov1 <- rowSums(as.matrix(mcols(x[,c(1,2)])))
    cov2 <- rowSums(as.matrix(mcols(x[,c(3,4)])))
+   total_cov <- cov1 + cov2
 
    if (is.null(high.coverage)) {
        q1 <- quantile(cov1, probs=percentile)
@@ -125,9 +130,9 @@ uniqueGRfilterByCov <- function(x, y = NULL, min.coverage = 4, min.meth = 0,
            paste(min.coverage, collapse = ","), ") is not hold by the sample")
    idx2 <- which((cov1 <= q) & (cov2 <= q))
    idx <- intersect(idx1, idx2)
+   idx <- intersect(idx, which(total_cov >= min.sitecov))
    if (!(length(idx) > 0))
        stop("*** Some filtering condition is not hold by the sample")
-
 
    x <- x[idx]
    if (max(min.meth) > 0) {

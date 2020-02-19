@@ -79,13 +79,13 @@ selectDIMP <- function(LR, div.col=NULL, pval.col=NULL, absolute=FALSE,
    for (k in seq_len(length(LR))) {
        x <- LR[[k]]
        if (!is.null(tv.cut) && !is.null(tv.col))
-           x <- x[abs(mcols(x[, tv.col])[, 1]) > tv.cut]
+           x <- x[which(abs(mcols(x[, tv.col])[, 1]) > tv.cut)]
        if (is.null(div.col)) {
-           LR[[k]] <- x[mcols(x[, target.col])[, 1] < cutpoint]
+           LR[[k]] <- x[which(mcols(x[, target.col])[, 1] < cutpoint)]
        } else {
            if (absolute)
-               LR[[k]] <- x[abs(mcols(x[, target.col])[, 1]) > cutpoint]
-           else LR[[k]] <- x[mcols(x[, target.col])[, 1] > cutpoint]
+               LR[[k]] <- x[which(abs(mcols(x[, target.col])[, 1]) > cutpoint)]
+           else LR[[k]] <- x[which(mcols(x[, target.col])[, 1] > cutpoint)]
        }
    }
    return(LR)

@@ -106,6 +106,10 @@
 #'     where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth) hold will be
 #'     removed, where mC and uC stand for the numbers of methylated and
 #'     unmethylated reads. Default is min.umeth = 0.
+#' @param min.sitecov An integer. The minimum total coverage. Only sites where
+#'     the total coverage (cov1 + cov2) is greater than 'min.sitecov' are
+#'     considered for downstream analysis, where cov1 and cov2 are the coverages
+#'     for samples 1 and 2, respectively.
 #' @param high.coverage An integer for read counts. Cytosine sites having
 #'     higher coverage than this are discarded.
 #'@param percentile Threshold to remove the outliers from each file and all
@@ -165,9 +169,9 @@
 #' @export
 estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
                            min.coverage = 4, min.meth = 4, min.umeth = 0,
-                           high.coverage = NULL, percentile = 0.999,
-                           JD = FALSE, num.cores = 1L, tasks = 0L,
-                           meth.level = FALSE, logbase = 2,
+                           min.sitecov = 4, high.coverage = NULL,
+                           percentile = 0.999, JD = FALSE, num.cores = 1L,
+                           tasks = 0L, meth.level = FALSE, logbase = 2,
                            verbose = TRUE, ...) {
 
    if (is.null(columns) && (!meth.level)) columns <- c(1,2)
@@ -199,7 +203,8 @@ estimateDivergence <- function(ref, indiv, Bayesian = FALSE, columns = NULL,
            if (verbose) message("*** Processing sample #", k, " ", sn[ k ])
            x = uniqueGRfilterByCov(x = ref, y = indv[[k]],
                                min.coverage = min.coverage, min.meth = min.meth,
-                               min.umeth = min.umeth, percentile = percentile,
+                               min.umeth = min.umeth, min.sitecov = min.sitecov,
+                               percentile = percentile,
                                high.coverage = high.coverage, num.cores = 1L,
                                tasks=tasks, verbose = verbose, ...)
            if (length(x) < 2)

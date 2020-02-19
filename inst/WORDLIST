@@ -22,6 +22,7 @@ bidimensional
 bioconductor
 BiocParallel
 Bioinformatics
+Biomarker
 biomolecular
 bisulfite
 bp
@@ -48,6 +49,7 @@ coord
 CountPerBp
 countTest
 coverages
+cov
 CpG
 CutPoint
 cutpoint
@@ -199,6 +201,7 @@ NUll
 num
 ontogenetic
 optStatVal
+optionData
 Pardo
 pca
 pcaLDA
@@ -240,12 +243,14 @@ rggamma
 Routledge
 rowRanges
 RMST
+sampleNames
 se
 selectDIMP
 seqlevels
 seqname
 seqnames
 simulateCounts
+sitecov
 sizeFactors
 statistcs
 stdout

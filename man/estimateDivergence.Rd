@@ -12,6 +12,7 @@ estimateDivergence(
   min.coverage = 4,
   min.meth = 4,
   min.umeth = 0,
+  min.sitecov = 4,
   high.coverage = NULL,
   percentile = 0.999,
   JD = FALSE,
@@ -59,6 +60,11 @@ reads to consider cytosine position. Specifically cytosine positions
 where (uC <= min.umeth) & (mC > 0) & (mC <= min.meth) hold will be
 removed, where mC and uC stand for the numbers of methylated and
 unmethylated reads. Default is min.umeth = 0.}
+
+\item{min.sitecov}{An integer. The minimum total coverage. Only sites where
+the total coverage (cov1 + cov2) is greater than 'min.sitecov' are
+considered for downstream analysis, where cov1 and cov2 are the coverages
+for samples 1 and 2, respectively.}
 
 \item{high.coverage}{An integer for read counts. Cytosine sites having
 higher coverage than this are discarded.}

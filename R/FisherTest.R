@@ -65,6 +65,7 @@
 #'     evenly as possible over the number of workers (see MulticoreParam from
 #'     BiocParallel package).
 #' @param verbose if TRUE, prints the function log to stdout
+#' @param progressbar logical(1). Enable progress bar
 #' @param ... Additional parameters for function
 #'     \code{\link[MethylIT]{uniqueGRanges}}.
 #'
@@ -79,12 +80,20 @@
 #' ## Get a dataset of Hellinger divergency of methylation levels
 #' ## from the package
 #' data(HD)
-#' ## Only the first four cytosine sites from each sample are tested
-#' hd <- lapply(HD, function(hd) hd[1:4])
+#' ### --- To get the read counts
+#' hd <- lapply(HD, function(hd) {
+#'    hd = hd[1:10,3:4]
+#'    colnames(mcols(hd)) <- c("mC", "uC")
+#'    return(hd)
+#' })
 #'
-#' FisherTest(LR = hd, pooling.stat = "sum",
-#'         treatment.names = c("T1", "T2"), tv.cut = NULL,
-#'         pAdjustMethod="BH", pvalCutOff = 0.05, num.cores = 1L,
+#' FisherTest(LR = hd,
+#'        pooling.stat = NULL,
+#'         control.names = "C1",
+#'         treatment.names = "T1",
+#'         pAdjustMethod="BH",
+#'         pvalCutOff = 0.05,
+#'         num.cores = 1L,
 #'         verbose=FALSE)
 #'
 #' @seealso \code{\link[MethylIT.utils]{rmstGR}}
@@ -93,7 +102,7 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
                        treatment.names=NULL, pooling.stat = "sum", tv.cut=NULL,
                        hdiv.cut=NULL, hdiv.col=NULL, pAdjustMethod="BH",
                        pvalCutOff=0.05, saveAll=FALSE, num.cores=1L, tasks=0L,
-                       verbose=FALSE, ...) {
+                       verbose=FALSE, progressbar = TRUE, ...) {
 
    if (any(!unlist(lapply(LR, function(GR) is(GR, "GRanges")))))
        stop("At least one element from 'LR' is not a 'GRanges' object")
@@ -108,7 +117,7 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
      stop("List's names does not match control & treatment names")
 
    # === Auxiliar function to perform FT ===
-   ftest <- function(GR, ...) {
+   ftest <- function(GR, num.cores = num.cores, tasks = tasks, ...) {
        count.matrix = as.matrix(mcols(GR))
        p1 <- count.matrix[, c(1,2)]
        p1 <- p1[, 1]/rowSums(p1)
@@ -148,9 +157,11 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
              cat("*** Performing Fisher's exact test... \n
                  # of sites after filtering: ", sites, "\n")
            if (Sys.info()['sysname'] == "Linux") {
-             bpparam <- MulticoreParam(workers=num.cores, tasks=tasks)
+             bpparam <- MulticoreParam(workers=num.cores, tasks=tasks,
+                                       progressbar = progressbar)
            } else {
-             bpparam <- SnowParam(workers = num.cores, type = "SOCK")
+             bpparam <- SnowParam(workers = num.cores, type = "SOCK",
+                                   progressbar = progressbar)
            }
            pvals <- unname(unlist(bplapply(count.matrix, function(v) {
              fisher.test(matrix(as.integer(v), 2, byrow = TRUE))$p.value
@@ -186,31 +197,39 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
 
    # This tests each sample against the reference
    if (is.null(control.names) || is.null(treatment.names)) {
-       res <- lapply(LR, function(GR) ftest(GR) )
+       res <- lapply(LR, function(GR) ftest(GR, num.cores = num.cores,
+                                            tasks = tasks, verbose = verbose) )
    }
 
    if (!is.null(control.names)&&!is.null(treatment.names)) {
        ctrl <- LR[control.names]
-       ctrl <- lapply(ctrl, function(GR) {
-           GR <- GR[, count.col]
-           colnames(mcols(GR)) <- c("c1", "t1") # Control counts
-           return(GR)
-       })
 
        treat <- LR[treatment.names]
-       treat <- lapply(treat, function(GR) {
-           GR <- GR[, count.col]
-           colnames(mcols(GR)) <- c("c2", "t2") # Control counts
-           return(GR)
-       })
+
        if (!is.null(pooling.stat)) {
            ctrl <- poolFromGRlist(ctrl, stat=pooling.stat,
                                    num.cores=num.cores, verbose=verbose)
+           colnames(mcols(ctrl)) <- c("c1", "t1") # control counts
+
            treat <- poolFromGRlist(treat, stat=pooling.stat,
                                    num.cores=num.cores, verbose=verbose)
+           colnames(mcols(treat)) <- c("c2", "t2") # treatment counts
+
            GR <- uniqueGRanges(list(ctrl, treat), verbose=verbose, ...)
-           res <- ftest(GR)
+           res <- ftest(GR, num.cores = num.cores, tasks = tasks,
+                       verbose=verbose )
        } else {
+           ctrl <- lapply(ctrl, function(GR) {
+               GR <- GR[, count.col]
+               colnames(mcols(GR)) <- c("c1", "t1") # Control counts
+               return(GR)
+           })
+
+           treat <- lapply(treat, function(GR) {
+               GR <- GR[, count.col]
+               colnames(mcols(GR)) <- c("c2", "t2") # Treatment counts
+               return(GR)
+           })
            res = list()
            i = 1
            test.name = c()
@@ -223,15 +242,17 @@ FisherTest <- function(LR, count.col=c(1,2), control.names=NULL,
                    if (verbose)
                        cat("*** Testing", paste0(control.names[k], " versus ",
                            treatment.names[j]), "\n")
-                   res[[i]]=ftest(GR, verbose = verbose, ...)
+                   res[[i]]=ftest(GR, num.cores = num.cores,
+                                   tasks = tasks, verbose = verbose)
                    i = i + 1
                }
                names(res) <- test.name
            }
        }
    }
-   cl <- class(LR)
    if (!is.list(res)) res <- list(groupComparison = res)
+   if (inherits(LR, "InfDiv") || inherits(LR, "pDMP")) cl <- class(LR)
+   else cl <- class(res)
    res <- structure(res, class = c(cl, "testDMP"))
    return(res)
 }
