@@ -48,9 +48,11 @@
 #' @param columns Vector of integer numbers of the columns where the counts
 #'     "mC1", "uC1", "mC2", and "uC2" are in the matrix (default 1 to 4). That
 #'     is, the input could have more than 4 columns, but only 4 columns with
-#'     the counts are used.
-#' @param meth.level methylation levels can be provided in place of counts.
-#' @param preserve.gr Logic (Default:FALSE). Option of whether to preserve all
+#'     the counts are used. if 'meth.level == TRUE', then
+#'     columns = c('p1', 'p2').
+#' @param meth.level logical(1). Methylation levels can be provided in place of
+#'     counts.
+#' @param preserve.gr logical(1). Option of whether to preserve all
 #'     the metadata from the original GRanges object.
 #' @param logbase Logarithm base used to compute the JD (if JD = TRUE).
 #'     Logarithm base 2 is used as default (bit unit). Use logbase = exp(1) for
@@ -80,6 +82,18 @@
 #' ## Keep in mind that Hellinger and J divergences are, in general, correlated!
 #'     cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
 #'             method = "kendall")
+#'
+#' ## An example with methylation levels
+#' set.seed(123)
+#' sites = 10
+#' dat = data.frame(chr = "chr1", start = 1:sites,
+#'                  end = 1:sites,strand = '*',
+#'                  m1 = runif(n = sites),
+#'                  m2 = runif(n = sites))
+#' dat =  makeGRangesFromDataFrame(dat, keep.extra.columns = TRUE)
+#' ## Transforming the list of data frames into a GRanges object
+#' hd <- estimateBayesianDivergence(x = dat, columns = c(p1 = 1, p2 = 2),
+#'                                  meth.level = TRUE, preserve.gr = TRUE
 #'
 #' @references 1. Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
 #'     two discrete populations based on the Hellinger distance. Stat Probab
@@ -111,7 +125,13 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
    }
    ## If x carriers a read counts, then:
    if (!meth.level) {
-       x <- x[ ,columns]
+       x <- x[, columns]
+       if (ncol(x) < 4) {
+          stop("If counts are provided, then 'length(columns) = 4' is expected",
+               "\n If you are providing methylation level, please set",
+               " 'meth.level = TRUE'")
+       }
+
        r0 <- rowSums(x)
        ind <- which(r0 > 4); rm(r0)
        x <- x[ind, ]
@@ -181,6 +201,9 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
            x$jdiv <- unlist(jdiv)
        }
    } else {
+       if (length(columns) > 2) columns <- c(1, 2)
+       x <- x[, columns]
+
        if (verbose) cat("*** Estimating Hellinger divergence... \n")
        hdiv <- bplapply(seq_len(nrow(x)), function(i) {
            estimateHellingerDiv(p=as.numeric(x[i, ]))}, BPPARAM=bpparam)
@@ -188,10 +211,17 @@ estimateBayesianDivergence <- function(x, Bayesian=FALSE, JD = FALSE,
        hdiv <- unlist(hdiv)
        x <- data.frame(x, TV=x[ ,2] - x[ ,1], hdiv)
        colnames(x) <- c("p1", "p2", "TV", "hdiv")
+       if (JD) {
+          jdiv <- bplapply(seq_len(nrow(x)), function(i) {
+             estimateJDiv(p = as.numeric(x[i, c("p1", "p2")]),
+                          logbase = logbase)},
+             BPPARAM=bpparam)
+          x$jdiv <- unlist(jdiv)
+       }
    }
    if (!ismatrix) {
        if (preserve.gr) {
-           if (JD && !meth.level)
+           if (JD)
                mcols(HDiv) <- data.frame(mcols(HDiv),
                                        x[, c("p1", "p2", "TV", "hdiv", "jdiv")])
            else mcols(HDiv) <- data.frame(mcols(HDiv),
