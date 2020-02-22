@@ -25,7 +25,7 @@ License: file LICENSE
 biocViews: 
   Software, Epigenetics, MathematicalBiology, DNAMethylation, 
   DifferentialMethylation, Sequencing, Alignment, Bayesian, 
-  DifferentialExpression
+  DifferentialExpression, Biophysics
 LazyData: yes
 Imports:
   ArgumentCheck,
@@ -50,7 +50,7 @@ Imports:
   XML
 RoxygenNote: 7.0.2
 Suggests:
-    spelling, 
+  spelling, 
   testthat, 
   rmarkdown,
   knitr
