@@ -61,25 +61,24 @@
 #' @importFrom matrixStats rowMins
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @return If 'output = "best.model"', a character vector with the name of the
-#'     best fitted model for each sample and model statistics, which can be used
-#'     the next step to get the potential DMPs with function
-#'     \code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
-#'     table carrying the GoF values and the previously mentioned data.
+#' best fitted model for each sample and model statistics, which can be used the
+#' next step to get the potential DMPs with function
+#' \code{\link{getPotentialDIMP}}. Otherwise, it will return a list with the
+#' table carrying the GoF values and the previously mentioned data.
 #'
-#'     The best model selection is based on the lowest AIC. However, if
-#'     'confl_model = TRUE', then the returned list will contain a sublist named
-#'     'confl_model' with the best model selected based on the highest
-#'     R.Cross.val. This sublist is returned only if at least there is one
-#'     sample where the model with the lowest AIC has not the highest
-#'     R.Cross.val. This report is useful to analyse any conflict between
-#'     models. For example, some times the best model selected based on AIC has
-#'     a R.Cross.val = 0.99945, while the higest R.Cross.val is 0.99950. In such
-#'     a situation the model with lowest AIC is still fine. However, some times
-#'     the model with the best AIC has some meaningless paramater value. For
-#'     example,  scale = 0.0000000001 in 'GGamm3P' or in 'Weibull2P' models.
-#'     This last situation can result from the numerical algorithm used in
-#'     the parameter estimation. The numerical algorithms for nonlinear fit
-#'     estimation are not perfect!
+#' The best model selection is based on the lowest AIC. However, if 'confl_model
+#' = TRUE', then the returned list will contain a sublist named 'confl_model'
+#' with the best model selected based on the highest R.Cross.val. This sublist
+#' is returned only if at least there is one sample where the model with the
+#' lowest AIC has not the highest R.Cross.val. This report is useful to analyse
+#' any conflict between models. For example, some times the best model selected
+#' based on AIC has a R.Cross.val = 0.99945, while the higest R.Cross.val is
+#' 0.99950. In such a situation the model with lowest AIC is still fine.
+#' However, some times the model with the best AIC has some meaningless
+#' paramater value. For example,  scale = 0.0000000001 in 'GGamm3P' or in
+#' 'Weibull2P' models. This last situation can result from the numerical
+#' algorithm used in the parameter estimation. The numerical algorithms for
+#' nonlinear fit estimation are not perfect!
 #'
 #' @export
 #'
@@ -96,13 +95,13 @@
 #' ps_dmp <- getPotentialDIMP(LR = hd, nlms = dt$nlms, div.col = 9L,
 #'                             dist.name = dt$bestModel)
 #' @references
-#'     \enumerate{
-#'         \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
+#' \enumerate{
+#'     \item R. Sanchez and S. A. Mackenzie, “Information Thermodynamics of
 #'             Cytosine DNA Methylation,” PLoS One, vol. 11, no. 3, p. e0150427,
 #'             Mar. 2016.
-#'         \item Stevens JP. Applied Multivariate Statistics for the Social
+#'     \item Stevens JP. Applied Multivariate Statistics for the Social
 #'             Sciences. Fifth Edit. Routledge Academic; 2009.
-#'     }
+#' }
 #' @seealso \code{\link{nonlinearFitDist}}
 
 gofReport <- function(HD, model = c("Weibull2P", "Weibull3P",

@@ -101,7 +101,7 @@
 #'     (only for Linux OS).
 #' @param stat An integer number indicating the statistic to be used in the
 #'     testing when \emph{simple} = FALSE The mapping for statistic names are:
-#'     \itemize{
+#' \itemize{
 #'         \item 0 = "Accuracy"
 #'         \item 1 = "Sensitivity"
 #'         \item 2 = "Specificity"
@@ -115,7 +115,7 @@
 #'         \item 10 = "Detection Prevalence"
 #'         \item 11 = "Balanced Accuracy"
 #'         \item 12 = FDR
-#'    }
+#' }
 #' @param cutp_data Logic (optional). If TRUE, and simple = TRUE, then a
 #'     data frame for further analysis or estimation of the optimal cutpoint
 #'     based  only on the selected divergence is provided. A further analysis
@@ -125,7 +125,7 @@
 #' @param ... arguments passed to or from other methods.
 #' @return Depending the parameter setting will return the following list with
 #'     elements:
-#'     \enumerate{
+#' \enumerate{
 #'         \item cutpoint: Cutpoint estimated.
 #'         \item testSetPerformance: Performance evaluation on the test set.
 #'         \item testSetModel.FDR: False discovery rate on the test set.
@@ -140,9 +140,9 @@
 #'         \item classifier: Name of the model classifier used in the
 #'               performance evaluation.
 #'         \item statistic: Name of the performance statistic used to find the
-#'               cutpoint when \emph{simple} =  FALSE
+#'               cutpoint when \emph{simple} =  FALSE.
 #'         \item optStatVal: Value of the performance statistic at the cutpoint.
-#'     }
+#' }
 #' @examples
 #' ## Get a dataset of potential signals and the estimated cutpoint from the
 #' ## package and performs cutpoint estimation
