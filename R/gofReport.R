@@ -25,7 +25,7 @@
 #' Although the numerical algorithms to accomplish the nonlinear fit are not
 #' perfect, in general, the model with the lowest AIC must have the highest
 #' R.Cross.val. If the model with the lowest AIC has not the highest
-#' R.Cross.val, then further analyses are required. These analyses could include
+#' R.Cross.val, then further analyzes are required. These analyzes could include
 #' the visualization of the graphics for the density distribution, evaluation of
 #' whether the parameter values can be meaningful or not, etc. Nevertheless, the
 #' best model will, in general, lead to the identification of the greater amount
@@ -70,12 +70,12 @@
 #' = TRUE', then the returned list will contain a sublist named 'confl_model'
 #' with the best model selected based on the highest R.Cross.val. This sublist
 #' is returned only if at least there is one sample where the model with the
-#' lowest AIC has not the highest R.Cross.val. This report is useful to analyse
+#' lowest AIC has not the highest R.Cross.val. This report is useful to analyze
 #' any conflict between models. For example, some times the best model selected
-#' based on AIC has a R.Cross.val = 0.99945, while the higest R.Cross.val is
+#' based on AIC has a R.Cross.val = 0.99945, while the highest R.Cross.val is
 #' 0.99950. In such a situation the model with lowest AIC is still fine.
 #' However, some times the model with the best AIC has some meaningless
-#' paramater value. For example,  scale = 0.0000000001 in 'GGamm3P' or in
+#' parameter value. For example,  scale = 0.0000000001 in 'GGamma3P' or in
 #' 'Weibull2P' models. This last situation can result from the numerical
 #' algorithm used in the parameter estimation. The numerical algorithms for
 #' nonlinear fit estimation are not perfect!

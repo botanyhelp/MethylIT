@@ -33,6 +33,9 @@ navbar:
       - text: ------
       - text: "Example of Methylome Analysis with MethylIT using Cancer Datasets"
         href: articles/cancer_example.html
+      - text: ------
+      - text: "Optimal cutpoint for the methylation signal"
+        href: articles/Cutpoint_estimation_with_Methyl-IT.html
     news:
       text: News
       href: news/index.html
@@ -78,6 +81,7 @@ reference:
   contents:
   - '`uniqueGRanges`'
   - '`filterGRange`'
+  - '`estimateBayesianDivergence`'
   - '`estimateHellingerDiv`'
   - '`estimateJDiv`'
   - '`filterByCoverage`'
@@ -114,4 +118,5 @@ articles:
   - '`MethylIT`'
   - '`Methylation_analysis_with_Methyl-IT`'
   - '`cancer_example`'
+  - '`Cutpoint_estimation_with_Methyl-IT`'
 

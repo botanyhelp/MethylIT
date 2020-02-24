@@ -45,6 +45,7 @@ columnn
 CompressedGRangesList
 conf
 confusionMatrix
+confl
 coord
 CountPerBp
 countTest
@@ -141,6 +142,7 @@ jstat
 Kahraman
 Kullback
 lapply
+LD
 lda
 lda'from
 ldaDMP
@@ -202,8 +204,10 @@ num
 ontogenetic
 optStatVal
 optionData
+organismal
 Pardo
 pca
+pc
 pcaLDA
 pcaLogisticR
 pcaQDA

@@ -37,17 +37,17 @@ processes will be run simultaneously (see 'bplapply' function from
 BiocParallel package).}
 
 \item{tasks}{integer(1). The number of tasks per job. value must be a scalar
-integer >= 0L. In this documentation a job is defined as a single call
-to a function, such as bplapply, bpmapply etc. A task is the division of
-the X argument into chunks. When tasks == 0 (default), X is divided as
-evenly as possible over the number of workers (see MulticoreParam from
-BiocParallel package).}
+integer >= 0L. In this documentation a job is defined as a single call to
+a function, such as bplapply, bpmapply etc. A task is the division of the
+\eqn{X} argument into chunks. When tasks == 0 (default), \eqn{X} is
+divided as evenly as possible over the number of workers (see
+MulticoreParam from BiocParallel package).}
 
 \item{columns}{Vector of integer numbers of the columns where the counts
 "mC1", "uC1", "mC2", and "uC2" are in the matrix (default 1 to 4). That
 is, the input could have more than 4 columns, but only 4 columns with
 the counts are used. if 'meth.level == TRUE', then
-columns = c('p1', 'p2').}
+columns = \eqn{c('p1', 'p2')}.}
 
 \item{meth.level}{logical(1). Methylation levels can be provided in place of
 counts.}
@@ -64,48 +64,69 @@ natural logarithm.}
 \value{
 The input matrix or GRanges object with the four columns of counts
 and additional columns. If Bayessian = TRUE, the results are based on
-the posterior estimations of methylation levels. 1) p1" and "p2":
-methylation levels for control and treatment; 2) "hdiv": Hellinger
-divergence; 3) "bay.TV". "TV": total variation TV = p2 - p1 is based
-on simple counts
+the posterior estimations of methylation levels. The basic additional columns
+are:
+\describe{
+\item{1)}{The original matrix of methylated \eqn{c_{ij}} and unmethylated
+\eqn{t_{ij}} read counts from control \eqn{j=1} and treatment \eqn{j=2}
+samples at positions \eqn{i}.}
+\item{2)}{"p1" and "p2": methylation levels for control and treatment,
+respectively. If 'meth.level = FALSE' and 'Bayesian = TRUE' (recommended),
+"p1" and "p2" are estimated following the Bayesian approach described in
+reference (1).}
+\item{3)}{"bay.TV": total variation TV = p2 - p1}
+\item{4)}{"TV": total variation based on simple counts:
+\eqn{TV=c_1/(c_1+t_1)-c_2/(c_2+t_2)}, where \eqn{c_i} and \eqn{t_i} denote
+methylated and unmethylated read counts, respectively.}
+\item{5)}{"hdiv": Hellinger divergence. If Bayesian = TRUE, the results are
+based on the posterior estimations of methylation levels. if 'meth.level =
+FALSE', then "hdiv" is computed as given in reference (1), otherwise as:
+\deqn{hdiv = (sqrt(p_1) - sqrt(p_2))^2 + (sqrt(1 -p_1) - sqrt(1 -
+p_2))^2}}
+}
 }
 \description{
 The Information divergence of methylation levels is estimated
 using the direct estimation or a Bayesian approach of the methylation
-levels. Hellinger divergence is computed as given in reference 1.
+levels. if 'meth.level = FALSE', Hellinger divergence is computed as
+given in reference (1). The Bayesian approach followed is decribed in
+reference (2).
 }
 \details{
 For the current version, the Information divergence of methylation
 levels is estimated based on Hellinger divergence. If read counts are
-provided, then Hellinger divergence is computed as given in the first
-formula from Theorem 1 from reference 1. In the present case,\preformatted{hdiv = 2*(n[1] + 1)*(n[2] + 1)*((sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -
-p[1]) - sqrt(1 - p[2]))^2)/(n[1] + n[2] + 2)
+provided, then Hellinger divergence is computed as given in the first formula
+from Theorem 1 from reference 1. In the present case,
 
-where n[1] and n[2] are the coverage for the control and treatment,
-respectively. Notice that each row from the matrix of counts correspond
-to a single cytosine position and has four values corresponding to "mC1"
-and "uC1" (control), and mC2" and "uC2" for treatment.
+\deqn{H = 2 (n_1 + 1) (n_2 + 1)*((sqrt(p_1) - sqrt(p_2))^2 +
+         (sqrt(1-p_2) - sqrt(1-p_2))^2)/(n_1 + n_2 + 2)}
+
+where \eqn{n_1} and \eqn{n_2} are the coverage for the control and
+treatment, respectively. Notice that each row from the matrix of counts
+correspond to a single cytosine position and has four values corresponding to
+"mC1" and "uC1" (control), and mC2" and "uC2" for treatment.
 
 If the methylation levels are provided in place of counts, then
 Hellinger divergence is computed as:
-hdiv = (sqrt(p[1]) - sqrt(p[2]))^2 + (sqrt(1 -p[1]) - sqrt(1 - p[2]))^2
+\deqn{H = (sqrt(p_1) - sqrt(p_2))^2 + (sqrt(1 - p_1) - sqrt(1 - p_2))^2}
 
 This formula assumes that the probability vectors derived from the
-methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
-'estimateHellingerDiv') are an unbiased estimation of the expected one.
-}
+methylation levels \eqn{p_i = c(p_{i2}, 1 - p_{i2})} (see function
+\code{\link{estimateHellingerDiv}}) are an unbiased estimation of the
+expected one. The Bayesian approach followed here is decribed in reference
+(2).
 }
 \examples{
 ## The read count data are created
-    x <- data.frame(chr = "chr1", start = 1:10,
-                    end = 1:10,strand = '*',
+    gr <- data.frame(chr = "chr1", start = 1:10,
+                    end = 1:10, strand = '*',
                     mC1 = rnbinom(size = 10, mu = 4, n = 500),
                     uC1 = rnbinom(size = 10, mu = 4, n = 500),
                     mC2 = rnbinom(size = 10, mu = 4, n = 500),
                     uC2 = rnbinom(size = 10, mu = 4, n = 500))
-    x <- makeGRangesFromDataFrame(x, keep.extra.columns = TRUE)
+    gr <- makeGRangesFromDataFrame(gr, keep.extra.columns = TRUE)
 ## Estimation of the information divergences
-    hd <- estimateBayesianDivergence(x, JD = TRUE)
+    hd <- estimateBayesianDivergence(gr, JD = TRUE)
 
 ## Keep in mind that Hellinger and J divergences are, in general, correlated!
     cor.test(x = as.numeric(hd$hdiv), y = as.numeric(hd$jdiv),
@@ -115,23 +136,28 @@ methylation levels (p_ij) p_j = c(p_ij, 1 - p_ij) (see function
 set.seed(123)
 sites = 10
 dat = data.frame(chr = "chr1", start = 1:sites,
-                 end = 1:sites,strand = '*',
-                 m1 = runif(n = sites),
-                 m2 = runif(n = sites))
+                end = 1:sites,strand = '*',
+                m1 = runif(n = sites),
+                m2 = runif(n = sites))
 dat =  makeGRangesFromDataFrame(dat, keep.extra.columns = TRUE)
 ## Transforming the list of data frames into a GRanges object
 hd <- estimateBayesianDivergence(x = dat, columns = c(p1 = 1, p2 = 2),
-                                 meth.level = TRUE, preserve.gr = TRUE
+                                meth.level = TRUE, preserve.gr = TRUE)
 
 }
 \references{
 \enumerate{
-\item Basu  A., Mandal  A., Pardo L (2010) Hypothesis testing for
-two discrete populations based on the Hellinger distance. Stat Probab
-Lett 80: 206-214.
+\item Basu  A., Mandal  A., Pardo L. Hypothesis testing for two
+discrete populations based on the Hellinger distance. Stat. Probab.
+Lett. 2010, 80: 206-214.
+\item Sanchez R, Yang X, Maher T, Mackenzie S. Discrimination of DNA
+Methylation Signal from Background Variation for Clinical Diagnostics. Int.
+J. Mol Sci, 2019, 20:5343.
 }
+}
+\seealso{
+\code{\link{estimateDivergence}}
 }
 \author{
-Robersy Sanchez
+Robersy Sanchez (\url{https://genomaths.com})
 }
-\keyword{internal}
