@@ -118,7 +118,7 @@ Some simple examples
 
 [An example with simulated datasets](https://genomaths.github.io/methylit/articles/Methylation_analysis_with_Methyl-IT.html) to illustrate why a signal detection step is needed in methylation analysis.   
 
-[A guide for methylation analysis based on optimal cutpoint with_Methyl-IT](https://genomaths.github.io/Cutpoint_estimation_with_Methyl-IT.html).
+[Optimal cutpoint for the methylation signal](https://genomaths.github.io/methylit/articles/Cutpoint_estimation_with_Methyl-IT.html).
 
 [Principal Components and Linear Discriminant Analyses with Methyl-IT](https://genomaths.github.io/pca_lda_with_methylit.html)
 

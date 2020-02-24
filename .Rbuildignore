@@ -11,6 +11,7 @@
 ^vignettes/cancer_example\.Rmd$
 ^vignettes/MethylIT\.Rmd$
 ^vignettes/Methylation_analysis_with_Methyl-IT\.Rmd$
+^vignettes/Cutpoint_estimation_with_Methyl-IT\.Rmd$
 ^vignettes/bibliography\.bib$
 ^vignettes/_navbar\.yml$
 ^_pkgdown\.yml$

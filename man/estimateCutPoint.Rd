@@ -149,7 +149,7 @@ cutpoint
 \item classifier: Name of the model classifier used in the
 performance evaluation.
 \item statistic: Name of the performance statistic used to find the
-cutpoint when \emph{simple} =  FALSE
+cutpoint when \emph{simple} =  FALSE.
 \item optStatVal: Value of the performance statistic at the cutpoint.
 }
 }

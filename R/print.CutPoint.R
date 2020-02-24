@@ -3,7 +3,7 @@
 #' @param x Object of class \code{"CutPoint"}
 #' @param digits Number of significant digits to be used.
 #' @keywords internal
-#' @exportMethod print.CutPoint
+#' @export print.CutPoint
 print.CutPoint <- function(x, digits = getOption("digits")) {
 
    postProbCut <- format(signif(x$postProbCut, max(1L, digits - 2L)))
