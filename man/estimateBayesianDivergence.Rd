@@ -113,7 +113,7 @@ Hellinger divergence is computed as:
 This formula assumes that the probability vectors derived from the
 methylation levels \eqn{p_i = c(p_{i2}, 1 - p_{i2})} (see function
 \code{\link{estimateHellingerDiv}}) are an unbiased estimation of the
-expected one. The Bayesian approach followed here is decribed in reference
+expected one. The Bayesian approach followed here is described in reference
 (2).
 }
 \examples{

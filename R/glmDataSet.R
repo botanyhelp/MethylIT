@@ -15,10 +15,10 @@
 #'     individual samples. The row names of \emph{colData} must correspond to
 #'     th column names of the count matrix.
 #' @return An object from "RangedGlmDataSet" class containing these attributes:
-#'     "GR": the GRanges of the object, "counts": the counts for each sample 
-#'     at that genomic position, "colData": the condition of each sample, 
-#'     treatment or control, "sampleNames": the names of the samples, "levels": 
-#'     the values (perhaps TT and CT for treatment and control)  permitted in 
+#'     "GR": the GRanges of the object, "counts": the counts for each sample
+#'     at that genomic position, "colData": the condition of each sample,
+#'     treatment or control, "sampleNames": the names of the samples, "levels":
+#'     the values (perhaps TT and CT for treatment and control)  permitted in
 #'     the "colData" attribute, optionData: additional metadata or NULL
 #' @author Robersy Sanchez
 #' @export
@@ -127,4 +127,41 @@ glmDataSet <- function(GR = NULL, counts = NULL, colData = NULL) {
    return(x)
 }
 
+### ========================== Auxiliary function ============================ #
+
+
+#' @rdname glmDataSet
+#' @title Printing object from \emph{glmDataSet} and \emph{"RangedGlmDataSet"}
+#'     classes by simple print methods.
+#' @param x Object from class \emph{glmDataSet} or from class
+#'     \emph{"RangedGlmDataSet"}.
+#' @param digits Number of significant digits to be used.
+#' @keywords internal
+#' @export
+print.glmDataSet <- function(x, digits = getOption("digits"), ...) {
+   cm <- dim(counts)
+   lvs <- levels(x$colData$condition)
+   cat("glmDataSet with ", cm[1], " rows and ", cm[2], " columns (individuals)",
+       " with factor levels ", "'", lvs[1],"'", " and '", lvs[2],"' \n",
+       sep = "")
+   cat("The accessible objects in the dataset are: \n")
+   print(summary(x), digits = digits)
+   cat("\n")
+}
+
+#' @rdname glmDataSet
+#' @keywords internal
+#' @export
+print.RangedGlmDataSet <- function(x, digits = getOption("digits"), ...) {
+   r <- length(x$GR)
+   lvs <- levels(x$colData$condition)
+   col <- length(x$colData$condition)
+   cat("RangedGlmDataSet with ", r, " regions and ", col,
+       " columns (individuals) ",
+       "with factor levels ", "'", lvs[1],"'", " and '", lvs[2],"' \n",
+       sep = "")
+   cat("The accessible objects in the dataset are: \n")
+   print(summary(x))
+   cat("\n")
+}
 
