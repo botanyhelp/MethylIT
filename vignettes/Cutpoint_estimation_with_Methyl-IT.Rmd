@@ -5,10 +5,9 @@ author: |
  | Robersy Sanchez
  | rus547@psu.edu
  | Mackenzie's lab
- 
- | Department of Biology and Plant Science. 
+ |
+ | Department of Biology. 
  | Pennsylvania State University, University Park, PA 16802
- | Maintainer: Robersy Sanchez
 date: "`r format(Sys.time(), '%d %B %Y')`"
 fontsize: 11pt
 fontfamily: "serif"

@@ -124,3 +124,6 @@ grList <- GRangesList("gr1" = gr1, "gr2" = gr2, "gr3" = gr3)
 uniqueGRanges(grList)
 
 }
+\author{
+Robersy Sanchez (\url{https://genomaths.com}).
+}

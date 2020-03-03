@@ -190,7 +190,7 @@ as a Weibull distribution model, can be deduced on a statistical
 mechanical/thermodynamics basis for DNA methylation induced by thermal
 fluctuations [@Sanchez2016].
 
-```{r gof}
+```{r gof, message=FALSE}
 gof <- gofReport(HD = ml_hd,
                  model = c("Weibull2P", "Weibull3P",
                            "Gamma2P", "Gamma3P"),

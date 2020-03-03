@@ -91,7 +91,7 @@
 #' @importFrom GenomicRanges GRanges GRangesList findOverlaps
 #' @importFrom S4Vectors mcols queryHits subjectHits mcols<-
 #' @importFrom BiocParallel MulticoreParam bplapply SnowParam
-#'
+#' @author Robersy Sanchez (\url{https://genomaths.com}).
 #' @export
 uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
                        chromosomes=NULL, maxgap=-1L, minoverlap=1L, missing=0,
@@ -100,8 +100,7 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
                        ignore.strand=FALSE, keep.strand=!ignore.strand,
                        num.cores=1, tasks=0L, verbose=TRUE) {
 
-   if (is(ListOfGranges, "list") && !is(ListOfGranges, "GRangesList"))
-   {
+   if (is(ListOfGranges, "list") && !is(ListOfGranges, "GRangesList")) {
        GR <- try(as(ListOfGranges, "GRangesList"), silent=TRUE)
 
        if (inherits(ListOfGranges, "try-error")) {
@@ -112,6 +111,8 @@ uniqueGRanges <- function(ListOfGranges, ncols=NULL, columns=NULL,
            } else {ListOfGranges <- GR; rm(GR); gc()}
        }
    }
+
+   if (length(ListOfGranges) == 1) return(ListOfGranges)
 
    # Set parallel computation
    if (Sys.info()['sysname'] == "Linux") {

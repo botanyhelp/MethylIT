@@ -64,6 +64,7 @@ DESeqDataSet
 destfile
 dggamma
 DIMP
+doi
 DIMRs
 dinucleotides
 DMG
@@ -75,6 +76,7 @@ DMRs
 dpois
 DS
 Dugas
+dmpClusters
 ecdf
 ECDF
 Ensembl
@@ -162,6 +164,8 @@ maxgap
 maxGrpCV
 maximun
 maxiter
+maxDist
+minNumDMPs
 mc
 mC
 clas
