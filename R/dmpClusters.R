@@ -18,7 +18,7 @@
 #' positions inside the cluster where DMPs were reported in at least one
 #' of the samples.
 #'
-#' @param GR An objec from strong{\emph{'pDPM'}} class, which is returned by
+#' @param GR An object from strong{\emph{'pDMP'}} class, which is returned by
 #'     \code{\link{selectDIMP}} function.
 #' @param maxDist maximum distance at which two reported bases sites from the
 #'     same cluster can be separated. Default: maxDist = 3.

@@ -16,7 +16,7 @@ dmpClusters(
 )
 }
 \arguments{
-\item{GR}{An objec from strong{\emph{'pDPM'}} class, which is returned by
+\item{GR}{An object from strong{\emph{'pDMP'}} class, which is returned by
 \code{\link{selectDIMP}} function.}
 
 \item{maxDist}{maximum distance at which two reported bases sites from the
