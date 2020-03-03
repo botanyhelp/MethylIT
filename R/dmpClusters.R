@@ -100,6 +100,7 @@ dmpClusters <- function(GR, maxDist = 3,
                         num.cores = 1L, tasks = 0L,
                         verbose = TRUE, ...) {
    validateClass(GR)
+   signal <- cluster <- NULL
    if (!inherits(GR, "pDMP"))
        stop("*** GR object must inherits from 'pDMP' class", " which is
            returned by calling 'selectDMP' function.")
@@ -143,6 +144,7 @@ dmpClusters <- function(GR, maxDist = 3,
 # ========================= Auxiliary signal ================================= #
 meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
                        tasks = 0L, verbose = TRUE) {
+
    ## Set parallel computation
    progressbar = FALSE
    if (verbose) progressbar = TRUE
@@ -158,7 +160,7 @@ meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
        min.start <- min(start(y))
        max.end <- max(end(y))
        if(status == 0) {
-           y <- GenomicRanges::disjoin(gaps(y))
+           y <- GenomicRanges::disjoin(GenomicRanges::gaps(y))
            starts <- start(y)
            ends <- end(y)
            idx <- which(starts > min.start)
