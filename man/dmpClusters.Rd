@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmpClusters.R
 \name{dmpClusters}
 \alias{dmpClusters}
-\title{DMP cluster builder}
+\title{DMP clustering}
 \usage{
 dmpClusters(
   GR,
@@ -39,7 +39,7 @@ package).The number of tasks per job. value must be a scalar integer >=
 \item{...}{Further parameters for uniqueGRanges function.}
 }
 \value{
-GRanges object with the numbers of positions inside each cluster
+A GRanges object with the numbers of positions inside each cluster,
 where DMPs were reported in at least one of the samples.
 }
 \description{
@@ -64,7 +64,7 @@ of the samples.
 }
 \examples{
 ## Get a dataset of potential signals and the estimated cutpoint from the
-## package and performs cutpoint estimation
+## package
 data(PS, cutpoint)
 
 ## The estimated cutpoints are used to discriminate signals from the noise.
@@ -72,11 +72,11 @@ data(PS, cutpoint)
 dmps <- selectDIMP(PS, div.col = 9L, cutpoint = cutpoint$cutpoint)
 
 ## Build clusters of DMPs
-x1 = dmpClusters(GR = dmps, maxDist = 7, minNumDMPs = 6,num.cores=2L,
+x1 = dmpClusters(GR = dmps, maxDist = 7, minNumDMPs = 6, num.cores=2L,
                 verbose = FALSE)
 x1
 
-## ==== Setting up the experimennt design to test for DMRs ===
+## ==== Setting up the experiment design to test for DMRs ===
 nams <- names(dmps)
 dmps_at_clusters <- getDIMPatGenes(GR = dmps, GENES = x1,
                                     ignore.strand = TRUE)
@@ -88,10 +88,10 @@ colnames(mcols(dmps_at_clusters)) <- nams
 colData <- data.frame(condition = factor(c("CT", "CT", "CT",
                                            "TT", "TT", "TT"),
                                          levels = c("CT", "TT")),
-                      nams,
-                      row.names = 2)
+                    nams,
+                    row.names = 2)
 
-## Build RangedGlmDataSet is created
+## Build a RangedGlmDataSet object
 ds <- glmDataSet(GR = dmps_at_clusters, colData = colData)
 
 ## ================ Testing for DMRs ===========
