@@ -158,7 +158,7 @@ meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
        min.start <- min(start(y))
        max.end <- max(end(y))
        if(status == 0) {
-           y <- disjoin(gaps(y))
+           y <- GenomicRanges::disjoin(gaps(y))
            starts <- start(y)
            ends <- end(y)
            idx <- which(starts > min.start)
