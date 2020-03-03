@@ -7,7 +7,7 @@
 dmpClusters(
   GR,
   maxDist = 3,
-  minNumDMPs = 0,
+  minNumDMPs = 1,
   chromosomes = NULL,
   num.cores = 1L,
   tasks = 0L,
@@ -16,23 +16,23 @@ dmpClusters(
 )
 }
 \arguments{
-\item{GR}{An object from strong{\emph{'pDMP'}} class, which is returned by
+\item{GR}{An object from \strong{\emph{'pDMP'}} class, which is returned by
 \code{\link{selectDIMP}} function.}
 
 \item{maxDist}{maximum distance at which two reported bases sites from the
-same cluster can be separated. Default: maxDist = 3.}
+same cluster can be separated. Default: \eqn{maxDist = 3}.}
 
 \item{minNumDMPs}{minimum number of marked bases inside of each cluster.
-Default: minNumDMPs = 0.}
+Default: \eqn{minNumDMPs = 1}.}
 
 \item{chromosomes}{vector of characters labeling the chromosomes included in
 the analysis. Default: chromosomes = NULL (all chromosomes are included).}
 
 \item{num.cores, tasks}{integer(1). The number of cores to use, i.e. at most
-how many child processes will be run simultaneously (see bplapply
-function from BiocParallel package).The number of tasks per job. value
-must be a scalar integer >= 0L (see MulticoreParam from BiocParallel
-package).}
+how many child processes will be run simultaneously (see
+\code{\link[BiocParallel]{bplapply}} function from BiocParallel
+package).The number of tasks per job. value must be a scalar integer >=
+0L (see MulticoreParam from BiocParallel package).}
 
 \item{verbose}{if TRUE, prints the function log to stdout.}
 
@@ -54,9 +54,9 @@ used to build a binary string of zeros and ones . The binary string of zeros
 and ones is used in the detection of cluster of DMPs. Postulating that a
 reported DNA base is found at the beginning and the end of a cluster,
 genome-wide screening can be performed where two consecutive targeting base
-positions are separated by less than a given threshold "maxDist" bases. DMPs
-from all the samples included in \strong{\emph{GR}} are considered to build
-the clusters.
+positions are separated by less than a given threshold
+\strong{\emph{maxDist}} bases (1). DMPs from all the samples included in
+\strong{\emph{GR}} are considered to build the clusters.
 
 The number of DMPs reported in each cluster corresponds to the numbers of
 positions inside the cluster where DMPs were reported in at least one

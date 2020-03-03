@@ -10,27 +10,27 @@
 #' and ones is used in the detection of cluster of DMPs. Postulating that a
 #' reported DNA base is found at the beginning and the end of a cluster,
 #' genome-wide screening can be performed where two consecutive targeting base
-#' positions are separated by less than a given threshold "maxDist" bases. DMPs
-#' from all the samples included in \strong{\emph{GR}} are considered to build
-#' the clusters.
+#' positions are separated by less than a given threshold
+#' \strong{\emph{maxDist}} bases (1). DMPs from all the samples included in
+#' \strong{\emph{GR}} are considered to build the clusters.
 #'
 #' The number of DMPs reported in each cluster corresponds to the numbers of
 #' positions inside the cluster where DMPs were reported in at least one
 #' of the samples.
 #'
-#' @param GR An object from strong{\emph{'pDMP'}} class, which is returned by
+#' @param GR An object from \strong{\emph{'pDMP'}} class, which is returned by
 #'     \code{\link{selectDIMP}} function.
 #' @param maxDist maximum distance at which two reported bases sites from the
-#'     same cluster can be separated. Default: maxDist = 3.
+#'     same cluster can be separated. Default: \eqn{maxDist = 3}.
 #' @param minNumDMPs minimum number of marked bases inside of each cluster.
-#'     Default: minNumDMPs = 0.
+#'     Default: \eqn{minNumDMPs = 1}.
 #' @param chromosomes vector of characters labeling the chromosomes included in
 #'     the analysis. Default: chromosomes = NULL (all chromosomes are included).
 #' @param num.cores,tasks integer(1). The number of cores to use, i.e. at most
-#'     how many child processes will be run simultaneously (see bplapply
-#'     function from BiocParallel package).The number of tasks per job. value
-#'     must be a scalar integer >= 0L (see MulticoreParam from BiocParallel
-#'     package).
+#'     how many child processes will be run simultaneously (see
+#'     \code{\link[BiocParallel]{bplapply}} function from BiocParallel
+#'     package).The number of tasks per job. value must be a scalar integer >=
+#'     0L (see MulticoreParam from BiocParallel package).
 #' @param verbose if TRUE, prints the function log to stdout.
 #' @param ... Further parameters for uniqueGRanges function.
 #'
@@ -95,7 +95,7 @@
 #'                    verbose = TRUE)
 #' dmrs
 dmpClusters <- function(GR, maxDist = 3,
-                        minNumDMPs = 0,
+                        minNumDMPs = 1,
                         chromosomes = NULL,
                         num.cores = 1L, tasks = 0L,
                         verbose = TRUE, ...) {
