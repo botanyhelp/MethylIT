@@ -103,10 +103,9 @@ dmpClusters <- function(GR, maxDist = 3,
    if (!inherits(GR, "pDMP"))
        stop("*** GR object must inherits from 'pDMP' class", " which is
            returned by calling 'selectDMP' function.")
-   if (length(GR) == 1 && inherits(GR, "list"))
-       GR <- unlist(GR, use.names =FALSE)
-   if (inherits(GR, "list")) class(GR) <- "GRangesList"
-   else class(GR) <- "GRanges"
+   GR <- structure(GR, class = "list")
+   GR <- GRangesList(GR)
+   if (length(GR) == 1) GR <- unlist(GR, use.names =FALSE)
 
    GR <- meth_status(gr = GR, chromosomes = chromosomes, num.cores = num.cores,
                        tasks = tasks,  verbose = verbose)
@@ -144,7 +143,15 @@ dmpClusters <- function(GR, maxDist = 3,
 # ========================= Auxiliary signal ================================= #
 meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
                        tasks = 0L, verbose = TRUE) {
+   ## Set parallel computation
+   progressbar = FALSE
+   if (verbose) progressbar = TRUE
 
+   if (Sys.info()['sysname'] == "Linux") {
+       bpparam <- MulticoreParam(workers=num.cores, tasks = tasks,
+                               progressbar = progressbar)
+   } else bpparam <- SnowParam(workers = num.cores, type = "SOCK",
+                               progressbar = progressbar)
    status <- function(y, status, CHR, verbose) {
        if (verbose) message("\n *** Processing chromosome:  ", CHR, "\n")
        seqlevels(y, pruning.mode="coarse") <- CHR
@@ -160,7 +167,9 @@ meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
            idx <- which(ends < max.end)
            starts <- starts[idx]
            ends <- ends[idx]
-           post <- mapply(function(s,e) s:e, starts, ends, USE.NAMES=FALSE)
+           post<- bpmapply(function(s,e) s:e, starts, ends, USE.NAMES=FALSE,
+                           BPPARAM = bpparam)
+
            post <- sort(unique(unlist(post)))
            y <- GRanges(seqnames=CHR, ranges=IRanges(start=post, end=post))
        }
@@ -193,46 +202,15 @@ meth_status <- function(gr, chromosomes = NULL, num.cores = 1L,
    }
 
    kCHR <- length(CHRs)
-   progressbar = FALSE
-
-   # Set parallel computation
-   if (verbose) {
-       cat("* Computing the genomic signal for status '1' ...\n")
-       progressbar = TRUE
-   }
-
-   if (Sys.info()['sysname'] == "Linux") {
-       bpparam <- MulticoreParam(workers=num.cores, tasks = tasks,
-                                   progressbar = progressbar)
-   } else bpparam <- SnowParam(workers = num.cores, type = "SOCK",
-                               progressbar = progressbar)
-
-   if (num.cores == 1) {
-       r <- list()
-       for(k in 1:kCHR) {
-           r[[k]] <- status(y = gr, status = 1, CHR = CHRs[k],
-                           verbose = verbose)
-       }
-   } else {
-       r <- bplapply(CHRs, function(chr) status(y = gr, status = 1, CHR = chr,
-                                               verbose = verbose),
-                   BPPARAM=bpparam)
-   }
+   if (verbose) cat("* Computing the genomic signal for status '1' ...\n")
+   r <- lapply(CHRs, function(chr) status(y = gr, status = 1, CHR = chr,
+                                       verbose = verbose))
    if (verbose) cat("* Computing the genomic signal for status '0' ...\n")
-   if (num.cores == 1) {
-       y <- list()
-       for(k in 1:kCHR) {
-           y[[k]] <- status(y=gr, status=0, CHR=CHRs[k], verbose = verbose)
-       }
-   } else {
-           y <- bplapply(CHRs, function(chr) status(y = gr, status = 0,
-                                                    CHR = chr,
-                                                    verbose = verbose),
-                       BPPARAM=bpparam)
-   }
+   y <- lapply(CHRs, function(chr) status(y = gr, status = 0, CHR = chr,
+                                       verbose = verbose))
    if (verbose) cat("* Building the methylation signal ...\n")
    gr <- bpmapply(function(x,y) sortBySeqnameAndStart(c(x,y)), r, y,
-                   BPPARAM=bpparam)
+                   BPPARAM = bpparam)
    rm(r,y); gc()
    gr <- lapply(gr, unique)
    names(gr) <- CHRs
